@@ -2,6 +2,7 @@ using System;
 
 namespace Labyrinthian
 {
+    [Serializable]
     public sealed class PathNotFoundException : Exception
     { 
         public PathNotFoundException() : 

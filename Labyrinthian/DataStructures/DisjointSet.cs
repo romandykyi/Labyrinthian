@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Union-Find data structure. Inspired by https://github.com/mondrasovic/UnionFind
+    /// </summary>
     public sealed class DisjointSet<T> : IEnumerable<T> where T : IEquatable<T>
     {
         private readonly Dictionary<T, DisjointSetNode<T>> _nodes = new Dictionary<T, DisjointSetNode<T>>();

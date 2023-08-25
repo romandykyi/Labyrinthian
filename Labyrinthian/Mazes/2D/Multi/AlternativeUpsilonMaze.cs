@@ -69,7 +69,7 @@ namespace Labyrinthian
 
         protected override (int, int) GetWallPointsIndices(MazeEdge wall)
         {
-            var point = CellsCoordinates[wall.Cell0.Index];
+            var point = CellsCoordinates[wall.Cell1.Index];
             return point.Layer switch
             {
                 0 => wall.Direction switch

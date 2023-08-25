@@ -1,43 +1,77 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 
 namespace Labyrinthian
 {
     /// <summary>
-    /// Клас для репрезентації лабіринтів у вигляді графу
+    /// Class representating a graph-based maze. 
+    /// It consists of two undirected graphs: <b>base graph</b> and <b>passages graph</b>.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Each <b><b>node</b></b> of the <b>base graph</b> represents a maze cell or a special cell with a negative index,
+    /// that is not the maze part and used to draw exterior walls.
+    /// <br/>
+    /// Each <b>edge</b> of the <b>base graph</b> represents a possible wall/passage, if one of the nodes
+    /// of the <b>edge</b> is not the maze part then this <b>edge</b> is an exterior wall.
+    /// </para>
+    /// <para>
+    /// Each <b>node</b> of the <b>passages graph</b> represents a maze cell.
+    /// <br/>
+    /// Each <b>edge</b> of the <b>passages graph</b> represent passage between two maze cells.
+    /// </para>
+    /// <para>
+    /// <b>Base graph</b> is created inside the constructor and <b>passages graph</b> should be initialized
+    /// inside the <see cref="MazeGenerator"/> class
+    /// </para>
+    /// </remarks>
     public abstract class Maze
     {
-        private float[] _sizes = null!;
+        // Pre-calculated sizes
+        private float[]? _sizes;
+        // Set that contains all passages in the maze.
+        private readonly HashSet<MazeEdge> Connections;
 
-        // Всі з'єднання клітинок(наявність двох клітинок тут означає, що між ними є прохід)
-        protected readonly HashSet<MazeEdge> Connections;
         /// <summary>
-        /// Клітинки лабіринту
+        /// Cells that maze contains
         /// </summary>
         public MazeCell[] Cells { get; protected set; } = null!;
 
+        /// <summary>
+        /// Each solution of the maze.
+        /// </summary>
         public readonly List<MazePath> Paths;
 
+        /// <summary>
+        /// Description of the maze. Contains type of the maze and its dimensions 
+        /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// Розмір лабіринту в різних вимірах
+        /// Sizes of the maze in each dimension
         /// </summary>
         public virtual float[] Sizes => _sizes ?? CalculateSizes();
         /// <summary>
-        /// Кількість вимірів лабіринту
+        /// Number of the maze dimensions
         /// </summary>
         public abstract int Dimensions { get; }
 
-        public delegate void RelationChangedEvent(Maze owner, MazeEdge relation, bool isConnected);
+        /// <summary>
+        /// Delegete of an event that is raised when passage is carved or wall is added
+        /// </summary>
+        /// <param name="owner">Maze that called the event</param>
+        /// <param name="edge">Edge that was changed</param>
+        /// <param name="isConnected">True if passage is carved, false if wall is added</param>
+        public delegate void EdgeChangedEvent(Maze owner, MazeEdge edge, bool isConnected);
 
         /// <summary>
-        /// Подія, яка викликається при зміни стану стіни між двома клітинками
+        /// Event that is raised when passage is carved or wall is added
         /// </summary>
-        public event RelationChangedEvent? RelationChanged;
+        public event EdgeChangedEvent? EdgeChanged;
 
         private float[] CalculateSizes()
         {
@@ -57,6 +91,9 @@ namespace Labyrinthian
             return _sizes;
         }
 
+        /// <summary>
+        /// Basic initialization without touching the Cells array
+        /// </summary>
         protected Maze()
         {
             Description = string.Empty;
@@ -65,9 +102,9 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Створення графу лабіринту
+        /// Initialization of <see cref="Cells"/>
         /// </summary>
-        /// <param name="size">розмір лабіринту(кількість клітинок)</param>
+        /// <param name="size">A size of <see cref="Cells"/></param>
         protected Maze(int size) : this()
         {
             Cells = new MazeCell[size];
@@ -77,41 +114,7 @@ namespace Labyrinthian
             }
         }
 
-        // Перевірка, чи всі клітинки з'єднані
-        protected void CheckIfGraphConnected()
-        {
-            int k = 0;
-            MarkedCells visited = new MarkedCells(this);
-            Stack<MazeCell> dfsStack = new Stack<MazeCell>(1);
-            dfsStack.Push(Cells[0]);
-
-            while (dfsStack.Count > 0)
-            {
-                MazeCell current = dfsStack.Pop();
-
-                if (visited[current]) continue;
-                visited[current] = true;
-                foreach (var neighbor in current.Neighbors)
-                {
-                    dfsStack.Push(neighbor);
-                }
-                k++;
-            }
-
-            if (k != Cells.Length)
-            {
-                throw new MazeGraphIsDisconnectedException(k, this);
-            }
-        }
-
-        /// <summary>
-        /// З'єднати дві клітинки(тепер між клітинками не буде стіни)
-        /// </summary>
-        /// <returns>true - клітинки з'єднано, false - клітинки вже з'єднані</returns>
-        /// <exception cref="CellIsNotMazePartException" />
-        /// <exception cref="CellsAreNotNeighborsException" />
-        /// <exception cref="ArgumentNullException" />
-        public bool ConnectCells(MazeCell cell1, MazeCell cell2)
+        private bool ChangeEdge(MazeCell cell1, MazeCell cell2, Predicate<MazeEdge> change)
         {
             // Null checks just in case
             if (cell1 is null)
@@ -120,53 +123,55 @@ namespace Labyrinthian
                 throw new ArgumentNullException(nameof(cell2), "cells cannot be null");
 
             if (!cell1.IsMazePart)
-                throw new CellIsNotMazePartException(nameof(cell1), "You cannot connect cells which are not parts of maze");
+                throw new CellIsOuterException(nameof(cell1), "You cannot connect cells which are not the parts of maze");
             if (!cell2.IsMazePart)
-                throw new CellIsNotMazePartException(nameof(cell2), "You cannot connect cells which are not parts of maze");
+                throw new CellIsOuterException(nameof(cell2), "You cannot connect cells which are not the parts of maze");
             if (!MazeCell.AreNeighbors(cell1, cell2))
                 throw new CellsAreNotNeighborsException(cell1, cell2, "You can connect only neighboring cells");
 
             MazeEdge relation = MazeEdge.GetMinMax(cell1, cell2);
-            bool result = Connections.Add(relation);
-            if (result)
-                RelationChanged?.Invoke(this, relation, true);
+            bool result = change(relation);
+            if (result) EdgeChanged?.Invoke(this, relation, true);
 
             return result;
         }
 
         /// <summary>
-        /// Роз'єднати дві клітинки(тепер між клітинками буде стіна)
+        /// Carve a passage between <paramref name="cell1"/> and <paramref name="cell2"/>
+        /// (order of the arguments doesn't matter).
         /// </summary>
-        /// <returns>true - клітинки роз'єднано, false - клітинки вже роз'єднані</returns>
-        /// <exception cref="CellIsNotMazePartException" />
+        /// <returns><see langword="true"/> when passage is carved, or <see langword="false"/> when passage was already carved</returns>
+        /// <exception cref="CellIsOuterException" />
+        /// <exception cref="CellsAreNotNeighborsException" />
+        /// <exception cref="ArgumentNullException" />
+        public bool ConnectCells(MazeCell cell1, MazeCell cell2)
+        {
+            return ChangeEdge(cell1, cell2, Connections.Add);
+        }
+
+        /// <summary>
+        /// Create a wall between <paramref name="cell1"/> and <paramref name="cell2"/>
+        /// (order of the arguments doesn't matter).
+        /// </summary>
+        /// <returns><see langword="true"/> when wall is created, or <see langword="false"/> when wall was already present</returns>
+        /// <exception cref="CellIsOuterException" />
         /// <exception cref="CellsAreNotNeighborsException" />
         /// <exception cref="ArgumentNullException" />
         public bool BlockCells(MazeCell cell1, MazeCell cell2)
         {
-            if (cell1 is null)
-                throw new ArgumentNullException(nameof(cell1), "cells cannot be null");
-            if (cell2 is null)
-                throw new ArgumentNullException(nameof(cell2), "cells cannot be null");
-            if (!cell1.IsMazePart)
-                throw new CellIsNotMazePartException(nameof(cell1), "You cannot block cells which are not parts of maze");
-            if (!cell2.IsMazePart)
-                throw new CellIsNotMazePartException(nameof(cell2), "You cannot block cells which are not parts of maze");
-            if (!MazeCell.AreNeighbors(cell1, cell2))
-                throw new CellsAreNotNeighborsException(cell1, cell2, "You can block only neighboring cells");
-
-            MazeEdge relation = MazeEdge.GetMinMax(cell1, cell2);
-            bool result = Connections.Remove(relation);
-            if (result)
-                RelationChanged?.Invoke(this, relation, false);
-
-            return result;
+            return ChangeEdge(cell1, cell2, Connections.Remove);
         }
 
         /// <summary>
-        /// Чи між двома клітинками існує прохід
+        /// Check if there is a passage between <paramref name="cell1"/> and <paramref name="cell2"/>
+        /// (order of the arguments doesn't matter).
         /// </summary>
-        /// <returns>true - між клітинками існує прохід, false - між клітинками стіна/вони не сусіди</returns>
-        /// <exception cref="CellsAreNotNeighborsException" />
+        /// <returns>
+        /// True when a passages between cell1 and cell2 exists. 
+        /// False when a passage between cell1 and cell2 doesn't exist,
+        /// at least one of the cells isn't the part of the maze,
+        /// cell1 and cell2 aren't neighbors
+        /// </returns>
         /// <exception cref="ArgumentNullException" />
         public bool AreCellsConnected(MazeCell cell1, MazeCell cell2)
         {
@@ -180,38 +185,49 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Ініціалізувати граф лабіринту
+        /// Init the base graph of the maze. This method uses an abstract method GetDirectedNeighbors(cell) to set
+        /// all neighbors of Cells. It's intended to be called inside the constructor
+        /// of Maze overrides after initializing Cells array.
         /// </summary>
         protected void InitGraph()
         {
             foreach (var cell in Cells) cell.SetNeighbors(GetDirectedNeighbors(cell));
-            CheckIfGraphConnected();
         }
 
+        /// <summary>
+        /// This method should return all neighbors of the cell. It's used inside the method InitGraph to
+        /// set all neighbors of Cells.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// </returns>
         protected abstract MazeCell?[] GetDirectedNeighbors(MazeCell cell);
 
         /// <summary>
-        /// Отримати кількість точок клітинки
+        /// Get the number of points needed to represent the cell
         /// </summary>
         public abstract int GetCellPointsNumber(MazeCell cell);
 
         /// <summary>
-        /// Отримати точки клітинки
+        /// Get a point of the cell
         /// </summary>
-        /// <param name="cell">клітинка, точку якої ми отримуємо</param>
-        /// <param name="pointIndex">індекс точки</param>
-        /// <returns>вектор точки клітинки</returns>
+        /// <param name="cell">cell which point we need to get</param>
+        /// <param name="pointIndex">index of the point</param>
+        /// <returns>point of the cell</returns>
         public abstract float[] GetCellPoint(MazeCell cell, int pointIndex);
 
         /// <summary>
-        /// Отримати точку центру клітинки
+        /// Get a center of the cell.
         /// </summary>
+        /// <returns>
+        /// If isn't overrided, returns a center of a polygon created by points of the cell.
+        /// </returns>
         /// <exception cref="ArgumentNullException" />
         public virtual float[] GetCellCenter(MazeCell cell)
         {
             if (cell is null) throw new ArgumentNullException(nameof(cell), "cell cannot be null");
 
-            // Дефолтний алгоритм знаходження центру багатокутника
+            // Finding a 
             int n = GetCellPointsNumber(cell);
             float[] center = Enumerable.Repeat(0f, Dimensions).ToArray();
             for (int i = 0; i < n; ++i)
@@ -231,14 +247,20 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Отримати розташування стіни
+        /// Get a path that represents a wall.
         /// </summary>
+        /// <param name="wall">edge that represents a wall</param>
         public abstract PathSegment GetWallPosition(MazeEdge wall);
 
-        protected abstract PathSegment GetPath(MazeEdge relation);
+        /// <summary>
+        /// Get a path between two neighboring cells.
+        /// </summary>
+        /// <param name="edge">An edge that represents two neighboring cells</param>
+        /// <returns>A path between two neighboring cells.</returns>
+        protected abstract PathSegment GetPath(MazeEdge edge);
 
         /// <summary>
-        /// Отримати шлях від однієї сусідньої клітинки до іншої
+        /// Get a path between two neighboring cells.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="CellsAreNotNeighborsException" />
@@ -252,20 +274,28 @@ namespace Labyrinthian
             return GetPathBetweenCells(new MazeEdge(from, to));
         }
 
+        /// <summary>
+        /// Get a path that represents two neighboring cells.
+        /// </summary>
+        /// <param name="relation"></param>
+        /// <returns>
+        /// <see cref="Line"/> if isn't overrided
+        /// </returns>
+        /// <exception cref="CellsAreNotNeighborsException"></exception>
         public virtual PathSegment GetPathBetweenCells(MazeEdge relation)
         {
-            if (!MazeCell.AreNeighbors(relation.Cell0, relation.Cell1))
-                throw new CellsAreNotNeighborsException(relation.Cell0, relation.Cell1, "This function designed for getting path only between two neighboring cells");
+            if (!MazeCell.AreNeighbors(relation.Cell1, relation.Cell2))
+                throw new CellsAreNotNeighborsException(relation.Cell1, relation.Cell2, "This method designed for getting path only between two neighboring cells");
 
             float[] start, end;
-            if (!relation.Cell0.IsMazePart)
+            if (!relation.Cell1.IsMazePart)
             {
                 start = GetWallPosition(relation.Inverted).Center;
-                end = GetCellCenter(relation.Cell1);
+                end = GetCellCenter(relation.Cell2);
             }
-            else if (!relation.Cell1.IsMazePart)
+            else if (!relation.Cell2.IsMazePart)
             {
-                start = GetCellCenter(relation.Cell0);
+                start = GetCellCenter(relation.Cell1);
                 end = GetWallPosition(relation).Center;
             }
             else
@@ -280,20 +310,45 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Перенести точку на площину(для SVG конвертації)
+        /// Transform a maze point into 2D plane
         /// </summary>
-        /// <param name="position"></param>
+        /// <param name="position">A maze point</param>
         public abstract Vector2 PositionTo2DPoint(float[] position);
 
         /// <summary>
-        /// Конвертувати клітинку в svg
+        /// Convert a cell into svg-string
         /// </summary>
-        /// <param name="cell">клітинка, яку потрібно конвертувати</param>
-        /// <param name="cellSize">розмір клітинки</param>
-        /// <param name="offset">відступ</param>
-        public abstract string CellToSvg(MazeCell cell, float cellSize, float offset);
+        /// <param name="cell">a cell that will be converted into svg-string</param>
+        /// <param name="cellSize">the size of cell</param>
+        /// <param name="offset">offset from top left corner</param>
+        /// <returns>
+        /// A svg-string that represents the cell. It returns &lt;polygon&gt; if isn't overrided.
+        /// </returns>
+        public virtual string CellToSvgString(MazeCell cell, float cellSize, float offset)
+        {
+            StringBuilder line = new StringBuilder();
+            line.Append("<polygon points=\"");
+            int n = GetCellPointsNumber(cell);
+            for (int i = 0; i < n; ++i)
+            {
+                float[] point = GetCellPoint(cell, i);
+                point[0] = point[0] * cellSize + offset;
+                point[1] = point[1] * cellSize + offset;
+                string x = point[0].ToString(CultureInfo.InvariantCulture);
+                string y = point[1].ToString(CultureInfo.InvariantCulture);
+                line.Append($"{x},{y}");
+                if (i < n - 1) line.Append(" ");
+            }
+            line.Append("\"/>");
 
-        public override string ToString()
+            return line.ToString();
+        }
+
+        /// <summary>
+        /// Get maze description
+        /// </summary>
+        /// <returns>Maze.Description</returns>
+        public sealed override string ToString()
         {
             return Description;
         }

@@ -43,13 +43,13 @@ namespace Labyrinthian
             Queue<List<MazeCell>> bfsQueue = new Queue<List<MazeCell>>(1);
             MarkedCells visited = new MarkedCells(Maze);
 
-            bfsQueue.Enqueue(new List<MazeCell>() { Entry.Cell0 });
+            bfsQueue.Enqueue(new List<MazeCell>() { Entry.Cell1 });
 
             while (bfsQueue.Count > 0)
             {
                 List<MazeCell> currentPath = bfsQueue.Dequeue();
                 MazeCell currentCell = currentPath[^1];
-                if (currentCell == Exit.Cell0)
+                if (currentCell == Exit.Cell1)
                 {
                     return _path = currentPath.ToArray();
                 }
@@ -73,14 +73,14 @@ namespace Labyrinthian
 
         public IEnumerable<PathSegment> GetSegments()
         {
-            MazeCell previousCell = Entry.Cell0;
-            if (!Entry.Cell1.IsMazePart)
+            MazeCell previousCell = Entry.Cell1;
+            if (!Entry.Cell2.IsMazePart)
             {
-                yield return Maze.GetPathBetweenCells(Entry.Cell1, Entry.Cell0);
+                yield return Maze.GetPathBetweenCells(Entry.Cell2, Entry.Cell1);
             }
             else
             {
-                yield return Maze.GetPathBetweenCells(Entry.Cell0, Entry.Cell1);
+                yield return Maze.GetPathBetweenCells(Entry.Cell1, Entry.Cell2);
             }
 
             var path = Path;
@@ -89,7 +89,7 @@ namespace Labyrinthian
                 yield return Maze.GetPathBetweenCells(previousCell, path[i]);
                 previousCell = path[i];
             }
-            yield return Maze.GetPathBetweenCells(Exit.Cell0, Exit.Cell1);
+            yield return Maze.GetPathBetweenCells(Exit.Cell1, Exit.Cell2);
         }
 
         public void Recalculate()

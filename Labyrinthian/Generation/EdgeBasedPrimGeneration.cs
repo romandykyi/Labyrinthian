@@ -32,7 +32,7 @@ namespace Labyrinthian
                 // Pick a random wall from the list.
                 int currentWallIndex = Rnd.Next(0, walls.Count);
                 MazeEdge currentWall = walls[currentWallIndex];
-                MazeCell cell0 = currentWall.Cell0, cell1 = currentWall.Cell1;
+                MazeCell cell0 = currentWall.Cell1, cell1 = currentWall.Cell2;
 
                 // If only one of the cells that the wall divides is visited
                 if (!VisitedCells[cell1])

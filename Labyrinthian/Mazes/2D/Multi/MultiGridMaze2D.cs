@@ -88,7 +88,7 @@ namespace Labyrinthian
             {
                 cell = CellsGrids[layer][row, column];
             }
-            return cell ?? MazeCell.CreateEdgeCell(neighbor, direction);
+            return cell ?? MazeCell.CreateOuterCell(neighbor, direction);
         }
     }
 }

@@ -76,7 +76,7 @@ namespace Labyrinthian
             {
                 cell = CellsGrid[row, column];
             }
-            return cell ?? MazeCell.CreateEdgeCell(neighbor, direction);
+            return cell ?? MazeCell.CreateOuterCell(neighbor, direction);
         }
 
         public MazeCell? this[int row, int column] => CellsGrid[row, column];

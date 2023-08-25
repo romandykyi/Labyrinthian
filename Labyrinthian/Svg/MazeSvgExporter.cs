@@ -261,7 +261,7 @@ namespace Labyrinthian
             _writer.Write($"fill=\"{fillStr}\">");
             foreach (MazeCell cell in cells)
             {
-                string line = _maze.CellToSvg(cell, _cellSize, _offset);
+                string line = _maze.CellToSvgString(cell, _cellSize, _offset);
                 _writer.Write(line);
             }
             _writer.Write("</g>");
@@ -416,7 +416,7 @@ namespace Labyrinthian
             float strokeWidth = DefaultStrokeWidth, string? gID = null)
         {
             DrawMazeGraphEdges(strokeFill, 
-                edge => _maze.AreCellsConnected(edge.Cell0, edge.Cell1), 
+                edge => _maze.AreCellsConnected(edge.Cell1, edge.Cell2), 
                 includeExits, strokeWidth, gID);
         }
 

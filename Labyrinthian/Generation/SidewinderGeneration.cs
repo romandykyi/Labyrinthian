@@ -23,9 +23,9 @@ namespace Labyrinthian
             {
                 SelectedCell = cell;
                 VisitedCells[cell] = true;
-                if (!MazeCell.IsNotNullAndMazePart(cell.DirectedNeighbors[3]))
+                if (!cell.DirectedNeighbors[3].IsNotNullAndMazePart())
                 {
-                    if (MazeCell.IsNotNullAndMazePart(cell.DirectedNeighbors[0]))
+                    if (cell.DirectedNeighbors[0].IsNotNullAndMazePart())
                     {
                         Maze.ConnectCells(cell, cell.DirectedNeighbors[0]!);
                     }
@@ -37,7 +37,7 @@ namespace Labyrinthian
                 if (cells.Count > 0) Maze.ConnectCells(cell, cells[^1]);
                 cells.Add(cell);
 
-                if (!MazeCell.IsNotNullAndMazePart(cell.DirectedNeighbors[0]) ||
+                if (!cell.DirectedNeighbors[0].IsNotNullAndMazePart() ||
                     (float)Rnd.NextDouble() < m_horizontalCarveProbability)
                 {
                     MazeCell rndCell = cells[Rnd.Next(0, cells.Count)];

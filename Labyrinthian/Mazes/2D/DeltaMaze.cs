@@ -1,6 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Numerics;
 
 namespace Labyrinthian
 {
@@ -35,7 +33,7 @@ namespace Labyrinthian
 
         protected override (int, int) GetWallPointsIndices(MazeEdge wall)
         {
-            var point = CellsCoordinates[wall.Cell0.Index];
+            var point = CellsCoordinates[wall.Cell1.Index];
 
             if ((point.Column + point.Row) % 2 == _reminder)
             {

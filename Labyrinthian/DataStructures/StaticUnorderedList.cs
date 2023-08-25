@@ -5,19 +5,19 @@ using System.Collections.Generic;
 namespace Labyrinthian
 {
     /// <summary>
-    /// Список зі швидким часом
-    /// доступу по індексу, видалення і додавання
+    /// A list with fast access time by index, supporting fast removal(by index) and addition without
+    /// saving the order of elements. Capacity cannot be changed.
     /// </summary>
     public sealed class StaticUnorderedList<T> : IList<T>
     {
         private readonly T[] _arr;
 
         /// <summary>
-        /// Кількість доступних елементів
+        /// The number of available elements.
         /// </summary>
         public int Count { get; private set; }
         /// <summary>
-        /// Максимальна кількість доступних елементів
+        /// The maximum number of available elements(cannot be changed).
         /// </summary>
         public readonly int Capacity;
 
@@ -30,11 +30,11 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Знайти індекс певного елементу.
-        /// O(N) операція
+        /// Find the index of a specific element.
+        /// An O(N) operation.
         /// </summary>
-        /// <param name="item">елемент, який шукаємо</param>
-        /// <returns>індекс елементу item, або -1 якщо елементу не знайдено</returns>
+        /// <param name="item">The element to search for.</param>
+        /// <returns>The index of the 'item' element, or -1 if not found.</returns>
         public int IndexOf(T item)
         {
             for (int i = 0; i < Count; ++i)
@@ -48,11 +48,11 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Вставити елемент на певний індекс.
-        /// O(1) операція, попередній елемент по заданому індексу йде в кінець
+        /// Insert an element at a specific index.
+        /// An O(1) operation; the previous element at the given index moves to the end.
         /// </summary>
-        /// <param name="index">індекс, куди треба вставити елемент</param>
-        /// <param name="item">елемент, який треба вставити</param>
+        /// <param name="index">The index where the element should be inserted.</param>
+        /// <param name="item">The element to insert.</param>
         /// <exception cref="IndexOutOfRangeException" />
         public void Insert(int index, T item)
         {
@@ -64,11 +64,11 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Видалити елемент зі списку.
-        /// O(N) операція
+        /// Remove an element from the list.
+        /// An O(N) operation.
         /// </summary>
-        /// <param name="item">елемент</param>
-        /// <returns>true - елемент видалено, false - елементу не існує</returns>
+        /// <param name="item">The element to remove.</param>
+        /// <returns>True if the element was removed, false if the element does not exist.</returns>
         public bool Remove(T item)
         {
             int index = IndexOf(item);
@@ -79,10 +79,11 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Видалити елемент по заданому індексу. Після операції останній елемент списку стає на місце видаленого.
-        /// O(1) операція
+        /// Remove an element at the specified index. After the operation, the last element 
+        /// of the list moves to the position of the removed element.
+        /// An O(1) operation.
         /// </summary>
-        /// <param name="index">індекс елементу, який потрібно видалити</param>
+        /// <param name="index">The index of the element to remove.</param>
         public void RemoveAt(int index)
         {
             this[index] = this[^1];
@@ -92,10 +93,10 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Додати елемент в кінець.
-        /// O(1) операція
+        /// Add an element to the end.
+        /// An O(1) operation.
         /// </summary>
-        /// <param name="item">елемент, який потрібно додати</param>
+        /// <param name="item">The element to add.</param>
         /// <exception cref="IndexOutOfRangeException" />
         public void Add(T item)
         {
@@ -106,10 +107,10 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Отримати елемент зі списку та видалити його
+        /// Get an element from the list and remove it.
         /// </summary>
-        /// <param name="index">індекс елементу</param>
-        /// <returns>елемент по заданому індексу</returns>
+        /// <param name="index">The index of the element.</param>
+        /// <returns>The element at the specified index.</returns>
         public T Pop(int index)
         {
             T result = this[index];
@@ -119,7 +120,7 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Очистити список
+        /// Clear the list.
         /// </summary>
         public void Clear()
         {
@@ -132,20 +133,20 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Перевірити наявність елементу в списку
+        /// Check if an element exists in the list.
         /// </summary>
-        /// <param name="item">елемент, наявність якого потрібно перевірити</param>
-        /// <returns>true якщо елемент існує, інакше false</returns>
+        /// <param name="item">The element to check for existence.</param>
+        /// <returns>True if the element exists, otherwise false.</returns>
         public bool Contains(T item)
         {
             return IndexOf(item) != -1;
         }
 
         /// <summary>
-        /// Копіювати список в масив
+        /// Copy the list to an array.
         /// </summary>
-        /// <param name="array">масив, в який потрібно скопіювати список</param>
-        /// <param name="arrayIndex">початковий індекс масиву</param>
+        /// <param name="array">The array to copy the list into.</param>
+        /// <param name="arrayIndex">The starting index in the array.</param>
         public void CopyTo(T[] array, int arrayIndex)
         {
             Array.Copy(_arr, 0, array, arrayIndex, Count);

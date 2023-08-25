@@ -47,8 +47,8 @@ namespace Labyrinthian
 
                 MazeCell? up = _maze[row, i],
                     down = _maze[row + 1, i];
-                if (MazeCell.IsNotNullAndMazePart(up) &&
-                    MazeCell.IsNotNullAndMazePart(down))
+                if (up.IsNotNullAndMazePart() &&
+                    up.IsNotNullAndMazePart())
                 {
                     _maze.BlockCells(up!, down!);
                 }
@@ -64,8 +64,8 @@ namespace Labyrinthian
 
                 MazeCell? left = _maze[i, column],
                     right = _maze[i, column + 1];
-                if (MazeCell.IsNotNullAndMazePart(left) &&
-                    MazeCell.IsNotNullAndMazePart(right))
+                if (left.IsNotNullAndMazePart() &&
+                    right.IsNotNullAndMazePart())
                 {
                     _maze.BlockCells(left!, right!);
                 }

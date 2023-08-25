@@ -3,32 +3,32 @@ using System;
 namespace Labyrinthian
 {
     /// <summary>
-    /// Структура для зберігання інформації про дві з'єднані клітинки
+    /// Struct that represents an edge of passages graph of a maze.
     /// </summary>
     public readonly struct MazeEdge : IEquatable<MazeEdge>
     {
-        public readonly MazeCell Cell0;
         public readonly MazeCell Cell1;
+        public readonly MazeCell Cell2;
 
         /// <summary>
-        /// Напрямок другої клітинки відносно першої
+        /// Direction from the first cell to the second cell
         /// </summary>
-        public int Direction => Cell0.IsMazePart ?
-            Array.IndexOf(Cell0.DirectedNeighbors, Cell1): -Cell0.Index - 1;
+        public int Direction => Cell1.IsMazePart ?
+            Array.IndexOf(Cell1.DirectedNeighbors, Cell2): -Cell1.Index - 1;
 
         /// <summary>
-        /// Інвертоване відношення
+        /// Inverted edge
         /// </summary>
-        public MazeEdge Inverted => new MazeEdge(Cell1, Cell0);
+        public MazeEdge Inverted => new MazeEdge(Cell2, Cell1);
 
         public MazeEdge(MazeCell cell0, MazeCell cell1) : this()
         {
-            Cell0 = cell0;
-            Cell1 = cell1;
+            Cell1 = cell0;
+            Cell2 = cell1;
         }
         
         /// <summary>
-        /// Створити структуру, в якій Cell0.index &lt; Cell1.index
+        /// Create an edge where Cell0.index &lt; Cell1.index
         /// </summary>
         public static MazeEdge GetMinMax(MazeCell cell0, MazeCell cell1)
         {
@@ -47,14 +47,21 @@ namespace Labyrinthian
             return obj is MazeEdge relation && Equals(relation);
         }
 
+        /// <summary>
+        /// Two edges are equal if their nodes are equal and have the same order
+        /// </summary>
+        /// <returns>
+        /// <see langword="true" /> if both edges have equal nodes that have the same order;
+        /// <see langword="false" /> otherwise
+        /// </returns>
         public bool Equals(MazeEdge other)
         {
-            return Cell0 == other.Cell0 && Cell1 == other.Cell1;
+            return Cell1 == other.Cell1 && Cell2 == other.Cell2;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Cell0, Cell1);
+            return HashCode.Combine(Cell1, Cell2);
         }
 
         public static bool operator ==(MazeEdge left, MazeEdge right)

@@ -1,44 +1,73 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Representation of a maze cell used by <see cref="Maze"/>. Cell can be either a part of the maze or an outer cell
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// A part of the maze is a cell that is exists inside the maze. Between these cells can exist passages or walls.
+    /// </para>
+    /// <para>
+    /// An outer cell is a cell that is used only for represantaion of entries/exits. 
+    /// When the cell is outer then its <see cref="Index"/> is negative, <see cref="DirectedNeighbors"/> is null
+    /// and it has only one neighbor. Direction to this neighbor can be calculated using this formula:
+    /// <br />
+    /// <code>-<see cref="Index"/> - 1</code>
+    /// </para>
+    /// </remarks>
     public sealed class MazeCell : IEquatable<MazeCell>
     {
         /// <summary>
-        /// Індекс клітинки в масиві
-        /// (якщо від'ємний, то ця клітинка знаходиться поза лабіринтом,
-        /// (-index - 1) тоді це напрямок, в якому знаходиться сусід)
+        /// If positive, it's an index of the cell in <see cref="Maze.Cells"/>;
+        /// if negative then this cell is outer.
         /// </summary>
         public readonly int Index;
         /// <summary>
-        /// Всі сусіди, які знаходяться в межах лабіринту
+        /// All neighbors from <see cref="DirectedNeighbors"/> that are parts of the maze and not null
         /// </summary>
         public MazeCell[] Neighbors { get; private set; } = null!;
         /// <summary>
-        /// Всі сусіди(навіть не в межах лабіринту), розподілені по напрямкам:
-        /// парний напрямок(починаючи від 0) - основний, непарний - протилежний до
-        /// основного. Тут сусіди можуть бути null, якщо цього напрямку для даної клітинки не існує.
-        /// Сама властивість є null, якщо клітинка не є частиною лабіринту, тому властивість не повинна
-        /// використовуватися для крайніх клітинок
+        /// An array, whose indices mean directions(e.g. for <see cref="OrthogonalMaze"/> it's 0-right, 1-left, 2-down, 3-up).
+        /// <see langword="null"/> in the array means, that the direction doesn't exist for this cell.
+        /// The array can contain outer cells.
         /// </summary>
+        /// <remarks>
+        /// This array is <see langword="null"/> when the cell is outer.
+        /// </remarks>
         public MazeCell?[] DirectedNeighbors { get; private set; } = null!;
 
+        /// <summary>
+        /// <see langword="true"/> if this cell is a maze part;
+        /// <see langword="false"/> if this cell is outer.
+        /// </summary>
         public bool IsMazePart => Index >= 0;
 
+        /// <summary>
+        /// Create a maze cell.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Use <see cref="SetNeighbors(MazeCell?[])"/> after to set its neighbors.
+        /// </para>
+        /// <para>
+        /// For creating outer cells use <see cref="CreateOuterCell(MazeCell, int)"/>.
+        /// </para>
+        /// </remarks>
+        /// <param name="index">index of the cell</param>
         public MazeCell(int index)
         {
             Index = index;
         }
 
         /// <summary>
-        /// Створити клітинку поза межами лабіринту
-        /// (вони потрібні для того, щоб можна було легко відобразити крайні стіни)
+        /// Create an outer cell
         /// </summary>
-        /// <param name="neighbor">сусід клітинки</param>
-        /// <param name="direction">напрямок до сусіда</param>
-        public static MazeCell CreateEdgeCell(MazeCell neighbor, int direction)
+        /// <param name="neighbor">single neighbor of the cell</param>
+        /// <param name="direction">direction from this cell to the neighbor</param>
+        public static MazeCell CreateOuterCell(MazeCell neighbor, int direction)
         {
             return new MazeCell(-direction - 1)
             {
@@ -48,74 +77,18 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Задати сусідів клітинці
+        /// Set directed neighbors to the cell.
         /// </summary>
+        /// <exception cref="CellIsOuterException"/>
         public void SetNeighbors(params MazeCell?[] directedNeighbors)
         {
+            if (!IsMazePart) throw new CellIsOuterException();
+
             DirectedNeighbors = directedNeighbors;
 
             Neighbors = (from neighbor in directedNeighbors
-                        where neighbor != null && neighbor.Index >= 0
-                        select neighbor).ToArray();
-        }
-
-        private List<MazeCell> FindNeighbors(MazeCell?[] neighbors, Predicate<MazeCell> predicate)
-        {
-            List<MazeCell> result = new List<MazeCell>();
-            foreach (MazeCell? neighbor in neighbors)
-            {
-                if (neighbor != null && predicate(neighbor)) result.Add(neighbor);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Знайти сусідів клітинки, які задовільняють умову
-        /// </summary>
-        /// <param name="predicate">предикат який вирішує, чи вибирати клітинку</param>
-        public List<MazeCell> FindNeighbors(Predicate<MazeCell> predicate)
-        {
-            return FindNeighbors(Neighbors, predicate);
-        }
-
-        /// <summary>
-        /// Знайти сусідів клітинки(клітинки поза лабіринтом рахуються), які задовільняють умову
-        /// </summary>
-        /// <param name="predicate">предикат який вирішує, чи вибирати клітинку</param>
-        public List<MazeCell> FindAllNeighbors(Predicate<MazeCell> predicate)
-        {
-            return FindNeighbors(DirectedNeighbors, predicate);
-        }
-
-        /// <summary>
-        /// Знайти сусідів клітинки, які задовільняють умову
-        /// </summary>
-        /// <param name="predicate">предикат який вирішує, чи вибирати клітинку</param>
-        /// <param name="includeBorders">чи треба брати крайні стінки</param>
-        public List<MazeCell> FindNeighbors(Predicate<MazeCell> predicate, bool includeBorders)
-        {
-            return FindNeighbors(includeBorders ? DirectedNeighbors : Neighbors, predicate);
-        }
-
-        /// <summary>
-        /// Знайти сусіда, який виконує задану умову(null, якщо умова не виконана)
-        /// </summary>
-        public MazeCell? FindNeighbor(Predicate<MazeCell> predicate)
-        {
-            foreach (var neighbor in Neighbors)
-            {
-                if (predicate(neighbor)) return neighbor;
-            }
-            return null;
-        }
-        /// <summary>
-        /// Спробувати знайти сусіда, який виконує задану умову
-        /// </summary>
-        public bool TryFindNeighbor(Predicate<MazeCell> predicate, out MazeCell neighbor)
-        {
-            neighbor = FindNeighbor(predicate)!;
-            return neighbor != null;
+                         where neighbor != null && neighbor.Index >= 0
+                         select neighbor).ToArray();
         }
 
         public override bool Equals(object? obj)
@@ -123,6 +96,11 @@ namespace Labyrinthian
             return Equals(obj as MazeCell);
         }
 
+        /// <summary>
+        /// Compare cells by reference
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>true, if both cells are equal by reference</returns>
         public bool Equals(MazeCell? other)
         {
             if (other is null)
@@ -130,24 +108,14 @@ namespace Labyrinthian
                 return false;
             }
 
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (GetType() != other.GetType())
-            {
-                return false;
-            }
-
-            // Equality is based on Index
-            return Index == other.Index;
+            return ReferenceEquals(this, other);
         }
 
         public override int GetHashCode()
         {
             return HashCode.Combine(Index);
         }
+
         public static bool operator ==(MazeCell? left, MazeCell? right)
         {
             if (left is null)
@@ -166,14 +134,13 @@ namespace Labyrinthian
             return !(left == right);
         }
 
-        public static bool IsNotNullAndMazePart(MazeCell? cell)
-        {
-            return cell != null && cell.IsMazePart;
-        }
-
         /// <summary>
-        /// Перевірити, чи клітинки є сусідами
+        /// Check whether two cells are neighbors(order of the arguments doesn't mater).
         /// </summary>
+        /// <returns>
+        /// <see langword="true"/> if two cells are neighbors;
+        /// <see langword="false"/> if two cells are not neighbors
+        /// </returns>
         public static bool AreNeighbors(MazeCell cell1, MazeCell cell2)
         {
             if (cell1.IsMazePart) return cell1.DirectedNeighbors.Contains(cell2);

@@ -24,8 +24,8 @@ namespace Labyrinthian
 
             foreach (var wall in walls)
             {
-                MazeCell cell0 = wall.Cell0,
-                    cell1 = wall.Cell1;
+                MazeCell cell0 = wall.Cell1,
+                    cell1 = wall.Cell2;
                 if (set.Find(cell0) != set.Find(cell1))
                 {
                     // Remove the current wall

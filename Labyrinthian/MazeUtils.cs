@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Labyrinthian
 {
     public static class MazeUtils
     {
         /// <summary>
-        /// З'єднати всі сусідні клітинки між собою(лабіринт не буде мати стін)
+        /// Connect all cells in the maze.
+        /// There will be no walls in the maze after calling this method(not including outer walls)
         /// </summary>
         public static void ConnectAllCells(this Maze maze)
         {
@@ -22,7 +22,7 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Отримати всі стіни клітинки(в межах лабіринту)
+        /// Get all walls of the given cell
         /// </summary>
         /// <exception cref="ArgumentNullException" />
         public static MazeEdge[] GetWallsOfCell(this Maze maze, MazeCell cell)
@@ -42,13 +42,22 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Знайти всі стіни
+        /// Get all walls.
         /// </summary>
-        public static IEnumerable<MazeEdge> GetWalls(this Maze maze, bool includeBorders = true)
+        /// <param name="maze"></param>
+        /// <param name="includeOuter">
+        /// if <see langword="true"/> outer walls will be also returned;
+        /// otherwise if <see langword="false"/> only inner walls will be returned.
+        /// </param>
+        /// <returns>
+        /// inner and outer walls if <paramref name="includeOuter"/> is <see langword="true"/>;
+        /// only inner walls if <paramref name="includeOuter"/> is <see langword="false"/>.
+        /// </returns>
+        public static IEnumerable<MazeEdge> GetWalls(this Maze maze, bool includeOuter = true)
         {
             // Входи, які не треба малювати
             HashSet<MazeEdge> entries;
-            if (includeBorders)
+            if (includeOuter)
             {
                 entries = new HashSet<MazeEdge>(maze.Paths.Count * 2);
                 foreach (MazePath path in maze.Paths)
@@ -65,7 +74,7 @@ namespace Labyrinthian
             foreach (MazeCell cell in maze.Cells)
             {
                 var blockedNeighbors =
-                    cell.FindNeighbors(c => !maze.AreCellsConnected(c, cell), includeBorders);
+                    cell.FindNeighbors(c => !maze.AreCellsConnected(c, cell), includeOuter);
                 foreach (MazeCell neighbor in blockedNeighbors)
                 {
                     if (cell.Index < neighbor.Index || !neighbor.IsMazePart)
@@ -79,15 +88,15 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Знайти всі крайні стіни
+        /// Get all outer walls.
         /// </summary>
-        public static IEnumerable<MazeEdge> GetEdgeWalls(this Maze maze)
+        /// <returns>
+        /// Outer walls of the maze.
+        /// </returns>
+        public static IEnumerable<MazeEdge> GetOuterWalls(this Maze maze)
         {
             foreach (var cell in maze.Cells)
             {
-                // maze.Cells should contain only cells that are maze parts
-                // so cell.DirectedNeighbors should not be null here with correct
-                // implementation of Maze class
                 foreach (var neighbor in cell.DirectedNeighbors)
                 {
                     if (neighbor != null && !neighbor.IsMazePart)
@@ -97,8 +106,11 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Знайти усі глухі кути
+        /// Find all dead ends.
         /// </summary>
+        /// <returns>
+        /// All dead ends.
+        /// </returns>
         public static IEnumerable<MazeCell> FindDeadEnds(this Maze maze)
         {
             return from cell in maze.Cells
@@ -108,9 +120,12 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Знайти усі ребра лабіринту(пошук по масиву клітинок)
+        /// Get all base graph maze edges.
         /// </summary>
-        public static IEnumerable<MazeEdge> GetGraphEdges(this Maze maze)
+        /// <returns>
+        /// All base graph edges.
+        /// </returns>
+        public static IEnumerable<MazeEdge> GetBaseGraphEdges(this Maze maze)
         {
             foreach (MazeCell cell in maze.Cells)
             {
@@ -125,9 +140,10 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Знайти ребра лабіринту(використовуючи DFS)
+        /// Find all edges of maze using DFS
         /// </summary>
         /// <param name="maze"></param>
+        /// <param name="predicate">predicate which determines whether we should include an edge into DFS or ignore it</param>
         public static IEnumerable<MazeEdge> GetGraphEdgesDFS(this Maze maze, Predicate<MazeEdge> predicate)
         {
             Stack<MazeEdge> dfsStack = new Stack<MazeEdge>();
@@ -155,7 +171,7 @@ namespace Labyrinthian
                 else
                 {
                     MazeEdge currentEdge = dfsStack.Pop();
-                    currentCell = currentEdge.Cell1;
+                    currentCell = currentEdge.Cell2;
 
                     yield return currentEdge;
                 }
@@ -172,6 +188,35 @@ namespace Labyrinthian
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Check if base graph of maze is connected.
+        /// </summary>
+        /// <returns>
+        /// <see langword="true"/> if base graph is connected; <see langword="false" /> otherwise.
+        /// </returns>
+        public static bool CheckIfGraphConnected(this Maze maze)
+        {
+            int k = 0;
+            MarkedCells visited = new MarkedCells(maze);
+            Stack<MazeCell> dfsStack = new Stack<MazeCell>(1);
+            dfsStack.Push(maze.Cells[0]);
+
+            while (dfsStack.Count > 0)
+            {
+                MazeCell current = dfsStack.Pop();
+
+                if (visited[current]) continue;
+                visited[current] = true;
+                foreach (var neighbor in current.Neighbors)
+                {
+                    dfsStack.Push(neighbor);
+                }
+                k++;
+            }
+
+            return k == maze.Cells.Length;
         }
     }
 }
