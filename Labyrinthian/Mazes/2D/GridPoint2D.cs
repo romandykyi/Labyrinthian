@@ -2,6 +2,9 @@ using System;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Struct to represent a point that each cell of <see cref="GridMaze2D"/> has.
+    /// </summary>
     public readonly struct GridPoint2D : IEquatable<GridPoint2D>
     {
         public readonly int Row;
