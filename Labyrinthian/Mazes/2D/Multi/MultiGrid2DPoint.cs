@@ -3,7 +3,7 @@ using System;
 namespace Labyrinthian
 {
     /// <summary>
-    /// Struct to represent a point that each cell of <see cref="MultiGridPoint2D"/> has.
+    /// Struct to represent a point that each cell of <see cref="MultiGridMaze2D"/> has.
     /// </summary>
     public readonly struct MultiGridPoint2D : IEquatable<MultiGridPoint2D>
     {
