@@ -27,10 +27,10 @@ namespace Labyrinthian
         public readonly int Columns;
 
         /// <summary>
-        /// Create a delta maze.
+        /// Create a grid-based maze.
         /// </summary>
-        /// <param name="width">Number of columns.</param>
-        /// <param name="height">Number of rows.</param>
+        /// <param name="width">Number of columns. Should be greater than 1.</param>
+        /// <param name="height">Number of rows. Should be greater than 1.</param>
         /// <param name="p">Predicate that's used to determine whether we should include the cell.</param>
         /// <exception cref="ArgumentOutOfRangeException" />
         protected GridMaze2D(int width, int height, Predicate<GridPoint2D> p) : base()
