@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -214,6 +213,7 @@ namespace Labyrinthian
         /// <param name="cell">cell which point we need to get</param>
         /// <param name="pointIndex">index of the point</param>
         /// <returns>point of the cell</returns>
+        /// <exception cref="ArgumentOutOfRangeException" />
         public abstract float[] GetCellPoint(MazeCell cell, int pointIndex);
 
         /// <summary>

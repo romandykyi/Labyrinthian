@@ -10,13 +10,17 @@ namespace Labyrinthian
         public sealed override int Dimensions => 2;
 
         /// <summary>
-        /// Отримати номери точок стіни
+        /// Get indices of points of the first node in the edge '<paramref name="wall"/>'
+        /// that will be used for drawing a wall.
         /// </summary>
         protected abstract (int, int) GetWallPointsIndices(MazeEdge wall);
 
         /// <summary>
-        /// Створити лінійну стіну на основі двох точок
+        /// Make a line wall based on two points of the first node of the edge '<paramref name="wall"/>'.
         /// </summary>
+        /// <param name="wall">Wall that needs to be represented as a line.</param>
+        /// <param name="point1">First point index</param>
+        /// <param name="point2">Second point index</param>
         protected Line MakeLineWall(MazeEdge wall, int point1, int point2)
         {
             float[] p1 = GetCellPoint(wall.Cell1, point1);
