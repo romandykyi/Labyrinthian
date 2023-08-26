@@ -3,38 +3,37 @@ using System;
 namespace Labyrinthian
 {
     /// <summary>
-    /// Двовимірний лабіринт, представлений сіткою з квадратів
+    /// 2-dimensional Maze that consists of Squares.
     /// </summary>
     public sealed class OrthogonalMaze : GridMaze2D
     {
-        protected override MazeCell[] GetDirectedNeighbors(MazeCell cell, int row, int col)
-        {
-            return new MazeCell[4]
-                {
-                    GetCell(row, col + 1, cell, 1),
-                    GetCell(row, col - 1, cell, 0),
-                    GetCell(row + 1, col, cell, 3),
-                    GetCell(row - 1, col, cell, 2)
-                };
-        }
-
-        protected override (int, int) GetWallPointsIndices(MazeEdge wall)
-        {
-            return wall.Direction switch
-            {
-                0 => (1, 2),
-                1 => (3, 0),
-                2 => (2, 3),
-                3 => (0, 1),
-                _ => throw new InvalidWallDirectionException()
-            };
-        }
-
+        /// <summary>
+        /// Create a custom orthogonal maze.
+        /// </summary>
+        /// <param name="width">Number of columns. Should be greater than 1.</param>
+        /// <param name="height">Number of rows. Should be greater than 1.</param>
+        /// <param name="p">Predicate that's used to determine whether we should include the cell.</param>
+        /// <exception cref="ArgumentOutOfRangeException" />
         public OrthogonalMaze(int width, int height, Predicate<GridPoint2D> p) : base(width, height, p)
         {
             InitGraph();
             Description = $"Custom Orthogonal maze {Columns}x{Rows}";
         }
+
+        /// <summary>
+        /// Create an orthogonal maze with inner rectangular room.
+        /// </summary>
+        /// <param name="width">Number of columns. Should be greater than 1.</param>
+        /// <param name="height">Number of rows. Should be greater than 1.</param>
+        /// <param name="inWidth">
+        /// Number of columns of the inner rectangle. Should be positive and not greater than
+        /// <c><paramref name="width"/> - 2</c>
+        /// </param>
+        /// <param name="inHeight">
+        /// Number of rows of the inner rectangle. Should be positive and not greater than
+        /// <c><paramref name="height"/> - 2</c>
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException" />
         public OrthogonalMaze(int width, int height, int inWidth = 0, int inHeight = 0) :
             this(width, height, RectangularPattern(width, height, inWidth, inHeight))
         {
@@ -53,22 +52,46 @@ namespace Labyrinthian
 
             return pointIndex switch
             {
-                0 => new float[2] { point.Column, point.Row },
-                1 => new float[2] { point.Column + 1f, point.Row },
-                2 => new float[2] { point.Column + 1f, point.Row + 1f },
-                3 => new float[2] { point.Column, point.Row + 1f },
+                0 => new float[2] { point.Column, point.Row }, // Top-left corner
+                1 => new float[2] { point.Column + 1f, point.Row }, // Top-right corner
+                2 => new float[2] { point.Column + 1f, point.Row + 1f }, // Bottom-right corner
+                3 => new float[2] { point.Column, point.Row + 1f }, // Bottom-left corner
                 _ => throw new ArgumentOutOfRangeException(nameof(pointIndex))
             };
         }
 
         public override float[] GetCellCenter(MazeCell cell)
         {
+            // Optimized way of finding a center of the square
             var point = CellsCoordinates[cell.Index];
             return new float[2]
             {
                 point.Column + 0.5f,
                 point.Row + 0.5f
             };
+        }
+
+        protected override (int, int) GetWallPointsIndices(MazeEdge wall)
+        {
+            return wall.Direction switch
+            {
+                0 => (1, 2), // Right wall
+                1 => (3, 0), // Left wall
+                2 => (2, 3), // Down wall
+                3 => (0, 1), // Up wall
+                _ => throw new InvalidWallDirectionException()
+            };
+        }
+
+        protected override MazeCell[] GetDirectedNeighbors(MazeCell cell, int row, int col)
+        {
+            return new MazeCell[4]
+                {
+                    GetCell(row, col + 1, cell, 1), // Right
+                    GetCell(row, col - 1, cell, 0), // Left
+                    GetCell(row + 1, col, cell, 3), // Down
+                    GetCell(row - 1, col, cell, 2)  // Up
+                };
         }
     }
 }
