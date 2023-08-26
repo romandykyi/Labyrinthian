@@ -4,28 +4,52 @@ using System.Collections.Generic;
 namespace Labyrinthian
 {
     /// <summary>
-    /// Двовимірний лабіринт, який можна представити за допомогою сітки
+    /// 2-dimensional maze that can be represented with a single grid.
     /// </summary>
     public abstract class GridMaze2D : Maze2D
     {
         /// <summary>
-        /// Сітка клітинок(null на місцях пропуску)
+        /// Grid of cells(<see langword="null"/> when there's a gap).
         /// </summary>
         protected readonly MazeCell?[,] CellsGrid;
         /// <summary>
-        /// Координати кожної клітинки
+        /// Coordinates of each cell on the grid.
         /// </summary>
         protected readonly GridPoint2D[] CellsCoordinates;
 
-        public readonly int Rows, Columns;
+        /// <summary>
+        /// Number of rows.
+        /// </summary>
+        public readonly int Rows;
+        /// <summary>
+        /// Number of columns.
+        /// </summary>
+        public readonly int Columns;
 
+        /// <summary>
+        /// Create a delta maze.
+        /// </summary>
+        /// <param name="width">Number of columns.</param>
+        /// <param name="height">Number of rows.</param>
+        /// <param name="p">Predicate that's used to determine whether we should include the cell.</param>
+        /// <exception cref="ArgumentOutOfRangeException" />
         protected GridMaze2D(int width, int height, Predicate<GridPoint2D> p) : base()
         {
+            if (width <= 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(width));
+            }
+            if (height <= 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(width));
+            }
+
             List<MazeCell> cells = new List<MazeCell>();
             List<GridPoint2D> cellsCoordinates = new List<GridPoint2D>();
 
             int index = 0;
             CellsGrid = new MazeCell[height, width];
+            // Initialize each cell on the grid
             for (int i = 0; i < height; ++i)
             {
                 for (int j = 0; j < width; ++j)
@@ -58,17 +82,24 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Отримати сусідів клітинки
+        /// Get directed neighbors of the cell.
         /// </summary>
-        protected abstract MazeCell?[] GetDirectedNeighbors(MazeCell cell, int row, int col);
+        /// <param name="cell">Cell, whose neighbors will be returned.</param>
+        /// <param name="row">Row of the cell.</param>
+        /// <param name="column">Column of the cell.</param>
+        /// <returns></returns>
+        protected abstract MazeCell?[] GetDirectedNeighbors(MazeCell cell, int row, int column);
 
         /// <summary>
-        /// Отримати клітинку в межах або створити її поза межами лабіринту
+        /// Get a cell or create a new outer cell and return it.
         /// </summary>
-        /// <param name="row">рядок</param>
-        /// <param name="column">стовпчик</param>
-        /// <param name="neighbor">сусід</param>
-        /// <param name="direction">напрямок до сусіда</param>
+        /// <param name="row">Row of the cell.</param>
+        /// <param name="column">Column of the cell.</param>
+        /// <param name="neighbor">Neighbor of the cell.</param>
+        /// <param name="direction">Direction to the neighbor.</param>
+        /// <returns>
+        /// Cell that's already exists with given coordinates or a new outer cell.
+        /// </returns>
         protected MazeCell GetCell(int row, int column, MazeCell neighbor, int direction)
         {
             MazeCell? cell = null;
@@ -79,17 +110,44 @@ namespace Labyrinthian
             return cell ?? MazeCell.CreateOuterCell(neighbor, direction);
         }
 
+        /// <summary>
+        /// Access a cell from the grid.
+        /// </summary>
         public MazeCell? this[int row, int column] => CellsGrid[row, column];
 
         /// <summary>
-        /// Предикат лабіринту у вигляді прямокутника з прямокутним отвором
+        /// Predicate for the rectangular pattern with inner rectangular room.
         /// </summary>
-        /// <param name="width">довжина головного прямокутника</param>
-        /// <param name="height">висота головного прямокутника</param>
-        /// <param name="inWidth">довжина внутрішнього прямокутника</param>
-        /// <param name="inHeight">висота внутрішньго прямокутника</param>
-        public static Predicate<GridPoint2D> RectangularPattern(int width, int height, int inWidth, int inHeight)
+        /// <param name="width">Width of the main rectangle. Should be greater than 1.</param>
+        /// <param name="height">Height of the main rectangle. Should be greater than 1.</param>
+        /// <param name="inWidth">
+        /// Width of the inner rectangle. Should be positive and not greater than
+        /// <c><paramref name="width"/> - 2</c>
+        /// </param>
+        /// <param name="inHeight">
+        /// Height of the inner rectangle. Should be positive and not greater than
+        /// <c><paramref name="height"/> - 2</c>
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        public static Predicate<GridPoint2D> RectangularPattern(int width, int height, int inWidth = 0, int inHeight = 0)
         {
+            if (width <= 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(width));
+            }
+            if (height <= 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(width));
+            }
+            if (inWidth < 0 || inWidth > width - 2)
+            {
+                throw new ArgumentOutOfRangeException(nameof(inWidth));
+            }
+            if (inHeight < 0 || inHeight > height - 2)
+            {
+                throw new ArgumentOutOfRangeException(nameof(inHeight));
+            }
+
             int m0 = (height - inHeight) / 2;
             int m1 = m0 + inHeight;
             int n0 = (width - inWidth) / 2;
@@ -100,12 +158,25 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Предикат лабіринту у вигляді трикутника з трикутним отвором
+        /// Predicate for the triangular pattern with inner triangular room.
         /// </summary>
-        /// <param name="sideLength">сторона головного трикутника</param>
-        /// <param name="inSideLength">сторона внутрішнього трикутника</param>
-        public static Predicate<GridPoint2D> TriangularPattern(int sideLength, int inSideLength)
+        /// <param name="sideLength">Side length of the triangle. Should be greater than 1.</param>
+        /// <param name="inSideLength">
+        /// Side length of the inner triangle. Should be positive and not greater than 
+        /// <c><paramref name="sideLength"/> - 3</c>
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        public static Predicate<GridPoint2D> TriangularPattern(int sideLength, int inSideLength = 0)
         {
+            if (sideLength <= 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sideLength));
+            }
+            if (inSideLength < 0 || inSideLength > sideLength - 3)
+            {
+                throw new ArgumentOutOfRangeException(nameof(inSideLength));
+            }
+
             int k = sideLength - 1;
             int r = inSideLength - 1;
 
@@ -121,12 +192,25 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Предикат лабіринту у вигляді шестикутника з шестикутним отвором
+        /// Predicate for the hexagonal pattern with inner hexagonal room.
         /// </summary>
-        /// <param name="sideLength">сторона головного шестикутника</param>
-        /// <param name="inSideLength">сторона внутрішнього шестикутника</param>
+        /// <param name="sideLength">Side length of the hexagon. Should be greater than 1.</param>
+        /// <param name="inSideLength">
+        /// Side length of the inner hexagon. Should be positive and not greater than 
+        /// <c><paramref name="sideLength"/> - 1</c>
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public static Predicate<GridPoint2D> HexagonalPattern(int sideLength, int inSideLength)
         {
+            if (sideLength <= 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sideLength));
+            }
+            if (inSideLength < 0 || inSideLength > sideLength - 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(inSideLength));
+            }
+
             int n = 2 * sideLength - 1;
             int m = 2 * inSideLength - 1;
 
@@ -147,10 +231,13 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Предикат лабіринту у вигляді шестикутника з шестикутним отвором на трикутній сітці
+        /// Predicate for the hexagonal pattern with inner hexagonal room on the triangular grid.
         /// </summary>
-        /// <param name="sideLength">сторона головного шестикутника</param>
-        /// <param name="inSideLength">сторона внутрішнього шестикутника</param>
+        /// <param name="sideLength">Side length of the hexagon. Should be greater than 1.</param>
+        /// <param name="inSideLength">
+        /// Side length of the inner hexagon. Should be positive and not greater than 
+        /// <c><paramref name="sideLength"/> - 1</c>
+        /// </param>
         public static Predicate<GridPoint2D> DeltaHexagonalPattern(int sideLength, int inSideLength)
         {
             int r = (sideLength + 1) % 2;
