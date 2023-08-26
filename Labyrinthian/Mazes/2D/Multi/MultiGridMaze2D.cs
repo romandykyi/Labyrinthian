@@ -85,11 +85,6 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Access a cell from the grid.
-        /// </summary>
-        public MazeCell? this[int grid, int row, int column] => CellsGrids[grid][row, column];
-
-        /// <summary>
         /// Get directed neighbors of the cell.
         /// </summary>
         /// <param name="cell">Cell, whose neighbors will be returned.</param>
@@ -127,5 +122,10 @@ namespace Labyrinthian
             }
             return cell ?? MazeCell.CreateOuterCell(neighbor, direction);
         }
+
+        /// <summary>
+        /// Access a cell from the grid.
+        /// </summary>
+        public MazeCell? this[int grid, int row, int column] => CellsGrids[grid][row, column];
     }
 }
