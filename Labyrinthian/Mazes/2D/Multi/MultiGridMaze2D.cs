@@ -4,26 +4,48 @@ using System.Collections.Generic;
 namespace Labyrinthian
 {
     /// <summary>
-    /// Двовимірний лабіринт, який можна представити за допомогою різних сіток які перетинаються
+    /// Maze that can be represented with multiple grids that intersect each others.
     /// </summary>
     public abstract class MultiGridMaze2D : Maze2D
     {
         /// <summary>
-        /// Сітки клітинок(null на місцях пропуску)
+        /// Grids of cells(<see langword="null"/> when there's a gap).
         /// </summary>
         protected readonly MazeCell?[][,] CellsGrids;
         /// <summary>
-        /// Координати кожної клітинки
+        /// Coordinates of each cell.
         /// </summary>
         protected readonly MultiGridPoint2D[] CellsCoordinates;
 
+        /// <summary>
+        /// Main grid rows number.
+        /// </summary>
         public readonly int BaseRows;
+        /// <summary>
+        /// Main grid columns number.
+        /// </summary>
         public readonly int BaseColumns;
-        public abstract int Layers { get; }
+        /// <summary>
+        /// Number of grids.
+        /// </summary>
+        public abstract int GridsNumber { get; }
 
-        protected abstract void GetLayerSizes(int layer, out int rows, out int columns);
+        /// <summary>
+        /// Get sizes of the grid.
+        /// </summary>
+        /// <param name="grid">Index of the grid.</param>
+        /// <param name="rows">Number of rows.</param>
+        /// <param name="columns">Number of columns.</param>
+        /// <exception cref="InvalidGridIndexException" />
+        protected abstract void GetGridSizes(int grid, out int rows, out int columns);
 
-        public MultiGridMaze2D(int baseWidth, int baseHeight, Predicate<MultiGridPoint2D> predicate)
+        /// <summary>
+        /// Create a maze.
+        /// </summary>
+        /// <param name="baseWidth">Width(columns) of the main grid.</param>
+        /// <param name="baseHeight">Height(rows) of the main grid.</param>
+        /// <param name="predicate">Predicate, used to determine whether we need to include the cell or not.</param>
+        public MultiGridMaze2D(int baseWidth, int baseHeight, Predicate<MultiGridPoint2D> predicate) : base()
         {
             BaseRows = baseHeight;
             BaseColumns = baseWidth;
@@ -32,10 +54,11 @@ namespace Labyrinthian
             List<MultiGridPoint2D> cellsCoordinates = new List<MultiGridPoint2D>();
 
             int index = 0;
-            CellsGrids = new MazeCell[Layers][,];
-            for (int k = 0; k < Layers; ++k)
+            CellsGrids = new MazeCell[GridsNumber][,];
+            // Initialize cells for each grid
+            for (int k = 0; k < GridsNumber; ++k)
             {
-                GetLayerSizes(k, out int rows, out int columns);
+                GetGridSizes(k, out int rows, out int columns);
                 CellsGrids[k] = new MazeCell[rows, columns];
                 for (int i = 0; i < rows; ++i)
                 {
@@ -61,32 +84,46 @@ namespace Labyrinthian
             CellsCoordinates = cellsCoordinates.ToArray();
         }
 
-        public MazeCell? this[int layer, int row, int column] => CellsGrids[layer][row, column];
+        /// <summary>
+        /// Access a cell from the grid.
+        /// </summary>
+        public MazeCell? this[int grid, int row, int column] => CellsGrids[grid][row, column];
 
-        protected abstract MazeCell[] GetDirectedNeighbors(MazeCell cell, int layer, int row, int column);
+        /// <summary>
+        /// Get directed neighbors of the cell.
+        /// </summary>
+        /// <param name="cell">Cell, whose neighbors will be returned.</param>
+        /// <param name="grid">Grid of the cell.</param>
+        /// <param name="row">Row of the cell.</param>
+        /// <param name="column">Column of the cell.</param>
+        /// <returns></returns>
+        protected abstract MazeCell[] GetDirectedNeighbors(MazeCell cell, int grid, int row, int column);
 
         protected sealed override MazeCell[] GetDirectedNeighbors(MazeCell cell)
         {
             MultiGridPoint2D point = CellsCoordinates[cell.Index];
-            return GetDirectedNeighbors(cell, point.Layer, point.Row, point.Column);
+            return GetDirectedNeighbors(cell, point.Grid, point.Row, point.Column);
         }
 
         /// <summary>
-        /// Отримати клітинку в межах або створити її поза межами лабіринту
+        /// Get a cell or create a new outer cell and return it.
         /// </summary>
-        /// <param name="layer">шар</param>
-        /// <param name="row">рядок</param>
-        /// <param name="column">стовпчик</param>
-        /// <param name="neighbor">сусід</param>
-        /// <param name="direction">напрямок до сусіда</param>
-        protected MazeCell GetCell(int layer, int row, int column, MazeCell neighbor, int direction)
+        /// <param name="grid">Index of the grid where cell will be created.</param>
+        /// <param name="row">Row of the cell.</param>
+        /// <param name="column">Column of the cell.</param>
+        /// <param name="neighbor">Neighbor of the cell.</param>
+        /// <param name="direction">Direction to the neighbor.</param>
+        /// <returns>
+        /// Cell that's already exists with given coordinates or a new outer cell.
+        /// </returns>
+        protected MazeCell GetCell(int grid, int row, int column, MazeCell neighbor, int direction)
         {
             MazeCell? cell = null;
-            int rows = CellsGrids[layer].GetLength(0);
-            int columns = CellsGrids[layer].GetLength(1);
+            int rows = CellsGrids[grid].GetLength(0);
+            int columns = CellsGrids[grid].GetLength(1);
             if (row >= 0 && row < rows && column >= 0 && column < columns)
             {
-                cell = CellsGrids[layer][row, column];
+                cell = CellsGrids[grid][row, column];
             }
             return cell ?? MazeCell.CreateOuterCell(neighbor, direction);
         }
