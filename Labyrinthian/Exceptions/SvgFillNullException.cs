@@ -13,6 +13,7 @@ namespace Labyrinthian
         /// </summary>
         /// <param name="variableName">Name of the variable which is <see langword="null"/>.</param>
         public SvgFillNullException(string variableName) :
-            base($"{variableName} is null. SvgFill cannot be null, if you want not to fill object please use SvgFill.None instead") { }
+            base($"{variableName} is null. SvgFill cannot be null, if you want not to fill object please use SvgFill.None instead")
+        { }
     }
 }

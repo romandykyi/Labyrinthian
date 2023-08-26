@@ -11,7 +11,7 @@ namespace Labyrinthian
         /// <summary>
         /// Constructor that will generate message based on <paramref name="generator"/> and <paramref name="maze"/>.
         /// </summary>
-        /// <param name="generator">Generator that has thrown this exception(cannot be null).</param>
+        /// <param name="generator">Generator that has thrown this exception(cannot be <see langword="null"/>).</param>
         /// <param name="maze">Maze, which <paramref name="generator"/> doesn't support.</param>
         public MazeTypeIsNotSupportedException(MazeGenerator generator, Maze maze) : this(
             $"\"{generator}\" does not support \"{maze}\""
