@@ -55,7 +55,7 @@ namespace Labyrinthian
         /// </returns>
         public static IEnumerable<MazeEdge> GetWalls(this Maze maze, bool includeOuter = true)
         {
-            // Входи, які не треба малювати
+            // Entries that will not be returned
             HashSet<MazeEdge> entries;
             if (includeOuter)
             {
