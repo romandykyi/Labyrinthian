@@ -13,53 +13,6 @@ namespace Labyrinthian
         // If 0 then the first triangle on the grid will be poining up
         private readonly int _reminder = 0;
 
-        protected override MazeCell?[] GetDirectedNeighbors(MazeCell cell, int row, int col)
-        {
-            MazeCell? down = null, up = null;
-            // Up-pointing triangle
-            if ((row + col) % 2 == _reminder)
-            {
-                down = GetCell(row + 1, col, cell, 3);
-            }
-            // Down-pointing triangle
-            else
-            {
-                up = GetCell(row - 1, col, cell, 2);
-            }
-
-            return new MazeCell?[4]
-            {
-                GetCell(row, col + 1, cell, 1), // right
-                GetCell(row, col - 1, cell, 0), // left
-                down, up
-            };
-        }
-
-        protected override (int, int) GetWallPointsIndices(MazeEdge wall)
-        {
-            var point = CellsCoordinates[wall.Cell1.Index];
-
-            // Up-pointing triangle
-            if ((point.Column + point.Row) % 2 == _reminder)
-            {
-                return wall.Direction switch
-                {
-                    0 => (0, 1),
-                    1 => (2, 0),
-                    2 => (1, 2),
-                    _ => throw new InvalidWallDirectionException()
-                };
-            }
-            // Down-pointing triangle
-            return wall.Direction switch
-            {
-                0 => (1, 2),
-                1 => (2, 0),
-                3 => (0, 1),
-                _ => throw new InvalidWallDirectionException()
-            };
-        }
-
         /// <summary>
         /// Create a custom delta maze.
         /// </summary>
@@ -170,18 +123,26 @@ namespace Labyrinthian
             {
                 return pointIndex switch
                 {
+                    // Top point
                     0 => new float[2] { point.Column / 2f + 0.5f, point.Row * WidthToHeight },
+                    // Bottom-right point
                     1 => new float[2] { point.Column / 2f + 1f, (point.Row + 1f) * WidthToHeight },
+                    // Bottom-left point
                     2 => new float[2] { point.Column / 2f, (point.Row + 1f) * WidthToHeight },
+
                     _ => throw new ArgumentOutOfRangeException(nameof(pointIndex))
                 };
             }
             // Down-pointing triangle
             return pointIndex switch
             {
+                // Top-left point
                 0 => new float[2] { point.Column / 2f, point.Row * WidthToHeight },
+                // Top-right point
                 1 => new float[2] { point.Column / 2f + 1f, point.Row * WidthToHeight },
+                // Bottom point
                 2 => new float[2] { point.Column / 2f + 0.5f, (point.Row + 1f) * WidthToHeight },
+
                 _ => throw new ArgumentOutOfRangeException(nameof(pointIndex))
             };
         }
@@ -196,6 +157,53 @@ namespace Labyrinthian
             {
                 0.5f * point.Column + 0.5f,
                 WidthToHeight * ((point.Row + 1f) * a + point.Row * b) / 3f
+            };
+        }
+
+        protected override (int, int) GetWallPointsIndices(MazeEdge wall)
+        {
+            var point = CellsCoordinates[wall.Cell1.Index];
+
+            // Up-pointing triangle
+            if ((point.Column + point.Row) % 2 == _reminder)
+            {
+                return wall.Direction switch
+                {
+                    0 => (0, 1), // Right wall
+                    1 => (2, 0), // Left wall
+                    2 => (1, 2), // Bottom wall
+                    _ => throw new InvalidWallDirectionException()
+                };
+            }
+            // Down-pointing triangle
+            return wall.Direction switch
+            {
+                0 => (1, 2), // Right wall
+                1 => (2, 0), // Left wall
+                3 => (0, 1), // Top wall
+                _ => throw new InvalidWallDirectionException()
+            };
+        }
+
+        protected override MazeCell?[] GetDirectedNeighbors(MazeCell cell, int row, int col)
+        {
+            MazeCell? down = null, up = null;
+            // Up-pointing triangle
+            if ((row + col) % 2 == _reminder)
+            {
+                down = GetCell(row + 1, col, cell, 3);
+            }
+            // Down-pointing triangle
+            else
+            {
+                up = GetCell(row - 1, col, cell, 2);
+            }
+
+            return new MazeCell?[4]
+            {
+                GetCell(row, col + 1, cell, 1), // right
+                GetCell(row, col - 1, cell, 0), // left
+                down, up
             };
         }
     }
