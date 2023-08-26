@@ -36,7 +36,7 @@ namespace Labyrinthian
             _horizontalBias = horizontalBias;
         }
 
-        public override bool IsSuitableFor(Maze maze) => IsMazeDefaultOrthogonal(maze);
+        protected override bool IsSuitableFor(Maze maze) => IsMazeDefaultOrthogonal(maze);
 
         private void DivideHorizontally(int row, int column, int columns)
         {

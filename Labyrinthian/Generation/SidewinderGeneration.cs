@@ -13,7 +13,7 @@ namespace Labyrinthian
             m_horizontalCarveProbability = horizontalCarveProbability;
         }
 
-        public override bool IsSuitableFor(Maze maze) => IsMazeDefaultOrthogonal(maze);
+        protected override bool IsSuitableFor(Maze maze) => IsMazeDefaultOrthogonal(maze);
 
         protected override IEnumerable<Maze> Generation()
         {

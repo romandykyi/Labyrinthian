@@ -195,11 +195,11 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// This method should return all neighbors of the cell. It's used inside the method InitGraph to
+        /// This method should return all directed neighbors of the cell. It's used inside the method InitGraph to
         /// set all neighbors of Cells.
         /// </summary>
         /// <returns>
-        /// 
+        /// All directed neighbors of the cell.
         /// </returns>
         protected abstract MazeCell?[] GetDirectedNeighbors(MazeCell cell);
 
@@ -225,11 +225,11 @@ namespace Labyrinthian
         /// <exception cref="ArgumentNullException" />
         public virtual float[] GetCellCenter(MazeCell cell)
         {
-            if (cell is null) throw new ArgumentNullException(nameof(cell), "cell cannot be null");
+            if (cell is null) throw new ArgumentNullException(nameof(cell));
 
-            // Finding a 
             int n = GetCellPointsNumber(cell);
-            float[] center = Enumerable.Repeat(0f, Dimensions).ToArray();
+            float[] center = new float[Dimensions];
+            // Sum of all points coordinates
             for (int i = 0; i < n; ++i)
             {
                 float[] point = GetCellPoint(cell, i);
@@ -238,6 +238,7 @@ namespace Labyrinthian
                     center[j] += point[j];
                 }
             }
+            // Average
             for (int i = 0; i < center.Length; ++i)
             {
                 center[i] /= n;
@@ -334,8 +335,8 @@ namespace Labyrinthian
                 float[] point = GetCellPoint(cell, i);
                 point[0] = point[0] * cellSize + offset;
                 point[1] = point[1] * cellSize + offset;
-                string x = point[0].ToString(CultureInfo.InvariantCulture);
-                string y = point[1].ToString(CultureInfo.InvariantCulture);
+                string x = point[0].ToInvariantString();
+                string y = point[1].ToInvariantString();
                 line.Append($"{x},{y}");
                 if (i < n - 1) line.Append(" ");
             }

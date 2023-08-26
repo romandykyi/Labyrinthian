@@ -7,7 +7,7 @@ namespace Labyrinthian
         public BinaryTreeGeneration(Maze maze) : base(maze) { }
         public BinaryTreeGeneration(Maze maze, int seed) : base(maze, seed) { }
 
-        public override bool IsSuitableFor(Maze maze) => maze is OrthogonalMaze;
+        protected override bool IsSuitableFor(Maze maze) => maze is OrthogonalMaze;
 
         protected override IEnumerable<Maze> Generation()
         {

@@ -28,7 +28,7 @@ namespace Labyrinthian
         public static MazeEdge[] GetWallsOfCell(this Maze maze, MazeCell cell)
         {
             if (cell is null)
-                throw new ArgumentNullException(nameof(cell), "cell cannot be null");
+                throw new ArgumentNullException(nameof(cell));
 
             List<MazeCell> neighbors = cell.FindNeighbors(
                 neighbor => !maze.AreCellsConnected(cell, neighbor)
