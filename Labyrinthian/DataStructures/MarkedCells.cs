@@ -4,8 +4,12 @@ using System.Linq;
 namespace Labyrinthian
 {
     /// <summary>
+    /// <para>
     /// Data structure that represents a Boolean array and accepts MazeCell as index.
+    /// </para>
+    /// <para>
     /// Can be used in DFS/BFS algorithms to store the visited/unvisited state of each maze cell.
+    /// </para>
     /// </summary>
     public sealed class MarkedCells
     {

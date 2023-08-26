@@ -3,23 +3,27 @@ using System;
 namespace Labyrinthian
 {
     /// <summary>
-    /// Exception that is thrown when the maze cell is unexpected to be outer
+    /// Exception that is thrown when the maze cell is unexpected to be outer.
     /// </summary>
     [Serializable]
 
     public sealed class CellIsOuterException : Exception
     {
         /// <summary>
-        /// Constructor that creates an exception with specified message
+        /// Constructor with default message.
         /// </summary>
-        public CellIsOuterException(string message = "Maze cell is unexpectedly outer.") : base(message) { }
+        public CellIsOuterException() : this("Maze cell is unexpectedly outer.") { }
 
         /// <summary>
-        /// Constructor that creates an exception with a message 
-        /// <c>"{<paramref name="variableName"/>} is unexpectedly outer. {<paramref name="extraMessage}"/>"</c>
+        /// Constructor with custom message.
         /// </summary>
-        /// <param name="variableName">name of variable that represents outer cell</param>
-        /// <param name="extraMessage">extra message for exception</param>
+        public CellIsOuterException(string message) : base(message) { }
+
+        /// <summary>
+        /// Constructor which will generate a message based on <paramref name="variableName"/>.
+        /// </summary>
+        /// <param name="variableName">Name of variable that represents outer cell.</param>
+        /// <param name="extraMessage">An extra message for exception(optional).</param>
         public CellIsOuterException(string variableName, string extraMessage = "") :
             base($"{variableName} is unexpectedly outer. {extraMessage}") { }
     }

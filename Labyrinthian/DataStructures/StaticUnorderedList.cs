@@ -187,6 +187,13 @@ namespace Labyrinthian
             }
         }
 
+        /// <summary>
+        /// Get element of the list by the index.
+        /// </summary>
+        /// <returns>
+        /// Element of the list with the given index.
+        /// </returns>
+        /// <exception cref="IndexOutOfRangeException"/>
         public T this[int index]
         {
             get
