@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Labyrinthian
 {
     /// <summary>
-    /// Union-Find data structure. Inspired by https://github.com/mondrasovic/UnionFind
+    /// Union-Find data structure. Inspired by <seealso href="https://github.com/mondrasovic/UnionFind"/>
     /// </summary>
     public sealed class DisjointSet<T> : IEnumerable<T> where T : IEquatable<T>
     {
@@ -37,23 +37,53 @@ namespace Labyrinthian
             return node.Parent;
         }
 
-        public bool Add(T value)
+        /// <summary>
+        /// Add a new element.
+        /// </summary>
+        /// <returns>
+        /// <see langword="true"/> if element was added;
+        /// <see langword="false"/> otherwise if element was already present.
+        /// </returns>
+        public bool Add(T x)
         {
-            if (!_nodes.ContainsKey(value))
+            if (!_nodes.ContainsKey(x))
             {
-                _nodes[value] = new DisjointSetNode<T>(value);
+                _nodes[x] = new DisjointSetNode<T>(x);
                 return true;
             }
             return false;
         }
 
-        public T Find(T value)
+        /// <summary>
+        /// Follows the chain of parent pointers from a specified query 
+        /// node <paramref name="x"/> until it reaches a root element.
+        /// </summary>
+        /// <returns>The root element of the <paramref name="x"/>.</returns>
+        public T Find(T x)
         {
-            return Find(_nodes[value]).Value;
+            return Find(_nodes[x]).Value;
         }
 
+        /// <summary>
+        /// Replaces the set containing <paramref name="x"/>
+        /// and the set containing <paramref name="y"/> with their union.
+        /// </summary>
+        /// <returns>
+        /// <see langword="true" /> if two sets were merged;
+        /// <see langword="false"/> otherwise if two sets were already merged.
+        /// </returns>
+        /// <exception cref="KeyNotFoundException" />
         public bool Union(T x, T y)
         {
+            if (!_nodes.ContainsKey(x))
+            {
+                throw new KeyNotFoundException($"Key {x} is not found");
+            }
+            if (!_nodes.ContainsKey(y))
+            {
+                throw new KeyNotFoundException($"Key {y} is not found");
+            }
+
             DisjointSetNode<T> 
                 parentX = _nodes[x].Parent, 
                 parentY = _nodes[y].Parent;
@@ -77,6 +107,13 @@ namespace Labyrinthian
             return true;
         }
 
+        /// <summary>
+        /// Check whether the <paramref name="element"/> exists in the set
+        /// </summary>
+        /// <returns>
+        /// <see langword="true"/> if <paramref name="element"/> exists;
+        /// <see langword="false"/> otherwises.
+        /// </returns>
         public bool Contains(T element)
         {
             return _nodes.ContainsKey(element);
