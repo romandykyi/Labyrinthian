@@ -1,6 +1,8 @@
-
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Solid color fill.
+    /// </summary>
     public sealed class SvgColorFill : SvgFill
     {
         public readonly SvgColor Color;

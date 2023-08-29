@@ -8,27 +8,42 @@ using System.Linq;
 namespace Labyrinthian
 {
     /// <summary>
-    /// Клас для експорту лабіринтів у формат SVG
+    /// Class that can export mazes into SVG format.
     /// </summary>
+    /// <example>
+    /// Export an orthogonal maze 10x10 generated using Wilson's algorithm.
+    /// <code>
+    /// Maze maze = new OrthogonalMaze(10, 10);
+    /// MazeGenerator generator = new WilsonGeneration(maze);
+    /// generator.Generate();
+    /// using (var fs = new FileStream(@"D:\Pictures\Maze.svg", FileMode.Create))
+    /// using (var svgExporter = new MazeSvgExporter(maze, fs))
+    /// {
+    ///    var fill = new SvgColorFill(SvgColor.Black);
+    ///    var stroke = new SvgStroke(2f, fill);
+    ///    svgExporter.DrawWalls(stroke);
+    /// }
+    /// </code>
+    /// </example>
     public sealed class MazeSvgExporter : IDisposable
     {
-        private readonly bool _closeWriter;
-
         public const float DefaultCellSize = 32f;
         public const float DefaultStrokeWidth = 2f;
 
+        private readonly bool _closeWriter;
+
         private readonly Maze _maze;
-        private readonly float _cellSize, _wallsStroke, _offset;
+        private readonly float _cellSize, _wallsWidth, _offset;
 
         private readonly StreamWriter _writer;
         private readonly StringBuilder _definitions;
 
         /// <summary>
-        /// Довжина файлу Svg
+        /// Width of SVG document(in pixels).
         /// </summary>
         public readonly float Width;
         /// <summary>
-        /// Ширина файлу Svg
+        /// Height of SVG document(in pixels).
         /// </summary>
         public readonly float Height;
 
@@ -39,49 +54,52 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Створити експортер
+        /// Make an SVG exporter using <see cref="Stream"/>.
         /// </summary>
-        /// <param name="maze">лабіринт, який буде експортуватися</param>
-        /// <param name="stream">потік, для якого створиться StreamWriter. Цей клас не закриє stream</param>
-        /// <param name="cellSize">розмір клітинки</param>
-        /// <param name="wallsStroke">ширина стін</param>
-        /// <param name="padding">відступ з усіх сторін</param>
+        /// <param name="maze">Maze that we need to export.</param>
+        /// <param name="stream">Stream which will be used for exporting.</param>
+        /// <param name="cellSize">Size of one cell(in pixels).</param>
+        /// <param name="wallsWidth">Width of walls.</param>
+        /// <param name="padding">Padding.</param>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="NotImplementedException" />
         public MazeSvgExporter(Maze maze, Stream stream,
-            float cellSize = DefaultCellSize, float wallsStroke = DefaultStrokeWidth, float padding = 0f) :
+            float cellSize = DefaultCellSize, float wallsWidth = DefaultStrokeWidth, float padding = 0f) :
             this(maze, new StreamWriter(stream, Encoding.UTF8, 1024, true),
-                cellSize, wallsStroke, padding, true)
+                cellSize, wallsWidth, padding, true)
         { }
 
         /// <summary>
-        /// Створити експортер
+        /// Make an SVG exporter using <see cref="StreamWriter"/>.
         /// </summary>
-        /// <param name="maze">лабіринт, який буде експортуватися</param>
-        /// <param name="streamWriter">StreamWriter в який буде здійснена конвертація</param>
-        /// <param name="cellSize">розмір клітинки</param>
-        /// <param name="wallsStroke">ширина стін</param>
-        /// <param name="padding">відступ з усіх сторін</param>
-        /// <param name="closeWriter">чи потрібно закрити streamWriter під час закриття цього класу</param>
+        /// <param name="maze">Maze that we need to export.</param>
+        /// <param name="streamWriter">StreamWriter which will be used for exporting.</param>
+        /// <param name="cellSize">Size of one cell(in pixels).</param>
+        /// <param name="wallsWidth">Width of walls.</param>
+        /// <param name="padding">Padding.</param>
+        /// <param name="closeWriter">
+        /// If <see langword="true" />, <paramref name="streamWriter"/> 
+        /// will be closed after exporting is done.
+        /// </param>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="NotImplementedException" />
         public MazeSvgExporter(Maze maze, StreamWriter streamWriter,
-            float cellSize = DefaultCellSize, float wallsStroke = DefaultStrokeWidth,
+            float cellSize = DefaultCellSize, float wallsWidth = DefaultStrokeWidth,
             float padding = 0f, bool closeWriter = false)
         {
             if (maze == null) throw new ArgumentNullException(nameof(maze));
             if (maze.Dimensions != 2)
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException("SVG export of non 2D dimensional mazes is not supported yet.");
             }
 
             _maze = maze;
             _writer = streamWriter ?? throw new ArgumentNullException(nameof(streamWriter));
             _cellSize = cellSize;
-            _wallsStroke = wallsStroke;
+            _wallsWidth = wallsWidth;
             _closeWriter = closeWriter;
 
-            _offset = wallsStroke / 2f + padding;
+            _offset = wallsWidth / 2f + padding;
             Width = _maze.Sizes[0] * cellSize + _offset * 2f;
             Height = _maze.Sizes[1] * cellSize + _offset * 2f;
 
@@ -122,39 +140,41 @@ namespace Labyrinthian
             }
         }
 
-        public static void GetSizes(Maze maze, float cellSize, float padding, float wallsStroke, out float width, out float height)
-        {
-            width = maze.Sizes[0] * cellSize + wallsStroke + padding * 2f;
-            height = maze.Sizes[1] * cellSize + wallsStroke + padding * 2f;
-        }
-
         /// <summary>
-        /// Намалювати стіни чорним кольором
+        /// Draw walls using fill, specified in the constructor width and square linecap.
         /// </summary>
-        /// <param name="separatePaths">чи потрібно розділити svg-елемент path на декілька менших</param>
-        public void DrawWalls(bool separatePaths = false)
-        {
-            DrawWalls(new SvgColorFill(SvgColor.Black), separatePaths);
-        }
-
-        /// <summary>
-        /// Намалювати стіни
-        /// </summary>
-        /// <param name="fill">заливка стін</param>
-        /// <param name="separatePaths">чи потрібно розділити svg-елемент path на декілька менших</param>
-        /// <exception cref="SvgFillNullException"/>
+        /// <param name="fill">Fill of the walls.</param>
+        /// <param name="separatePaths">
+        /// If <see langword="true"/> one &lt;path&gt; will be used for one wall;
+        /// otherwise, all walls will be drawn only with single &lt;path&gt;
+        /// </param>
+        /// <exception cref="ArgumentNullException"/>
         public void DrawWalls(SvgFill fill, bool separatePaths = false)
         {
-            if (fill == null)
-                throw new SvgFillNullException(nameof(fill));
+            var stroke = new SvgStroke(_wallsWidth, fill, SvgStroke.StrokeLinecap.Square);
+            DrawWalls(stroke, separatePaths);
+        }
 
-            ApplyFill(fill);
+        /// <summary>
+        /// Draw walls.
+        /// </summary>
+        /// <param name="stroke">Stroke of the walls.</param>
+        /// <param name="separatePaths">
+        /// If <see langword="true"/> one &lt;path&gt; will be used for one wall;
+        /// otherwise, all walls will be drawn only with single &lt;path&gt;
+        /// </param>
+        /// <exception cref="ArgumentNullException"/>
+        public void DrawWalls(SvgStroke stroke, bool separatePaths = false)
+        {
+            if (stroke == null)
+                throw new ArgumentNullException(nameof(stroke));
+
+            ApplyFill(stroke.Fill);
 
             _writer.Write("<g id=\"walls\" ");
             _writer.Write("fill=\"none\" ");
-            _writer.Write($"stroke=\"{fill}\" ");
-            _writer.Write($"stroke-width=\"{_wallsStroke.ToInvariantString()}\" ");
-            _writer.Write("stroke-linecap=\"square\">");
+            _writer.Write(stroke);
+            _writer.Write(">");
 
             if (separatePaths) DrawWalls();
             else DrawWallsAsOnePath();
@@ -163,7 +183,7 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Записати метадані у файл
+        /// Write a metadata about generation of the maze.
         /// </summary>
         public void WriteMetadata()
         {
@@ -174,9 +194,9 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Додати фон
+        /// Add background.
         /// </summary>
-        /// <param name="fill">заливка фону</param>
+        /// <param name="fill">Fill used for background.</param>
         /// <exception cref="SvgFillNullException"/>
         public void AddBackground(SvgFill fill)
         {
@@ -188,51 +208,45 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Намалювати усі розв'язки лабіринту Maze.Paths дефолтним кольором(синім)
+        /// Draw all solutions(<see cref="Maze.Paths"/>).
         /// </summary>
-        /// <param name="strokeWidth">ширина лінії розв'язку</param>
-        public void DrawSolutions(float strokeWidth = DefaultStrokeWidth)
-        {
-            DrawSolutions(strokeWidth, new SvgColorFill(SvgColor.Blue));
-        }
-
-        /// <summary>
-        /// Намалювати усі розв'язки лабіринту Maze.Paths
-        /// </summary>
-        /// <param name="fillings">заливки, які будуть циклічно використовуватися для малювання кожного розв'язку(не може бути пустим)</param>
-        /// <param name="strokeWidth">ширина лінії розв'язку</param>
+        /// <param name="strokes">
+        /// Strokes used for each solution. 
+        /// If length is less than solutions number, than some strokes will be used more than once.
+        /// Can't be empty.
+        /// </param>
         /// <exception cref="ArgumentException"/>
         /// <exception cref="ArgumentNullException"/>
-        public void DrawSolutions(float strokeWidth = DefaultStrokeWidth, params SvgFill[] fillings)
+        public void DrawSolutions(params SvgStroke[] strokes)
         {
-            if (fillings == null)
-                throw new ArgumentNullException(nameof(fillings), "fillings cannot be null");
-            if (fillings.Length == 0)
+            if (strokes == null)
+                throw new ArgumentNullException(nameof(strokes), "fills cannot be null");
+            if (strokes.Length == 0)
             {
-                throw new ArgumentException($"{nameof(fillings)} array cannot be empty", nameof(fillings));
+                throw new ArgumentException($"{nameof(strokes)} array cannot be empty", nameof(strokes));
             }
             if (_maze.Paths.Count == 0) return;
 
-            _writer.Write("<g id=\"solutions\" fill=\"none\" stroke-linecap=\"square\" ");
-            _writer.Write($"stroke-width=\"{strokeWidth.ToInvariantString()}\">");
+            _writer.Write("<g id=\"solutions\" fill=\"none\">");
             for (int i = 0; i < _maze.Paths.Count; ++i)
             {
-                if (i < fillings.Length)
+                // Apply fill only if it wasn't applied.
+                if (i < strokes.Length)
                 {
-                    ApplyFill(fillings[i]);
+                    ApplyFill(strokes[i].Fill);
                 }
-                string color = fillings[i % fillings.Length].ToString();
-                _writer.Write($"{_maze.Paths[i].ToSVG(_cellSize, _offset, color)}");
+                string stroke = strokes[i % strokes.Length].ToString();
+                _writer.Write($"{_maze.Paths[i].ToSVG(_cellSize, _offset, stroke)}");
             }
             _writer.Write("</g>");
         }
 
         /// <summary>
-        /// Залити задані клітинки
+        /// Draw cells. Same as <see cref="FillCells(IEnumerable{MazeCell}, SvgFill, string?)"/>.
         /// </summary>
-        /// <param name="fill">заливка клітинок</param>
-        /// <param name="gID">ID групи клітинок(може бути null)</param>
-        /// <param name="cells">клітинки, які потрібно залити</param>
+        /// <param name="fill">Fill, used for cells.</param>
+        /// <param name="gID">ID of cells group(optional).</param>
+        /// <param name="cells">Cells that will be drawn.</param>
         /// <exception cref="SvgFillNullException"/>
         public void FillCells(SvgFill fill, string? gID = null, params MazeCell[] cells)
         {
@@ -240,11 +254,11 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Залити задані клітинки
+        /// Draw cells.
         /// </summary>
-        /// <param name="cells">клітинки, які потрібно залити</param>
-        /// <param name="fill">заливка клітинок</param>
-        /// <param name="gID">ID групи клітинок(може бути null)</param>
+        /// <param name="fill">Fill, used for cells.</param>
+        /// <param name="gID">ID of cells group(optional).</param>
+        /// <param name="cells">Cells that will be drawn.</param>
         /// <exception cref="SvgFillNullException"/>
         public void FillCells(IEnumerable<MazeCell> cells, SvgFill fill, string? gID = null)
         {
@@ -257,7 +271,7 @@ namespace Labyrinthian
             _writer.Write($"<g ");
             if (!string.IsNullOrEmpty(gID)) _writer.Write($"id=\"{gID}\" ");
             _writer.Write($"stroke=\"{fillStr}\" ");
-            _writer.Write($"stroke-width=\"{_wallsStroke.ToInvariantString()}\" ");
+            _writer.Write($"stroke-width=\"{_wallsWidth.ToInvariantString()}\" ");
             _writer.Write($"fill=\"{fillStr}\">");
             foreach (MazeCell cell in cells)
             {
@@ -268,39 +282,40 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Залити усі клітинки
+        /// Draw all cells.
         /// </summary>
-        /// <param name="fill">заливка клітинок</param>
+        /// <param name="fill">Fill, used for cells.</param>
+        /// <param name="gID">ID of cells group(optional).</param>
         /// <exception cref="SvgFillNullException"/>
-        public void FillAllCells(SvgFill fill) => FillCells(_maze.Cells, fill, "cells");
+        public void FillAllCells(SvgFill fill, string? gID = null)
+        {
+            FillCells(_maze.Cells, fill, gID);
+        }
 
         /// <summary>
-        /// Намалювати всі точки графу як круги
+        /// Draw nodes of maze's base graph as circles.
         /// </summary>
-        /// <param name="circleFill">заливка кругів</param>
-        /// <param name="strokeFill">заливка контурів кругів</param>
-        /// <param name="strokeWidth">ширина контуру</param>
-        /// <param name="circleRadius">радіус кругів</param>
-        /// <param name="cells">клітинки, які потрібно залити(якщо null, то всі клітинки будуть залити)</param>
+        /// <param name="nodes">Nodes that will be drawn.</param>
+        /// <param name="circleFill">Fill used for node.</param>
+        /// <param name="circleStroke">Stroke used for node.</param>
+        /// <param name="circleRadius">Radius of node.</param>
         /// <exception cref="SvgFillNullException"/>
-        public void DrawMazeGraphNodes(SvgFill circleFill, SvgFill strokeFill,
-            float strokeWidth = DefaultStrokeWidth, float circleRadius = 4.5f,
-            IEnumerable<MazeCell>? cells = null)
+        public void DrawMazeGraphNodes(IEnumerable<MazeCell> nodes,
+            SvgFill circleFill, SvgStroke circleStroke,
+            float circleRadius = 4.5f)
         {
             if (circleFill == null)
                 throw new SvgFillNullException(nameof(circleFill));
-            if (strokeFill == null)
-                throw new SvgFillNullException(nameof(strokeFill));
-
-            cells ??= _maze.Cells;
+            if (circleStroke == null)
+                throw new SvgFillNullException(nameof(circleStroke));
 
             ApplyFill(circleFill);
-            ApplyFill(strokeFill);
+            ApplyFill(circleStroke.Fill);
 
             _writer.Write($"<g id=\"nodes\" fill=\"{circleFill}\" ");
-            _writer.Write($"stroke=\"{strokeFill}\" ");
-            _writer.Write($"stroke-width=\"{strokeWidth}\">");
-            foreach (var cell in cells)
+            _writer.Write($"stroke=\"{circleStroke}\" ");
+            _writer.Write($"stroke-width=\"{circleStroke}\">");
+            foreach (var cell in nodes)
             {
                 float[] cellCenter = _maze.GetCellCenter(cell);
                 Vector2 position = _maze.PositionTo2DPoint(cellCenter);
@@ -316,35 +331,31 @@ namespace Labyrinthian
             _writer.Write("</g>");
         }
 
-        private IEnumerable<MazeEdge> FindEdges(Predicate<MazeEdge> predicate, bool includeExits = false)
+        /// <summary>
+        /// Draw all nodes of maze's base graph as circles.
+        /// </summary>
+        /// <param name="circleFill">Fill, used for node.</param>
+        /// <param name="circleStroke">Edges stroke.</param>
+        /// <param name="circleRadius">Radius of node.</param>
+        /// <exception cref="SvgFillNullException"/>
+        public void DrawAllMazeGraphNodes(SvgFill circleFill, SvgStroke circleStroke,
+            float circleRadius = 4.5f)
         {
-            if (includeExits)
-            {
-                foreach (var path in _maze.Paths)
-                {
-                    yield return path.Entry;
-                    yield return path.Exit;
-                }
-            }
-
-            foreach (var edge in _maze.GetGraphEdgesDFS(predicate))
-                yield return edge;
+            DrawMazeGraphNodes(_maze.Cells, circleFill, circleStroke, circleRadius);
         }
 
         /// <summary>
-        /// Намалювати вибрані ребра графу лабіринту
+        /// Draw edges of the maze.
         /// </summary>
-        /// <param name="strokeFill">заливка контуру</param>
-        /// <param name="edges">ребра, які малюються</param>
-        /// <param name="strokeWidth">ширина контуру</param>
-        /// <param name="gID">ID групи ребер(може бути null)</param>
+        /// <param name="edges">Edges that will be drawn.</param>
+        /// <param name="stroke">Edges stroke.</param>
+        /// <param name="gID">ID of edges group(optional).</param>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="SvgFillNullException" />
-        public void DrawMazeGraphEdges(SvgFill strokeFill, IEnumerable<MazeEdge> edges,
-            float strokeWidth = DefaultStrokeWidth, string? gID = null)
+        public void DrawEdges(IEnumerable<MazeEdge> edges, SvgStroke stroke, string? gID = null)
         {
-            if (strokeFill == null)
-                throw new SvgFillNullException(nameof(strokeFill));
+            if (stroke == null)
+                throw new SvgFillNullException(nameof(stroke));
             if (edges is null)
                 throw new ArgumentNullException(nameof(edges));
 
@@ -367,59 +378,43 @@ namespace Labyrinthian
                 previousSegment = currentSegment;
             }
 
-            _writer.Write($"\" stroke=\"{strokeFill}\" ");
-            _writer.Write($"stroke-width=\"{strokeWidth}\" ");
-            _writer.Write($"stroke-linecap=\"square\" ");
-            _writer.Write($"fill=\"none\"/>");
+            _writer.Write($"\" {stroke}/>");
 
-            ApplyFill(strokeFill);
+            ApplyFill(stroke.Fill);
         }
 
         /// <summary>
-        /// Намалювати вибрані ребра графу лабіринту
+        /// Draw edges of the base graph of the maze.
         /// </summary>
-        /// <param name="strokeFill">заливка</param>
-        /// <param name="predicate">предикат</param>
-        /// <param name="includeExits">чи потрібно малювати графи входів/виходів</param>
-        /// <param name="strokeWidth">ширина контуру</param>
-        /// <param name="gID">ID групи ребер(може бути null)</param>
-        public void DrawMazeGraphEdges(SvgFill strokeFill, Predicate<MazeEdge> predicate,
-            bool includeExits = true, float strokeWidth = DefaultStrokeWidth, string? gID = null)
-        {
-            var edges = FindEdges(predicate, includeExits);
-            DrawMazeGraphEdges(strokeFill, edges, strokeWidth, gID);
-        }
-
-        /// <summary>
-        /// Намалювати усі ребра графу лабіринту
-        /// </summary>
-        /// <param name="strokeFill">заливка контуру</param>
-        /// <param name="includeExits">чи потрібно малювати графи входів/виходів</param>
-        /// <param name="strokeWidth">ширина контуру</param>
-        /// <param name="gID">ID групи ребер(може бути null)</param>
+        /// <param name="stroke">Edges stroke.</param>
+        /// <param name="gID">ID of edges group(optional).</param>
         /// <exception cref="SvgFillNullException" />
-        public void DrawAllMazeGraphEdges(SvgFill strokeFill, bool includeExits = true,
-            float strokeWidth = DefaultStrokeWidth, string? gID = null)
+        public void DrawBaseGraphEdges(SvgStroke stroke, string? gID = null)
         {
-            DrawMazeGraphEdges(strokeFill, _ => true, includeExits, strokeWidth, gID);
+            DrawEdges(_maze.GetBaseGraphEdges(), stroke, gID);
         }
 
         /// <summary>
-        /// Намалювати усі ребра графу лабіринту, через які можна пройти
+        /// Draw edges of the passages graph of the maze.
         /// </summary>
-        /// <param name="strokeFill">заливка контуру</param>
-        /// <param name="includeExits">чи потрібно малювати графи входів/виходів</param>
-        /// <param name="strokeWidth">ширина контуру</param>
-        /// <param name="gID">ID групи ребер(може бути null)</param>
+        /// <param name="stroke">Edges stroke.</param>
+        /// <param name="includeExits">
+        /// If <see langword="true"/> then edges that lead to entries/exits will be 
+        /// also drawn.
+        /// </param>
+        /// <param name="gID">ID of edges group(optional).</param>
         /// <exception cref="SvgFillNullException" />
-        public void DrawMazePassageEdges(SvgFill strokeFill, bool includeExits = true,
-            float strokeWidth = DefaultStrokeWidth, string? gID = null)
+        public void DrawPassagesGraphEdges(SvgStroke stroke, 
+            bool includeExits = true, string? gID = null)
         {
-            DrawMazeGraphEdges(strokeFill, 
-                edge => _maze.AreCellsConnected(edge.Cell1, edge.Cell2), 
-                includeExits, strokeWidth, gID);
+            var edges = _maze.FindGraphEdgesDFS(
+                edge => _maze.AreCellsConnected(edge.Cell1, edge.Cell2), includeExits);
+            DrawEdges(edges, stroke, gID);
         }
 
+        /// <summary>
+        /// Finish exporting and dispose used resources.
+        /// </summary>
         public void Dispose()
         {
             if (_definitions.Length > 0)
@@ -432,9 +427,23 @@ namespace Labyrinthian
             if (_closeWriter) _writer.Close();
         }
 
+        /// <summary>
+        /// Finish exporting and dispose used resources.
+        /// Same as calling <see cref="Dispose"/>.
+        /// </summary>
         public void Close()
         {
             Dispose();
+        }
+
+        /// <summary>
+        /// Pre-calculate width and height of the maze without exporting it.
+        /// </summary>
+        public static void GetSizes(Maze maze, float cellSize, float padding,
+            float wallsStroke, out float width, out float height)
+        {
+            width = maze.Sizes[0] * cellSize + wallsStroke + padding * 2f;
+            height = maze.Sizes[1] * cellSize + wallsStroke + padding * 2f;
         }
     }
 }

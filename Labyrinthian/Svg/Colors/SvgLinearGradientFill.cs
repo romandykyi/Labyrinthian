@@ -4,6 +4,9 @@ using System.Numerics;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// SVG linear gradient fill.
+    /// </summary>
     public sealed class SvgLinearGradientFill : SvgFill
     {
         private static uint s_freeId = 100;
@@ -22,7 +25,15 @@ namespace Labyrinthian
             To = to;
         }
 
-        public SvgLinearGradientFill(Vector2 from, Vector2 to, SvgGradientMark[] marks) : this(from, to)
+        /// <summary>
+        /// Create a gradient from marks.
+        /// </summary>
+        /// <param name="from">First point of the gradient.</param>
+        /// <param name="to">Last point of the gradient.</param>
+        /// <param name="marks">Gradient marks(length should be at least 2).</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        public SvgLinearGradientFill(Vector2 from, Vector2 to, params SvgGradientMark[] marks) : this(from, to)
         {
             if (marks == null) throw new ArgumentNullException(nameof(marks));
             if (marks.Length < 2)
@@ -33,6 +44,14 @@ namespace Labyrinthian
             Marks = marks;
         }
 
+        /// <summary>
+        /// Create a gradient from colors that will be spreaded linearly.
+        /// </summary>
+        /// <param name="from">First point of the gradient.</param>
+        /// <param name="to">Last point of the gradient.</param>
+        /// <param name="colors">Gradient colors(length should be at least 2).</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public SvgLinearGradientFill(Vector2 from, Vector2 to, params SvgColor[] colors) : this(from, to)
         {
             if (colors.Length < 2)

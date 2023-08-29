@@ -311,17 +311,17 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Transform a maze point into 2D plane
+        /// Transform a maze point into 2D plane.
         /// </summary>
-        /// <param name="position">A maze point</param>
+        /// <param name="position">A maze point.</param>
         public abstract Vector2 PositionTo2DPoint(float[] position);
 
         /// <summary>
-        /// Convert a cell into svg-string
+        /// Convert a cell into svg-string.
         /// </summary>
-        /// <param name="cell">a cell that will be converted into svg-string</param>
-        /// <param name="cellSize">the size of cell</param>
-        /// <param name="offset">offset from top left corner</param>
+        /// <param name="cell">A cell that will be converted into svg-string.</param>
+        /// <param name="cellSize">The size of cell.</param>
+        /// <param name="offset">Offset from top left corner.</param>
         /// <returns>
         /// A svg-string that represents the cell. It returns &lt;polygon&gt; if isn't overrided.
         /// </returns>
@@ -346,9 +346,9 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Get maze description
+        /// Get maze description.
         /// </summary>
-        /// <returns>Maze.Description</returns>
+        /// <returns><see cref="Description" /></returns>
         public sealed override string ToString()
         {
             return Description;

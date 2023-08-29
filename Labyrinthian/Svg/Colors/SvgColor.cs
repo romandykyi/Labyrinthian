@@ -31,6 +31,13 @@ namespace Labyrinthian
             return result;
         }
 
+        /// <summary>
+        /// Create a color from rgba values.
+        /// </summary>
+        /// <param name="red">Red(0-255).</param>
+        /// <param name="green">Green(0-255).</param>
+        /// <param name="blue">Blue(0-255)</param>
+        /// <param name="alpha">Alpha(0-255). 255 by default.</param>
         public SvgColor(byte red, byte green, byte blue, byte alpha = 255) : this()
         {
             R = red;
@@ -39,6 +46,14 @@ namespace Labyrinthian
             A = alpha;
         }
 
+        /// <summary>
+        /// Create a color from hexcode '#RRGGBB' or '#RRGGBBAA'.
+        /// </summary>
+        /// <param name="hexCode">
+        /// Hexcode of the color in #RRGGBB or #RRGGBBAA format.
+        /// #RGB' and '#RGBA' are not supported and '#' is mandatory at the beginning.
+        /// </param>
+        /// <exception cref="ArgumentException"></exception>
         public SvgColor(string hexCode) : this()
         {
             hexCode = hexCode.ToLower().Trim();
@@ -53,6 +68,12 @@ namespace Labyrinthian
             A = hexCode.Length == 9 ? ParseHexToken(hexCode[7..9]) : (byte)0xFF;
         }
 
+        /// <summary>
+        /// Get hexcode of the color.
+        /// </summary>
+        /// <returns>
+        /// '#RRGGBB' format if alpha is 255, otherwise '#RRGGBBAA'. 
+        /// </returns>
         public override string ToString()
         {
             return A == 255 ? $"#{R:X2}{G:X2}{B:X2}" : 

@@ -131,7 +131,7 @@ namespace Labyrinthian
 
         public override string ToString()
         {
-            return "Recursion division";
+            return "Recursive division";
         }
     }
 }

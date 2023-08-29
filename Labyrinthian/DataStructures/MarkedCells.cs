@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Labyrinthian
@@ -11,7 +13,7 @@ namespace Labyrinthian
     /// Can be used in DFS/BFS algorithms to store the visited/unvisited state of each maze cell.
     /// </para>
     /// </summary>
-    public sealed class MarkedCells
+    public sealed class MarkedCells : IEnumerable<CellMark>
     {
         private readonly Maze _maze;
         private readonly bool[] _marks;
@@ -19,7 +21,7 @@ namespace Labyrinthian
         /// <summary>
         /// Event that is raised when the state of a cell changes.
         /// </summary>
-        public event Action<MazeCell, bool>? CellChanged;
+        public event Action<CellMark>? MarkChanged;
 
         /// <summary>
         /// Create a MarkedCells data structure.
@@ -46,7 +48,7 @@ namespace Labyrinthian
                 if (_marks[cell.Index] != value)
                 {
                     _marks[cell.Index] = value;
-                    CellChanged?.Invoke(cell, value);
+                    MarkChanged?.Invoke(new CellMark(cell, value));
                 }
             }
         }
@@ -58,6 +60,31 @@ namespace Labyrinthian
         {
             foreach (MazeCell cell in _maze.Cells)
                 this[cell] = value;
+        }
+
+        public IEnumerator<CellMark> GetEnumerator()
+        {
+            for (int i = 0; i < _marks.Length; ++i)
+            {
+                yield return new CellMark(_maze.Cells[i], _marks[i]);
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
+    public readonly struct CellMark
+    {
+        public readonly MazeCell Cell;
+        public readonly bool Value;
+
+        public CellMark(MazeCell cell, bool value) : this()
+        {
+            Cell = cell;
+            Value = value;
         }
     }
 }

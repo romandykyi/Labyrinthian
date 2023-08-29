@@ -1,9 +1,13 @@
-using System;
+using System.IO;
 using System.Text;
 
 namespace Labyrinthian
 {
-    public readonly struct SvgStroke
+    /// <summary>
+    /// Class that defines five stroke SVG attributes: 
+    /// 'stroke', 'stroke-opacity', 'stroke-width', 'stroke-dasharray' and 'stroke-linecap'.
+    /// </summary>
+    public class SvgStroke
     {
         public enum StrokeLinecap
         {
@@ -13,23 +17,21 @@ namespace Labyrinthian
         public readonly float Width;
         public readonly SvgFill Fill;
         public readonly StrokeLinecap Linecap;
+        public readonly float[] Dasharray;
 
-        public static readonly SvgStroke None = new SvgStroke(-1f);
+        public static readonly SvgStroke None = new SvgStroke(0f, SvgFill.None);
 
-        public SvgStroke(float width, StrokeLinecap linecap = StrokeLinecap.Butt) :
-            this(width, new SvgColorFill("#000000"), linecap) { }
-
-        public SvgStroke(float width, SvgFill fill, StrokeLinecap linecap = StrokeLinecap.Butt) : this()
+        public SvgStroke(float width, SvgFill fill, 
+            StrokeLinecap linecap = StrokeLinecap.Butt, params float[] dasharray)
         {
             Width = width;
             Fill = fill;
             Linecap = linecap;
+            Dasharray = dasharray;
         }
 
         public override string ToString()
         {
-            if (Width <= 0f) return "stroke=\"none\"";
-
             StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.Append($"stroke=\"{Fill}\"");
@@ -38,7 +40,10 @@ namespace Labyrinthian
             {
                 stringBuilder.Append($" stroke-opacity=\"{opacity}\"");
             }
-            stringBuilder.Append($" stroke-width=\"{Width.ToInvariantString()}\"");
+            if (Width > 0f)
+            {
+                stringBuilder.Append($" stroke-width=\"{Width.ToInvariantString()}\"");
+            }
             switch (Linecap)
             {
                 case StrokeLinecap.Square:
@@ -47,6 +52,16 @@ namespace Labyrinthian
                 case StrokeLinecap.Round:
                     stringBuilder.Append(" stroke-linecap=\"round\"");
                     break;
+            }
+            if (Dasharray.Length > 0)
+            {
+                stringBuilder.Append(" stroke-dasharray=\"");
+                for (int i = 0; i < Dasharray.Length - 1; ++i)
+                {
+                    stringBuilder.Append($"{Dasharray[i].ToInvariantString()},");
+                }
+                stringBuilder.Append(Dasharray[^1].ToInvariantString());
+                stringBuilder.Append('"');
             }
 
             return stringBuilder.ToString();

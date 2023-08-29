@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Labyrinthian
 {
@@ -140,12 +141,26 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Find all edges of maze using DFS
+        /// Find all edges of passages graph of the maze using DFS.
         /// </summary>
         /// <param name="maze"></param>
-        /// <param name="predicate">predicate which determines whether we should include an edge into DFS or ignore it</param>
-        public static IEnumerable<MazeEdge> GetGraphEdgesDFS(this Maze maze, Predicate<MazeEdge> predicate)
+        /// <param name="predicate">Predicate which determines whether we should include an edge into DFS or ignore it.</param>
+        /// <param name="includeExits">
+        /// If <see langword="true"/> then edges that lead to entries/exits will be 
+        /// returned. Note that <paramref name="predicate"/> will not be called for those edges.
+        /// </param>
+        public static IEnumerable<MazeEdge> FindGraphEdgesDFS(this Maze maze,
+            Predicate<MazeEdge> predicate, bool includeExits = false)
         {
+            if (includeExits)
+            {
+                foreach (var path in maze.Paths)
+                {
+                    yield return path.Entry;
+                    yield return path.Exit;
+                }
+            }
+
             Stack<MazeEdge> dfsStack = new Stack<MazeEdge>();
 
             MarkedCells visited = new MarkedCells(maze);

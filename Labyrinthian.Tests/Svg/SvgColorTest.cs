@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using System;
 
-namespace Labyrinthian.Tests
+namespace Labyrinthian.Tests.Svg
 {
     internal class SvgColorTest
     {
@@ -22,7 +22,13 @@ namespace Labyrinthian.Tests
         public void ParsingColorWithAlpha()
         {
             SvgColor color = new("#02Ab4F88");
-            Assert.That(color.R == 0x02 && color.G == 0xAb && color.B == 0x4F && color.A == 0x88, Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(color.R, Is.EqualTo(0x02));
+                Assert.That(color.G, Is.EqualTo(0xAB));
+                Assert.That(color.B, Is.EqualTo(0x4F));
+                Assert.That(color.A, Is.EqualTo(0x88));
+            });
         }
 
         [Test]

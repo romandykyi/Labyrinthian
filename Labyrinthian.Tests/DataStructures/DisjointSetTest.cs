@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Labyrinthian.Tests
+namespace Labyrinthian.Tests.DataStructures
 {
     internal class DisjointSetTest
     {

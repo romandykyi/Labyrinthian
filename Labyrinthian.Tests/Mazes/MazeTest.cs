@@ -3,7 +3,7 @@ using System.Numerics;
 using System;
 using System.Linq;
 
-namespace Labyrinthian.Tests
+namespace Labyrinthian.Tests.Mazes
 {
     internal class MazeTest
     {

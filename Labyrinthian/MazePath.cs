@@ -1,21 +1,27 @@
+using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Path that represents a path in the maze from entry to exit(edges with outer cell).
+    /// </summary>
     public sealed class MazePath
     {
         private MazeCell[]? _path = null;
         private MazeEdge m_entry, m_exit;
 
         public readonly Maze Maze;
+        
         public MazeEdge Entry
         {
             get => m_entry;
             set
             {
                 m_entry = value;
+                // Reset the path
                 _path = null;
             }
         }
@@ -25,14 +31,34 @@ namespace Labyrinthian
             set
             {
                 m_exit = value;
+                // Reset the path
                 _path = null;
             }
         }
 
+        /// <summary>
+        /// Path from <see cref="Entry"/> to <see cref="Exit"/> found using BFS.
+        /// </summary>
         public MazeCell[] Path => _path ?? FindPath();
 
+        /// <summary>
+        /// Create a maze path.
+        /// </summary>
+        /// <param name="maze">Maze where path will be placed.</param>
+        /// <param name="entry">Edge that represents an entry(second node should be outer cell).</param>
+        /// <param name="exit">Edge that represents an exit(second node should be outer cell).</param>
+        /// <exception cref="ArgumentException" />
         public MazePath(Maze maze, MazeEdge entry, MazeEdge exit)
         {
+            if (entry.Cell2.IsMazePart)
+            {
+                throw new ArgumentException($"{nameof(entry.Cell2)} should be outer cell.", nameof(entry));
+            }
+            if (exit.Cell2.IsMazePart)
+            {
+                throw new ArgumentException($"{nameof(exit.Cell2)} should be outer cell.", nameof(exit));
+            }
+
             Maze = maze;
             Entry = entry;
             Exit = exit;
@@ -71,6 +97,17 @@ namespace Labyrinthian
             throw new PathNotFoundException();
         }
 
+        /// <summary>
+        /// Recalculate the path.
+        /// </summary>
+        public void Recalculate()
+        {
+            _path = FindPath();
+        }
+
+        /// <summary>
+        /// Get all vector path segments that represent this path.
+        /// </summary>
         public IEnumerable<PathSegment> GetSegments()
         {
             MazeCell previousCell = Entry.Cell1;
@@ -92,15 +129,19 @@ namespace Labyrinthian
             yield return Maze.GetPathBetweenCells(Exit.Cell1, Exit.Cell2);
         }
 
-        public void Recalculate()
-        {
-            _path = FindPath();
-        }
-
-        public string ToSVG(float cellSize, float offset, string strokeColor)
+        /// <summary>
+        /// Convert a maze path into SVG path.
+        /// </summary>
+        /// <param name="cellSize">Size of a maze cell.</param>
+        /// <param name="offset">Offset from left and top.</param>
+        /// <param name="stroke">Stroke of the path.</param>
+        /// <returns>
+        /// &lt;path&gt; element that represents this path.
+        /// </returns>
+        public string ToSVG(float cellSize, float offset, string stroke)
         {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append($"<path stroke=\"{strokeColor}\" d=\"");
+            stringBuilder.Append($"<path {stroke} d=\"");
 
             var path = GetSegments();
             stringBuilder.Append(path.First().MoveToStartSvg(cellSize, offset));

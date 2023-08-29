@@ -81,7 +81,7 @@ namespace Labyrinthian
         /// </summary>
         /// <param name="maze">Maze used for generation.</param>
         /// <param name="initialCell">Cell that will be current at the start of generation(optional).</param>
-        /// <param name="defaultVisited">Default visited state for all cells.</param>
+        /// <param name="defaultVisited">Default 'visited' state for all cells(false by default).</param>
         /// <exception cref="MazeTypeIsNotSupportedException"></exception>
         protected MazeGenerator(Maze maze, MazeCell? initialCell = null, bool defaultVisited = false) :
             this(maze, Environment.TickCount, initialCell, defaultVisited)
@@ -93,7 +93,7 @@ namespace Labyrinthian
         /// <param name="maze">Maze used for generation.</param>
         /// <param name="seed">Seed for random numbers generator.</param>
         /// <param name="initialCell">Cell that will be current at the start of generation(optional).</param>
-        /// <param name="defaultVisited">Default visited state for all cells.</param>
+        /// <param name="defaultVisited">Default 'visited' state for all cells(false by default).</param>
         /// <exception cref="MazeTypeIsNotSupportedException"></exception>
         protected MazeGenerator(Maze maze, int seed,
             MazeCell? initialCell = null, bool defaultVisited = false)
@@ -110,8 +110,8 @@ namespace Labyrinthian
             VisitedCells = new MarkedCells(Maze, defaultVisited);
             PostProcessors = new List<IMazePostProcessor>();
 
-            VisitedCells.CellChanged += (cell, _) => CellStateChanged?.Invoke(cell);
-            HighlightedCells.CellChanged += (cell, _) => CellStateChanged?.Invoke(cell);
+            VisitedCells.MarkChanged += mark => CellStateChanged?.Invoke(mark.Cell);
+            HighlightedCells.MarkChanged += mark => CellStateChanged?.Invoke(mark.Cell);
 
             maze.Description += $" generated with {ToString()} algorithm(seed: {seed})";
         }

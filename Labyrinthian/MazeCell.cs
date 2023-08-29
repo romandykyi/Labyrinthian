@@ -45,6 +45,13 @@ namespace Labyrinthian
         /// </summary>
         public bool IsMazePart => Index >= 0;
 
+        private MazeCell(int index, MazeCell[] neighbors, MazeCell[] directedNeighbors)
+        {
+            Index = index;
+            Neighbors = neighbors;
+            DirectedNeighbors = directedNeighbors;
+        }
+
         /// <summary>
         /// Create a maze cell.
         /// </summary>
@@ -56,24 +63,31 @@ namespace Labyrinthian
         /// For creating outer cells use <see cref="CreateOuterCell(MazeCell, int)"/>.
         /// </para>
         /// </remarks>
-        /// <param name="index">index of the cell</param>
+        /// <param name="index">index of the cell(can't be negative)</param>
+        /// <exception cref="ArgumentOutOfRangeException" />
         public MazeCell(int index)
         {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), $"You're trying to create a cell with negative index. If you need to create an outer cell, use method {nameof(MazeCell)}.{nameof(CreateOuterCell)}.");
+            }
             Index = index;
         }
 
         /// <summary>
         /// Create an outer cell
         /// </summary>
-        /// <param name="neighbor">single neighbor of the cell</param>
-        /// <param name="direction">direction from this cell to the neighbor</param>
+        /// <param name="neighbor">single neighbor of the cell(shouldn't be null).</param>
+        /// <param name="direction">direction from created cell to the neighbor(can't be negative).</param>
+        /// <exception cref="ArgumentOutOfRangeException" />
         public static MazeCell CreateOuterCell(MazeCell neighbor, int direction)
         {
-            return new MazeCell(-direction - 1)
+            if (direction < 0)
             {
-                Neighbors = new MazeCell[1] { neighbor },
-                DirectedNeighbors = null! // DirectedNeighbors shouldn't be used for cells that are not parts of maze
-            };
+                throw new ArgumentOutOfRangeException(nameof(direction), "Direction can't be negative.");
+            }
+
+            return new MazeCell(-direction - 1, new MazeCell[1] { neighbor }, null!);
         }
 
         /// <summary>

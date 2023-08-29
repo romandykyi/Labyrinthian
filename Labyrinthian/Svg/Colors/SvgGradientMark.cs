@@ -2,6 +2,9 @@ using System.Text;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// SVG &lt;stop&gt; tag. Used for gradients.
+    /// </summary>
     public readonly struct SvgGradientMark
     {
         public readonly float Offset;
