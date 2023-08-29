@@ -35,7 +35,7 @@ namespace Labyrinthian
         private readonly Maze _maze;
         private readonly float _cellSize, _wallsWidth, _offset;
 
-        private readonly StreamWriter _writer;
+        private readonly TextWriter _writer;
         private readonly StringBuilder _definitions;
 
         /// <summary>
@@ -73,17 +73,17 @@ namespace Labyrinthian
         /// Make an SVG exporter using <see cref="StreamWriter"/>.
         /// </summary>
         /// <param name="maze">Maze that we need to export.</param>
-        /// <param name="streamWriter">StreamWriter which will be used for exporting.</param>
+        /// <param name="textWriter">TextWriter which will be used for exporting.</param>
         /// <param name="cellSize">Size of one cell(in pixels).</param>
         /// <param name="wallsWidth">Width of walls.</param>
         /// <param name="padding">Padding.</param>
         /// <param name="closeWriter">
-        /// If <see langword="true" />, <paramref name="streamWriter"/> 
+        /// If <see langword="true" />, <paramref name="textWriter"/> 
         /// will be closed after exporting is done.
         /// </param>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="NotImplementedException" />
-        public MazeSvgExporter(Maze maze, StreamWriter streamWriter,
+        public MazeSvgExporter(Maze maze, TextWriter textWriter,
             float cellSize = DefaultCellSize, float wallsWidth = DefaultStrokeWidth,
             float padding = 0f, bool closeWriter = false)
         {
@@ -94,7 +94,7 @@ namespace Labyrinthian
             }
 
             _maze = maze;
-            _writer = streamWriter ?? throw new ArgumentNullException(nameof(streamWriter));
+            _writer = textWriter ?? throw new ArgumentNullException(nameof(textWriter));
             _cellSize = cellSize;
             _wallsWidth = wallsWidth;
             _closeWriter = closeWriter;
@@ -313,8 +313,7 @@ namespace Labyrinthian
             ApplyFill(circleStroke.Fill);
 
             _writer.Write($"<g id=\"nodes\" fill=\"{circleFill}\" ");
-            _writer.Write($"stroke=\"{circleStroke}\" ");
-            _writer.Write($"stroke-width=\"{circleStroke}\">");
+            _writer.Write($"{circleStroke}>");
             foreach (var cell in nodes)
             {
                 float[] cellCenter = _maze.GetCellCenter(cell);
