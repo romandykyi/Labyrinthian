@@ -14,4 +14,12 @@ namespace Labyrinthian
             return Math.Abs(b - a) <= epsilon;
         }
     }
+    public static class DoubleExtensions
+    {
+        public static string ToInvariantString(this double value) => value.ToString(CultureInfo.InvariantCulture);
+    }
+    public static class DecimalExtensions
+    {
+        public static string ToInvariantString(this decimal value) => value.ToString(CultureInfo.InvariantCulture);
+    }
 }

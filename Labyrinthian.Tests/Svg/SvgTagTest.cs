@@ -29,6 +29,20 @@ namespace Labyrinthian.Tests.Svg
         }
 
         [Test]
+        public void IdAttribute()
+        {
+            SvgTag tag = new("g", "g777");
+            Assert.That(tag.ToString(), Is.EqualTo("<g id=\"g777\" />"));
+        }
+
+        [Test]
+        public void IdConstructorWorks()
+        {
+            SvgTag tag = new("g", "cool_id");
+            Assert.That(tag.Id, Is.EqualTo("cool_id"));
+        }
+
+        [Test]
         public void MultipleAttributes()
         {
             SvgTag tag = new("path");
@@ -53,18 +67,17 @@ namespace Labyrinthian.Tests.Svg
         public void NestedTags_AttributesOnParent()
         {
             SvgTag parent = new("g");
-            parent.AddAttribute("id", "g100");
+            parent.AddAttribute("stroke", "red");
             parent.Children.Add(new("polygon"));
             parent.Children.Add(new("polyline"));
 
-            Assert.That(parent.ToString(), Is.EqualTo("<g id=\"g100\"><polygon /><polyline /></g>"));
+            Assert.That(parent.ToString(), Is.EqualTo("<g stroke=\"red\"><polygon /><polyline /></g>"));
         }
 
         [Test]
         public void NestedTags_WithAttributes()
         {
-            SvgTag parent = new("g");
-            parent.AddAttribute("id", "g100");
+            SvgTag parent = new("g", "g100");
             SvgTag child1 = new("rect");
             child1.AddAttribute("fill", "red");
             SvgTag child2 = new("polyline");
@@ -77,8 +90,7 @@ namespace Labyrinthian.Tests.Svg
         [Test]
         public void MultipleNestedTags()
         {
-            SvgTag parent1 = new("g");
-            parent1.AddAttribute("id", "main");
+            SvgTag parent1 = new("g", "main");
             SvgTag parent2 = new("g");
             SvgTag child1 = new("rect");
             child1.AddAttribute("fill", "black");
