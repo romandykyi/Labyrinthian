@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Numerics;
 
-namespace Labyrinthian
+namespace Labyrinthian.Svg
 {
     /// <summary>
     /// SVG linear gradient fill.

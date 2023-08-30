@@ -1,4 +1,4 @@
-namespace Labyrinthian
+namespace Labyrinthian.Svg
 {
     /// <summary>
     /// Solid color fill.

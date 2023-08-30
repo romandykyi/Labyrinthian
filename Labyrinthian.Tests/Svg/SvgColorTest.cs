@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System;
+using Labyrinthian.Svg;
 
 namespace Labyrinthian.Tests.Svg
 {

@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace Labyrinthian
+namespace Labyrinthian.Svg
 {
     public readonly struct SvgColor
     {

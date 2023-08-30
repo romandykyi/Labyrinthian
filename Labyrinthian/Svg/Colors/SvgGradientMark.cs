@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Labyrinthian
+namespace Labyrinthian.Svg
 {
     /// <summary>
     /// SVG &lt;stop&gt; tag. Used for gradients.

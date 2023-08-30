@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 
-namespace Labyrinthian
+namespace Labyrinthian.Svg
 {
     /// <summary>
     /// Class that defines five stroke SVG attributes: 

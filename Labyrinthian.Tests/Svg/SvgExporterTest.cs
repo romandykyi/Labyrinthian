@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using Labyrinthian.Svg;
 
 namespace Labyrinthian.Tests.Svg
 {

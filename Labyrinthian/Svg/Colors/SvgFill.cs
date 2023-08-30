@@ -1,4 +1,4 @@
-namespace Labyrinthian
+namespace Labyrinthian.Svg
 {
     /// <summary>
     /// Class that represents svg-fill.

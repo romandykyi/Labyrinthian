@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Globalization;
+using NUnit.Framework;
 
 namespace Labyrinthian.Tests
 {
@@ -9,6 +10,17 @@ namespace Labyrinthian.Tests
         {
             float f = 1.61803f;
             Assert.That(f.ToInvariantString(), Is.EqualTo("1.61803"));
+        }
+
+        [Test]
+        public void ToInvariantString_PolishTest()
+        {
+            var previousCulture = CultureInfo.CurrentCulture;
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("pl-PL");
+            float f = 51.5125f;
+            Assert.That(f.ToInvariantString(), Is.EqualTo("51.5125"));
+
+            CultureInfo.CurrentCulture = previousCulture;
         }
 
         [Test]

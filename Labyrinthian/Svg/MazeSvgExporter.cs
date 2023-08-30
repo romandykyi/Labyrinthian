@@ -5,7 +5,7 @@ using System.IO;
 using System.Numerics;
 using System.Linq;
 
-namespace Labyrinthian
+namespace Labyrinthian.Svg
 {
     /// <summary>
     /// Class that can export mazes into SVG format.
