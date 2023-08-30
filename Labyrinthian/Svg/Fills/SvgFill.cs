@@ -17,7 +17,7 @@ namespace Labyrinthian.Svg
         public virtual string? Definition => null;
         /// <summary>
         /// Opacity. 
-        /// <see langword="null" /> if fill is opaque.
+        /// <see langword="null" /> if isn't needed.
         /// </summary>
         public virtual string? Opacity => null;
 
