@@ -1,6 +1,7 @@
 ﻿namespace Labyrinthian.Svg
 {
-    public sealed class SvgUse : SvgElement
+    [SvgElement("use")]
+    public sealed class SvgUse : SvgGroup
     {
         public class ElementHref : INeedsDefinition
         {
@@ -8,7 +9,7 @@
 
             public override string ToString()
             {
-                return Definition!.Id!;
+                return $"#{Definition!.Id!}";
             }
         }
 

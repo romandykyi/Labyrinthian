@@ -6,7 +6,7 @@ namespace Labyrinthian.Svg
     public class SvgPropertyAttribute : Attribute
     {
         public readonly string Name;
-        public string? LocalName { get; set; }
+        public string? Prefix { get; set; }
         public char Separator { get; set; } = ' ';
 
         public SvgPropertyAttribute(string name)
