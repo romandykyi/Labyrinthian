@@ -1,9 +1,8 @@
 ﻿namespace Labyrinthian.Svg
 {
-    public sealed class SvgRoot : SvgElement
+    [SvgElement("svg")]
+    public sealed class SvgRoot : SvgGroup
     {
-        public string Name => "svg";
-
         [SvgProperty("xmlns")]
         public string Xmlns => "http://www.w3.org/2000/svg";
 
