@@ -12,7 +12,7 @@
         public SvgGradientUnits? GradientUnits { get; set; }
 
         [SvgProperty("spreadMethod")]
-        public SvgGradientUnits? SpreadMethod { get; set; }
+        public SvgSpreadMethod? SpreadMethod { get; set; }
 
         [SvgProperty("gradientTransform")]
         public string? GradientTransform { get; set; }
