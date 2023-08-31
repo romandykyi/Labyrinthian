@@ -14,7 +14,7 @@ namespace Labyrinthian
         /// Direction from the first cell to the second cell
         /// </summary>
         public int Direction => Cell1.IsMazePart ?
-            Array.IndexOf(Cell1.DirectedNeighbors, Cell2): -Cell1.Index - 1;
+            Array.IndexOf(Cell1.DirectedNeighbors, Cell2) : -Cell1.Index - 1;
 
         /// <summary>
         /// Inverted edge
@@ -26,7 +26,7 @@ namespace Labyrinthian
             Cell1 = cell0;
             Cell2 = cell1;
         }
-        
+
         /// <summary>
         /// Create an edge where Cell0.index &lt; Cell1.index
         /// </summary>

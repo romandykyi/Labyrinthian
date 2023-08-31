@@ -59,7 +59,7 @@ namespace Labyrinthian.Tests.Mazes
         public void CreateOuterCellDoesntAcceptNegativeDirection()
         {
             MazeCell neighbor = new(504030);
-            
+
             Assert.Throws<ArgumentOutOfRangeException>(() => MazeCell.CreateOuterCell(neighbor, -403020));
         }
 

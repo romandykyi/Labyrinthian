@@ -8,6 +8,9 @@ namespace Labyrinthian.Svg
         [SvgProperty("id")]
         public string? Id { get; set; }
 
+        [SvgProperty("class")]
+        public string? Class { get; set; }
+
         [SvgProperty("style")]
         public string? Style { get; set; }
 

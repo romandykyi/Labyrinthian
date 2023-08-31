@@ -43,7 +43,7 @@ namespace Labyrinthian
 
                 yield return Maze;
             }
-            
+
             SelectedCell = null;
             yield return Maze;
         }

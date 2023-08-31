@@ -9,7 +9,7 @@ namespace Labyrinthian.Svg
     {
         public SvgGradient Gradient { get; set; }
 
-        public SvgGradientFill(SvgGradient gradient) 
+        public SvgGradientFill(SvgGradient gradient)
         {
             Gradient = gradient;
         }

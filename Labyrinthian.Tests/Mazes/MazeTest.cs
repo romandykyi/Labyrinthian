@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using System.Numerics;
 using System;
 using System.Linq;
+using System.Numerics;
 
 namespace Labyrinthian.Tests.Mazes
 {

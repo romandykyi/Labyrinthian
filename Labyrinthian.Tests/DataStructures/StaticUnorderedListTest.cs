@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace Labyrinthian.Tests.DataStructures
 {

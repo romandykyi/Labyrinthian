@@ -48,7 +48,7 @@ namespace Labyrinthian
         protected MazeGeneratorWithCustomSelection(
             Maze maze, int seed, MazeCellSelection? selection = null, MazeCell? initialCell = null,
             bool defaultVisited = false)
-            : base(maze, seed, initialCell, defaultVisited) 
+            : base(maze, seed, initialCell, defaultVisited)
         {
             Selection = selection ?? RandomSelection;
         }
@@ -63,6 +63,7 @@ namespace Labyrinthian
         /// <exception cref="MazeTypeIsNotSupportedException"></exception>
         protected MazeGeneratorWithCustomSelection(Maze maze, MazeCellSelection? selection = null,
             MazeCell? initialCell = null, bool defaultVisited = false) :
-            this(maze, Environment.TickCount, selection, initialCell, defaultVisited) { }
+            this(maze, Environment.TickCount, selection, initialCell, defaultVisited)
+        { }
     }
 }

@@ -5,9 +5,11 @@ namespace Labyrinthian
     public sealed class WilsonGeneration : MazeGenerator
     {
         public WilsonGeneration(Maze maze, MazeCell? initialCell = null) :
-            base(maze, initialCell) { }
+            base(maze, initialCell)
+        { }
         public WilsonGeneration(Maze maze, int seed, MazeCell? initialCell = null) :
-            base(maze, seed, initialCell) { }
+            base(maze, seed, initialCell)
+        { }
 
         private void EraseWalk(List<MazeCell> walk, int start = 0)
         {
@@ -57,7 +59,7 @@ namespace Labyrinthian
                     var neighbors =
                         SelectedCell.FindNeighbors(neighbor => neighbor != previousCell);
 
-                    if (neighbors.Count != 0 )
+                    if (neighbors.Count != 0)
                     {
                         int rndNeighborIndex = Rnd.Next(0, neighbors.Count);
 

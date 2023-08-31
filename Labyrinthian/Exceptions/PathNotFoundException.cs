@@ -11,9 +11,10 @@ namespace Labyrinthian
         /// <summary>
         /// Constructor with default message.
         /// </summary>
-        public PathNotFoundException() : 
-            this("Couldn't find the path between two cells. Make sure that both cells belong to the same maze and that the maze has no isolated cells.") { }
-        
+        public PathNotFoundException() :
+            this("Couldn't find the path between two cells. Make sure that both cells belong to the same maze and that the maze has no isolated cells.")
+        { }
+
         /// <summary>
         /// Constructor with custom message.
         /// </summary>

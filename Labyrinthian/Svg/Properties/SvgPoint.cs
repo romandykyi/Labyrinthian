@@ -4,7 +4,7 @@ namespace Labyrinthian.Svg
 {
     public struct SvgPoint
     {
-        public float X; 
+        public float X;
         public float Y;
 
         public SvgPoint(float x, float y)

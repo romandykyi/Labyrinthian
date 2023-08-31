@@ -1,14 +1,15 @@
-using System;
 using System.Collections.Generic;
 
 namespace Labyrinthian
 {
     public sealed class DFSGeneration : MazeGenerator
     {
-        public DFSGeneration(Maze maze, MazeCell? initialCell = null) : 
-            base(maze, initialCell) { }
-        public DFSGeneration(Maze maze, int seed, MazeCell? initialCell = null) : 
-            base(maze, seed, initialCell) { }
+        public DFSGeneration(Maze maze, MazeCell? initialCell = null) :
+            base(maze, initialCell)
+        { }
+        public DFSGeneration(Maze maze, int seed, MazeCell? initialCell = null) :
+            base(maze, seed, initialCell)
+        { }
 
         protected override IEnumerable<Maze> Generation()
         {

@@ -7,7 +7,8 @@ namespace Labyrinthian
     {
         public KruskalGeneration(Maze maze) : base(maze, defaultVisited: true) { }
         public KruskalGeneration(Maze maze, int seed) :
-            base(maze, seed, defaultVisited: true) { }
+            base(maze, seed, defaultVisited: true)
+        { }
 
         protected override IEnumerable<Maze> Generation()
         {

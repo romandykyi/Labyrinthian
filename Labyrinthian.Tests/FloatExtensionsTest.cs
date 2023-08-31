@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using System.Globalization;
 
 namespace Labyrinthian.Tests
 {

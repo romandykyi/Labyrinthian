@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Labyrinthian.Svg
+﻿namespace Labyrinthian.Svg
 {
     public sealed class SvgUse : SvgElement
     {

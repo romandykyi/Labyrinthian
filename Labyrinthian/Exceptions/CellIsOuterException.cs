@@ -25,6 +25,7 @@ namespace Labyrinthian
         /// <param name="variableName">Name of variable that represents outer cell.</param>
         /// <param name="extraMessage">An extra message for exception(optional).</param>
         public CellIsOuterException(string variableName, string extraMessage = "") :
-            base($"{variableName} is unexpectedly outer. {extraMessage}") { }
+            base($"{variableName} is unexpectedly outer. {extraMessage}")
+        { }
     }
 }

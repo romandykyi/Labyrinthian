@@ -6,7 +6,8 @@ namespace Labyrinthian
     public sealed class GrowingTreeGeneration : MazeGeneratorWithCustomSelection
     {
         public GrowingTreeGeneration(Maze maze, MazeCellSelection? selection = null, MazeCell? initialCell = null) :
-            base(maze, Environment.TickCount, selection, initialCell) { }
+            base(maze, Environment.TickCount, selection, initialCell)
+        { }
         public GrowingTreeGeneration(Maze maze, int seed, MazeCellSelection? selection = null,
             MazeCell? initialCell = null) : base(maze, seed, selection, initialCell) { }
 
@@ -29,7 +30,7 @@ namespace Labyrinthian
                 SelectedCell = cells[cellIndex];
 
                 // Find unvisited neighbors of current cell
-                List<MazeCell> unvisitedNeighbors = 
+                List<MazeCell> unvisitedNeighbors =
                     SelectedCell.FindNeighbors(neighbor => !VisitedCells[neighbor]);
 
                 // If there are no unvisited neighbors, 

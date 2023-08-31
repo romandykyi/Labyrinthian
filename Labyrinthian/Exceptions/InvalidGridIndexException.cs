@@ -12,7 +12,7 @@ namespace Labyrinthian
         /// Constructor with default message.
         /// </summary>
         public InvalidGridIndexException() : this("Grid index is invalid") { }
-        
+
         /// <summary>
         /// Constructor with custom message.
         /// </summary>

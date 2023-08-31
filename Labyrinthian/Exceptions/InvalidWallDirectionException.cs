@@ -12,7 +12,7 @@ namespace Labyrinthian
         /// Constructor with default message.
         /// </summary>
         public InvalidWallDirectionException() : this("Wall direction is out of bounds") { }
-        
+
         /// <summary>
         /// Constructor with custom message.
         /// </summary>

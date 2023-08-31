@@ -15,7 +15,8 @@ namespace Labyrinthian
         /// <param name="maze">Maze, which <paramref name="generator"/> doesn't support.</param>
         public MazeTypeIsNotSupportedException(MazeGenerator generator, Maze maze) : this(
             $"\"{generator}\" does not support \"{maze}\""
-            ) { }
+            )
+        { }
 
         /// <summary>
         /// Constructor with custom message.

@@ -8,7 +8,7 @@ namespace Labyrinthian
         private readonly float m_horizontalCarveProbability = 0.5f;
 
         public SidewinderGeneration(Maze maze) : this(maze, Environment.TickCount) { }
-        public SidewinderGeneration(Maze maze, int seed, float horizontalCarveProbability = 0.5f) : base(maze, seed) 
+        public SidewinderGeneration(Maze maze, int seed, float horizontalCarveProbability = 0.5f) : base(maze, seed)
         {
             m_horizontalCarveProbability = horizontalCarveProbability;
         }

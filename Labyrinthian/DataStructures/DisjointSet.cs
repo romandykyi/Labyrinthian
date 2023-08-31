@@ -84,8 +84,8 @@ namespace Labyrinthian
                 throw new KeyNotFoundException($"Key {y} is not found");
             }
 
-            DisjointSetNode<T> 
-                parentX = _nodes[x].Parent, 
+            DisjointSetNode<T>
+                parentX = _nodes[x].Parent,
                 parentY = _nodes[y].Parent;
 
             if (parentX == parentY)

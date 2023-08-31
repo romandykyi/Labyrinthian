@@ -16,6 +16,7 @@ namespace Labyrinthian
         /// <param name="cell2">Second cell. Cannot be <see langword="null"/>.</param>
         /// <param name="extraMessage">An extra message(optional).</param>
         public CellsAreNotNeighborsException(MazeCell cell1, MazeCell cell2, string extraMessage = "") :
-            base($"Two cells(first cell index = {cell1.Index}, second cell index = {cell2.Index}) are unexpectedly not neighbors. {extraMessage}") { }
+            base($"Two cells(first cell index = {cell1.Index}, second cell index = {cell2.Index}) are unexpectedly not neighbors. {extraMessage}")
+        { }
     }
 }

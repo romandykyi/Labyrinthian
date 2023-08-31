@@ -1,7 +1,7 @@
 using System;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Labyrinthian
 {
@@ -14,7 +14,7 @@ namespace Labyrinthian
         private MazeEdge m_entry, m_exit;
 
         public readonly Maze Maze;
-        
+
         public MazeEdge Entry
         {
             get => m_entry;

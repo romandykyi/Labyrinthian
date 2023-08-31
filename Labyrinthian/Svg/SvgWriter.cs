@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Globalization;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Globalization;
 using System.IO;
-using System.Xml;
+using System.Reflection;
 using System.Text;
+using System.Xml;
 
 namespace Labyrinthian.Svg
 {
@@ -48,6 +48,20 @@ namespace Labyrinthian.Svg
                     result = stringBuilder.ToString();
                 }
             }
+            else if (propertyValue is Enum e)
+            {
+                var enumMemberInfo = e.GetType().GetField(e.ToString());
+                if (enumMemberInfo == null)
+                {
+                    return null;
+                }
+                var svgEnumFieldAttribute = enumMemberInfo.GetCustomAttribute<SvgEnumFieldAttribute>();
+                if (svgEnumFieldAttribute == null)
+                {
+                    return null;
+                }
+                return svgEnumFieldAttribute.Name;
+            }
             else
             {
                 result = Convert.ToString(propertyValue, CultureInfo.InvariantCulture);
@@ -84,7 +98,7 @@ namespace Labyrinthian.Svg
 
         private void StartElement(SvgElement element)
         {
-            var elementAttribute = 
+            var elementAttribute =
                 element.GetType().GetCustomAttribute<SvgElementAttribute>() ??
                 throw new InvalidOperationException($"Only svg-elements with {nameof(SvgElementAttribute)} are supported.");
 

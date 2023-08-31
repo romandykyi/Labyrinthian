@@ -10,7 +10,7 @@
 //        private const SvgStroke.StrokeLinecap DefaultLinecap = SvgStroke.StrokeLinecap.Square;
 
 //        private readonly bool _separatePaths;
-        
+
 //        public readonly SvgStroke Stroke;
 
 //        private Walls(SvgStroke stroke, bool separatePaths)
