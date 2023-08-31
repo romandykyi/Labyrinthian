@@ -16,6 +16,7 @@ namespace Labyrinthian.Tests
         public void ToInvariantString_PolishTest()
         {
             var previousCulture = CultureInfo.CurrentCulture;
+            // In Polish culture ',' is used instead of '.' when displaying floating-point numbers
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("pl-PL");
             float f = 51.5125f;
             Assert.That(f.ToInvariantString(), Is.EqualTo("51.5125"));

@@ -1,4 +1,5 @@
 using System;
+using Labyrinthian.Svg;
 
 namespace Labyrinthian
 {

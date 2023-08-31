@@ -5,7 +5,7 @@ namespace Labyrinthian.Svg
     /// </summary>
     public sealed class SvgColorFill : SvgFill
     {
-        public readonly SvgColor Color;
+        public SvgColor Color { get; set; }
 
         public SvgColorFill(SvgColor color)
         {
@@ -13,8 +13,5 @@ namespace Labyrinthian.Svg
         }
 
         public override string ToString() => Color.ToString();
-
-        public override string? Opacity => !Color.IsOpaque ? 
-            Color.Opacity.ToInvariantString() : null;
     }
 }
