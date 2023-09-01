@@ -32,10 +32,12 @@ namespace Labyrinthian.Svg
         private string? SvgPropertyToString(SvgPropertyAttribute property, object propertyValue)
         {
             string? result = null;
+            // string is also IEnumerable so we need to check this type before.
             if (propertyValue is string s)
             {
                 result = s;
             }
+            // Here we're writing SVG-collections, e.g. 'points'
             else if (propertyValue is IEnumerable enumerable)
             {
                 StringBuilder stringBuilder = new StringBuilder();
@@ -52,20 +54,12 @@ namespace Labyrinthian.Svg
                     result = stringBuilder.ToString();
                 }
             }
+            // Write an SVG-option, e.g. 'stroke-linecap'
             else if (propertyValue is Enum e)
             {
-                var enumMemberInfo = e.GetType().GetField(e.ToString());
-                if (enumMemberInfo == null)
-                {
-                    return null;
-                }
-                var svgEnumFieldAttribute = enumMemberInfo.GetCustomAttribute<SvgEnumFieldAttribute>();
-                if (svgEnumFieldAttribute == null)
-                {
-                    return null;
-                }
-                return svgEnumFieldAttribute.Name;
+                return e.GetSvgOption();
             }
+            // Write any other object(e.g. 'float')
             else
             {
                 result = Convert.ToString(propertyValue, CultureInfo.InvariantCulture);
@@ -133,12 +127,18 @@ namespace Labyrinthian.Svg
             }
         }
 
+        /// <summary>
+        /// Start root '&lt;svg&gt;' element and the xml document.
+        /// </summary>
         public void StartRoot(SvgRoot root)
         {
             _writer.WriteStartDocument();
             StartElement(root, root.Xmlns);
         }
 
+        /// <summary>
+        /// End the root element and a document.
+        /// </summary>
         public void EndRoot()
         {
             if (_definitions.Count > 0)
@@ -156,16 +156,30 @@ namespace Labyrinthian.Svg
             _writer.WriteEndDocument();
         }
 
+        /// <summary>
+        /// Start writing an SVG-element.
+        /// </summary>
+        /// <param name="element">Element which will be written.</param>
         public void StartElement(SvgElement element)
         {
             StartElement(element, null);
         }
 
+        /// <summary>
+        /// End writing an SVG-element
+        /// </summary>
         public void EndElement()
         {
             _writer.WriteEndElement();
         }
 
+        /// <summary>
+        /// Write an element with string value. Closed automatically.
+        /// Use this method if you want to add '&lt;desc&gt;' or '&lt;style&gt;'.
+        /// </summary>
+        /// <param name="element">Element's name.</param>
+        /// <param name="value">String value of the element(optional).</param>
+        /// <param name="prefix">Prefix of the element(optional).</param>
         public void WriteStringElement(string element, string? value = null, string? prefix = null)
         {
             _writer.WriteStartElement(prefix, element, null);

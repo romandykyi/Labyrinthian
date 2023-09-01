@@ -1,5 +1,23 @@
 ﻿namespace Labyrinthian.Svg
 {
+    public enum SvgGradientUnits
+    {
+        [SvgOption("userSpaceOnUse")]
+        UserSpaceOnUse,
+        [SvgOption("objectBoundingBox")]
+        ObjectBoundingBox
+    }
+
+    public enum SvgSpreadMethod
+    {
+        [SvgOption("pad")]
+        Pad,
+        [SvgOption("reflect")]
+        Reflect,
+        [SvgOption("repeat")]
+        Repeat
+    }
+
     public abstract class SvgGradient : SvgElement
     {
         [SvgChildren]

@@ -3,11 +3,11 @@
 namespace Labyrinthian.Svg
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    public class SvgEnumFieldAttribute : Attribute
+    public class SvgOptionAttribute : Attribute
     {
         public readonly string Name;
 
-        public SvgEnumFieldAttribute(string name)
+        public SvgOptionAttribute(string name)
         {
             Name = name;
         }

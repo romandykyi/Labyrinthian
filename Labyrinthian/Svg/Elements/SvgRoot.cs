@@ -1,7 +1,7 @@
 ﻿namespace Labyrinthian.Svg
 {
     [SvgElement("svg")]
-    public sealed class SvgRoot : SvgGroup
+    public sealed class SvgRoot : SvgViewBoxGroup
     {
         [SvgProperty("xmlns")]
         public string Xmlns => "http://www.w3.org/2000/svg";
@@ -11,8 +11,5 @@
 
         [SvgProperty("version")]
         public string Version => "1.1";
-
-        [SvgProperty("viewBox")]
-        public SvgViewBox? ViewBox { get; set; }
     }
 }
