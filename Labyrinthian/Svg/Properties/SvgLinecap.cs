@@ -2,11 +2,11 @@
 {
     public enum SvgLinecap
     {
-        [SvgEnumField("butt")]
+        [SvgOption("butt")]
         Butt,
-        [SvgEnumField("round")]
+        [SvgOption("round")]
         Round,
-        [SvgEnumField("square")]
+        [SvgOption("square")]
         Square
     }
 }
