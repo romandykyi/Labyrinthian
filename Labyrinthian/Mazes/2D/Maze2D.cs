@@ -8,6 +8,8 @@ namespace Labyrinthian
     public abstract class Maze2D : Maze
     {
         public sealed override int Dimensions => 2;
+        public override float Width2D => Sizes[0];
+        public override float Height2D => Sizes[1];
 
         /// <summary>
         /// Get indices of points of the first node in the edge '<paramref name="wall"/>'

@@ -36,7 +36,7 @@ namespace Labyrinthian
         private readonly HashSet<MazeEdge> Connections;
 
         /// <summary>
-        /// Cells that maze contains
+        /// Cells that maze contains.
         /// </summary>
         public MazeCell[] Cells { get; protected set; } = null!;
 
@@ -46,21 +46,30 @@ namespace Labyrinthian
         public readonly List<MazePath> Paths;
 
         /// <summary>
-        /// Description of the maze. Contains type of the maze and its dimensions 
+        /// Description of the maze. Contains type of the maze and its dimensions.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// Sizes of the maze in each dimension
+        /// Sizes of the maze in each dimension.
         /// </summary>
         public virtual float[] Sizes => _sizes ?? CalculateSizes();
         /// <summary>
-        /// Number of the maze dimensions
+        /// Number of the maze dimensions.
         /// </summary>
         public abstract int Dimensions { get; }
 
         /// <summary>
-        /// Delegete of an event that is raised when passage is carved or wall is added
+        /// 2D width of the maze(for svg exporting).
+        /// </summary>
+        public abstract float Width2D { get; }
+        /// <summary>
+        /// 2D height of the maze(for svg exporting).
+        /// </summary>
+        public abstract float Height2D { get; }
+
+        /// <summary>
+        /// Delegete of an event that is raised when passage is carved or wall is added.
         /// </summary>
         /// <param name="owner">Maze that called the event</param>
         /// <param name="edge">Edge that was changed</param>
@@ -68,7 +77,7 @@ namespace Labyrinthian
         public delegate void EdgeChangedEvent(Maze owner, MazeEdge edge, bool isConnected);
 
         /// <summary>
-        /// Event that is raised when passage is carved or wall is added
+        /// Event that is raised when passage is carved or wall is added.
         /// </summary>
         public event EdgeChangedEvent? EdgeChanged;
 
@@ -91,7 +100,7 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Basic initialization without touching the Cells array
+        /// Basic initialization without touching the Cells array.
         /// </summary>
         protected Maze()
         {
@@ -101,9 +110,9 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Initialization of <see cref="Cells"/>
+        /// Initialization of <see cref="Cells"/>.
         /// </summary>
-        /// <param name="size">A size of <see cref="Cells"/></param>
+        /// <param name="size">A size of <see cref="Cells"/>.</param>
         protected Maze(int size) : this()
         {
             Cells = new MazeCell[size];
