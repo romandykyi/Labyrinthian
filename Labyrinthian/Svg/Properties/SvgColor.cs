@@ -5,11 +5,18 @@ namespace Labyrinthian.Svg
 {
     public readonly struct SvgColor
     {
-        public static readonly SvgColor White = new SvgColor(255, 255, 255);
-        public static readonly SvgColor Black = new SvgColor(0, 0, 0);
-        public static readonly SvgColor Red = new SvgColor(255, 0, 0);
-        public static readonly SvgColor Green = new SvgColor(0, 255, 0);
-        public static readonly SvgColor Blue = new SvgColor(0, 0, 255);
+        public static readonly SvgColor White = new SvgColor(0xFF, 0xFF, 0xFF);
+        public static readonly SvgColor Gray = new SvgColor(0x80, 0x80, 0x80);
+        public static readonly SvgColor Grey = new SvgColor(0x80, 0x80, 0x80);
+        public static readonly SvgColor Black = new SvgColor(0x00, 0x00, 0x00);
+        public static readonly SvgColor Red = new SvgColor(0xFF, 0, 0x00);
+        public static readonly SvgColor Green = new SvgColor(0x00, 0xFF, 0x00);
+        public static readonly SvgColor Blue = new SvgColor(0x00, 0x00, 0xFF);
+        public static readonly SvgColor Orange = new SvgColor(0xFF, 0xA5, 0x00);
+        public static readonly SvgColor Yellow = new SvgColor(0xFF, 0xFF, 0x00);
+        public static readonly SvgColor Purple = new SvgColor(0x80, 0x00, 0x80);
+        public static readonly SvgColor Magenta = new SvgColor(0xFF, 0x00, 0xFF);
+        public static readonly SvgColor Cyan = new SvgColor(0x00, 0xFF, 0xFF);
 
         public readonly byte R, G, B;
 
