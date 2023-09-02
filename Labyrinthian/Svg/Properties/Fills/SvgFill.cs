@@ -13,5 +13,10 @@ namespace Labyrinthian.Svg
         {
             public override string ToString() => "none";
         }
+
+        public static implicit operator SvgFill(SvgColor color)
+        {
+            return new SvgColorFill(color);
+        }
     }
 }
