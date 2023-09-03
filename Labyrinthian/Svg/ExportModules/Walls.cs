@@ -1,79 +1,113 @@
-﻿//using System;
-//using System.Runtime.CompilerServices;
-//using System.Text;
+﻿using System.Text;
 
-//namespace Labyrinthian.Svg
-//{
-//    public sealed class Walls : IExportModule
-//    {
-//        private const float DefaultStrokeWidth = 2f;
-//        private const SvgStroke.StrokeLinecap DefaultLinecap = SvgStroke.StrokeLinecap.Square;
+namespace Labyrinthian.Svg
+{
+    /// <summary>
+    /// Export module for maze walls.
+    /// </summary>
+    public sealed class Walls : IExportModule
+    {
+        private readonly SvgPath _path;
+        private readonly SvgGroup? _group;
+        private readonly bool _separatePaths;
 
-//        private readonly bool _separatePaths;
+        /// <summary>
+        /// 'stroke-width' of walls in pixels.
+        /// </summary>
+        internal readonly float WallsWidth;
 
-//        public readonly SvgStroke Stroke;
+        private Walls(SvgPath path, float wallsWidth, bool separatePaths, SvgGroup? group = null)
+        {
+            _path = path;
+            WallsWidth = wallsWidth;
+            _separatePaths = separatePaths;
+            _group = group;
+        }
 
-//        private Walls(SvgStroke stroke, bool separatePaths)
-//        {
-//            Stroke = stroke;
-//            _separatePaths = separatePaths;
-//        }
+        private void ExportAsSeparatePaths(MazeSvgExporter exporter, SvgWriter svgWriter)
+        {
+            svgWriter.StartElement(_group!);
+            foreach (var wall in exporter.Maze.GetWalls())
+            {
+                _path.D = exporter.Maze.GetWallPosition(wall).
+                    FromStartToEnd(exporter.CellSize, exporter.Offset);
 
-//        public SvgTag Export(Maze maze)
-//        {
-//            throw new NotImplementedException();
-//        }
+                svgWriter.StartElement(_path);
+                svgWriter.EndElement();
+            }
+            svgWriter.EndElement();
+        }
 
-//        private static SvgStroke GetDefaultStroke(SvgFill fill)
-//        {
-//            if (fill == null)
-//            {
-//                throw new SvgFillNullException(nameof(fill));
-//            }
+        private void ExportAsOnePath(MazeSvgExporter exporter, SvgWriter svgWriter)
+        {
+            PathSegment? previous = null;
+            StringBuilder pathD = new StringBuilder();
+            foreach (var wall in exporter.Maze.GetWalls())
+            {
+                PathSegment segment = exporter.Maze.GetWallPosition(wall);
+                string line = segment.MoveNext(previous, exporter.CellSize, exporter.Offset);
+                pathD.Append(line);
 
-//            return new SvgStroke(DefaultStrokeWidth, fill, DefaultLinecap);
-//        }
+                previous = segment;
+            }
+            _path.D = pathD.ToString();
+            svgWriter.StartElement(_path);
+            svgWriter.EndElement();
+        }
 
-//        private SvgTag AsOnePath(MazeSvgExporter exporter)
-//        {
-//            SvgTag path = new SvgTag("path");
-//            PathSegment? previous = null;
-//            StringBuilder pathD = new StringBuilder();
-//            foreach (var wall in exporter.Maze.GetWalls())
-//            {
-//                PathSegment segment = exporter.Maze.GetWallPosition(wall);
-//                string line = segment.MoveNext(previous, exporter.CellSize, exporter.Offset);
-//                pathD.Append(line);
+        public void Export(MazeSvgExporter exporter, SvgWriter svgWriter)
+        {
+            if (_separatePaths)
+            {
+                ExportAsSeparatePaths(exporter, svgWriter);
+            }
+            else
+            {
+                ExportAsOnePath(exporter, svgWriter);
+            }
+        }
 
-//                previous = segment;
-//            }
-//            path.AddAttribute("d", pathD);
-//            return path;
-//        }
+        /// <summary>
+        /// When calling this method, walls will be exported using
+        /// one &lt;path&gt; element.
+        /// </summary>
+        /// <param name="path">
+        /// Optional template path('stroke-width' will be set to <paramref name="wallsWidth"/>).
+        /// Setting 'Fill' to <see cref="SvgFill.None"/> is recommended.
+        /// </param>
+        /// <param name="wallsWidth">Walls width in pixels.</param>
+        public static Walls AsOnePath(SvgPath? path = null, float wallsWidth = 2f)
+        {
+            path ??= new SvgPath()
+            {
+                Fill = SvgFill.None,
+                Stroke = SvgColor.Black,
+                StrokeWidth = 2f
+            };
+            return new Walls(path, wallsWidth, false);
+        }
 
-//        private SvgTag AsSeparatePaths(MazeSvgExporter exporter)
-//        {
-//            SvgTag group = new SvgTag("g");
-//            foreach (var wall in exporter.Maze.GetWalls())
-//            {
-//                SvgTag path = new SvgTag("path");
-//                string pathD = 
-//                    exporter.Maze.GetWallPosition(wall).
-//                    FromStartToEnd(exporter.CellSize, exporter.Offset);
-//                path.AddAttribute("d", pathD);
-//                group.Children.Add(path);
-//            }
-//            return group;
-//        }
-
-//        public static Walls AsOnePath(SvgStroke stroke)
-//        {
-//            return new Walls(stroke, false);
-//        }
-
-//        public static Walls AsSeparatePaths(SvgStroke stroke)
-//        {
-//            return new Walls(stroke, true);
-//        }
-//    }
-//}
+        /// <summary>
+        /// When calling this method, walls will be exported using
+        /// many &lt;path&gt; elements.
+        /// </summary>
+        /// <param name="group">
+        /// Optional params of group which will contain paths.
+        /// Setting 'Fill' to <see cref="SvgFill.None"/> is recommended.
+        /// </param>
+        /// <param name="path">
+        /// Optional template path('stroke-width' will be set to <paramref name="wallsWidth"/>).
+        /// It's recommended to set all path properties inside <paramref name="group"/>.
+        /// </param>
+        /// <param name="wallsWidth">Walls width in pixels.</param>
+        public static Walls AsSeparatePaths(SvgGroup? group = null, float wallsWidth = 2f, SvgPath? path = null)
+        {
+            path ??= new SvgPath();
+            group ??= new SvgGroup()
+            {
+                Fill = SvgFill.None
+            };
+            return new Walls(path, wallsWidth, true, group);
+        }
+    }
+}

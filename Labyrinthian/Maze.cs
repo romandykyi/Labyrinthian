@@ -217,11 +217,11 @@ namespace Labyrinthian
         public abstract int GetCellPointsNumber(MazeCell cell);
 
         /// <summary>
-        /// Get a point of the cell
+        /// Get a point of the cell.
         /// </summary>
-        /// <param name="cell">cell which point we need to get</param>
-        /// <param name="pointIndex">index of the point</param>
-        /// <returns>point of the cell</returns>
+        /// <param name="cell">Cell whose point we need to get.</param>
+        /// <param name="pointIndex">Index of the point.</param>
+        /// <returns>Point of the cell.</returns>
         /// <exception cref="ArgumentOutOfRangeException" />
         public abstract float[] GetCellPoint(MazeCell cell, int pointIndex);
 
@@ -257,15 +257,32 @@ namespace Labyrinthian
         }
 
         /// <summary>
+        /// Get path representation of the cell.
+        /// </summary>
+        /// <param name="cell">Cell whose path representation we need to get.</param>
+        /// <returns>
+        /// Paths that combined together form a cell shape.
+        /// </returns>
+        public abstract IEnumerable<PathSegment> GetCellPath(MazeCell cell);
+
+        /// <summary>
+        /// Get a center of the cell(2D).
+        /// </summary>
+        /// <returns>
+        /// 2D center of the cell.
+        /// </returns>
+        public abstract Vector2 GetCellCenter2D(MazeCell cell);
+
+        /// <summary>
         /// Get a path that represents a wall.
         /// </summary>
-        /// <param name="wall">edge that represents a wall</param>
+        /// <param name="wall">Edge that represents a wall.</param>
         public abstract PathSegment GetWallPosition(MazeEdge wall);
 
         /// <summary>
         /// Get a path between two neighboring cells.
         /// </summary>
-        /// <param name="edge">An edge that represents two neighboring cells</param>
+        /// <param name="edge">An edge that represents two neighboring cells.</param>
         /// <returns>A path between two neighboring cells.</returns>
         protected abstract PathSegment GetPath(MazeEdge edge);
 
@@ -289,23 +306,23 @@ namespace Labyrinthian
         /// </summary>
         /// <param name="relation"></param>
         /// <returns>
-        /// <see cref="Line"/> if isn't overrided
+        /// <see cref="Line"/> if isn't overrided.
         /// </returns>
-        /// <exception cref="CellsAreNotNeighborsException"></exception>
+        /// <exception cref="CellsAreNotNeighborsException" />
         public virtual PathSegment GetPathBetweenCells(MazeEdge relation)
         {
             if (!MazeCell.AreNeighbors(relation.Cell1, relation.Cell2))
                 throw new CellsAreNotNeighborsException(relation.Cell1, relation.Cell2, "This method designed for getting path only between two neighboring cells");
 
-            float[] start, end;
+            Vector2 start, end;
             if (!relation.Cell1.IsMazePart)
             {
                 start = GetWallPosition(relation.Inverted).Center;
-                end = GetCellCenter(relation.Cell2);
+                end = GetCellCenter2D(relation.Cell2);
             }
             else if (!relation.Cell2.IsMazePart)
             {
-                start = GetCellCenter(relation.Cell1);
+                start = GetCellCenter2D(relation.Cell1);
                 end = GetWallPosition(relation).Center;
             }
             else
@@ -313,45 +330,7 @@ namespace Labyrinthian
                 return GetPath(relation);
             }
 
-            Vector2 startV = PositionTo2DPoint(start),
-                endV = PositionTo2DPoint(end);
-
-            return new Line(startV, endV);
-        }
-
-        /// <summary>
-        /// Transform a maze point into 2D plane.
-        /// </summary>
-        /// <param name="position">A maze point.</param>
-        public abstract Vector2 PositionTo2DPoint(float[] position);
-
-        /// <summary>
-        /// Convert a cell into svg-string.
-        /// </summary>
-        /// <param name="cell">A cell that will be converted into svg-string.</param>
-        /// <param name="cellSize">The size of cell.</param>
-        /// <param name="offset">Offset from top left corner.</param>
-        /// <returns>
-        /// A svg-string that represents the cell. It returns &lt;polygon&gt; if isn't overrided.
-        /// </returns>
-        public virtual string CellToSvgString(MazeCell cell, float cellSize, float offset)
-        {
-            StringBuilder line = new StringBuilder();
-            line.Append("<polygon points=\"");
-            int n = GetCellPointsNumber(cell);
-            for (int i = 0; i < n; ++i)
-            {
-                float[] point = GetCellPoint(cell, i);
-                point[0] = point[0] * cellSize + offset;
-                point[1] = point[1] * cellSize + offset;
-                string x = point[0].ToInvariantString();
-                string y = point[1].ToInvariantString();
-                line.Append($"{x},{y}");
-                if (i < n - 1) line.Append(" ");
-            }
-            line.Append("\"/>");
-
-            return line.ToString();
+            return new Line(start, end);
         }
 
         /// <summary>

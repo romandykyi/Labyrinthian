@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
@@ -16,6 +17,10 @@ namespace Labyrinthian.Tests.Mazes
         {
             public override int Dimensions => 2;
             public override float[] Sizes => new float[2] { Cells.Length, -Cells.Length };
+
+            public override float Width2D => throw new NotImplementedException();
+
+            public override float Height2D => throw new NotImplementedException();
 
             public TestMaze(int size) : base(size)
             {
@@ -34,11 +39,6 @@ namespace Labyrinthian.Tests.Mazes
                     return new MazeCell[] { Cells[cell.Index + 1], Cells[cell.Index - 1] };
             }
 
-            public override string CellToSvgString(MazeCell cell, float cellSize, float offset)
-            {
-                throw new NotImplementedException();
-            }
-
             public override float[] GetCellPoint(MazeCell cell, int pointIndex)
             {
                 return new float[2] { pointIndex, -pointIndex };
@@ -51,12 +51,17 @@ namespace Labyrinthian.Tests.Mazes
                 throw new NotImplementedException();
             }
 
-            public override Vector2 PositionTo2DPoint(float[] position)
+            protected override PathSegment GetPath(MazeEdge relation)
             {
                 throw new NotImplementedException();
             }
 
-            protected override PathSegment GetPath(MazeEdge relation)
+            public override IEnumerable<PathSegment> GetCellPath(MazeCell cell)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override Vector2 GetCellCenter2D(MazeCell cell)
             {
                 throw new NotImplementedException();
             }

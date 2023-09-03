@@ -22,23 +22,17 @@ namespace Labyrinthian
         public override Vector2 StartPoint => From;
         public override Vector2 EndPoint => To;
 
-        public override float[] Center => new float[2]
-        {
-            (From.X + To.X) / 2f,
-            (From.Y + To.Y) / 2f
-        };
-
         protected override string MoveToEndSvg(Vector2 v)
         {
             if (From.X.ApproximatelyEquals(To.X))
             {
-                return $"V {v.Y.ToInvariantString()} ";
+                return $"V{v.Y.ToInvariantString()} ";
             }
             if (From.Y.ApproximatelyEquals(To.Y))
             {
-                return $"H {v.X.ToInvariantString()} ";
+                return $"H{v.X.ToInvariantString()} ";
             }
-            return $"L {v.X.ToInvariantString()} {v.Y.ToInvariantString()} ";
+            return $"L{v.X.ToInvariantString()},{v.Y.ToInvariantString()} ";
         }
     }
 }

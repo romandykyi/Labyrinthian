@@ -128,30 +128,5 @@ namespace Labyrinthian
             }
             yield return Maze.GetPathBetweenCells(Exit.Cell1, Exit.Cell2);
         }
-
-        /// <summary>
-        /// Convert a maze path into SVG path.
-        /// </summary>
-        /// <param name="cellSize">Size of a maze cell.</param>
-        /// <param name="offset">Offset from left and top.</param>
-        /// <param name="stroke">Stroke of the path.</param>
-        /// <returns>
-        /// &lt;path&gt; element that represents this path.
-        /// </returns>
-        public string ToSVG(float cellSize, float offset, string stroke)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append($"<path {stroke} d=\"");
-
-            var path = GetSegments();
-            stringBuilder.Append(path.First().MoveToStartSvg(cellSize, offset));
-            foreach (var segment in path)
-            {
-                stringBuilder.Append(segment.MoveToEndSvg(cellSize, offset));
-            }
-
-            stringBuilder.Append($"\"/>");
-            return stringBuilder.ToString();
-        }
     }
 }

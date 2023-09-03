@@ -6,7 +6,7 @@ namespace Labyrinthian
     {
         public abstract Vector2 StartPoint { get; }
         public abstract Vector2 EndPoint { get; }
-        public abstract float[] Center { get; }
+        public virtual Vector2 Center => Vector2.Lerp(StartPoint, EndPoint, 0.5f);
 
         protected Vector2 Transform(Vector2 v, float cellSize, float offset)
         {
@@ -14,7 +14,7 @@ namespace Labyrinthian
         }
 
         protected virtual string MoveToStartSvg(Vector2 v) =>
-            $"M {v.X.ToInvariantString()} {v.Y.ToInvariantString()} ";
+            $"M{v.X.ToInvariantString()},{v.Y.ToInvariantString()} ";
 
         protected abstract string MoveToEndSvg(Vector2 v);
 
