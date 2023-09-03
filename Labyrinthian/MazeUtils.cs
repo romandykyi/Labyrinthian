@@ -106,6 +106,19 @@ namespace Labyrinthian
         }
 
         /// <summary>
+        /// Check whether cell is a dead end or not.
+        /// </summary>
+        /// <returns>
+        /// &lt;true&gt; if cell is a dead end;
+        /// &lt;false&gt; otherwise.
+        /// </returns>
+        public static bool IsDeadEnd(this Maze maze, MazeCell cell)
+        {
+            return cell.FindNeighbors(
+                       neighbor => maze.AreCellsConnected(cell, neighbor)).Count == 1;
+        }
+
+        /// <summary>
         /// Find all dead ends.
         /// </summary>
         /// <returns>
@@ -114,8 +127,7 @@ namespace Labyrinthian
         public static IEnumerable<MazeCell> FindDeadEnds(this Maze maze)
         {
             return from cell in maze.Cells
-                   where cell.FindNeighbors(
-                       neighbor => maze.AreCellsConnected(cell, neighbor)).Count == 1
+                   where maze.IsDeadEnd(cell)
                    select cell;
         }
 
@@ -144,22 +156,9 @@ namespace Labyrinthian
         /// </summary>
         /// <param name="maze"></param>
         /// <param name="predicate">Predicate which determines whether we should include an edge into DFS or ignore it.</param>
-        /// <param name="includeExits">
-        /// If <see langword="true"/> then edges that lead to entries/exits will be 
-        /// returned. Note that <paramref name="predicate"/> will not be called for those edges.
-        /// </param>
         public static IEnumerable<MazeEdge> FindGraphEdgesDFS(this Maze maze,
-            Predicate<MazeEdge> predicate, bool includeExits = false)
+            Predicate<MazeEdge> predicate)
         {
-            if (includeExits)
-            {
-                foreach (var path in maze.Paths)
-                {
-                    yield return path.Entry;
-                    yield return path.Exit;
-                }
-            }
-
             Stack<MazeEdge> dfsStack = new Stack<MazeEdge>();
 
             MarkedCells visited = new MarkedCells(maze);

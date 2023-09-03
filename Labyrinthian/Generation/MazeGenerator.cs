@@ -132,6 +132,12 @@ namespace Labyrinthian
         /// <returns>Step by step maze post processing.</returns>
         protected IEnumerable<Maze> ApplyPostProcessorsStepByStep()
         {
+            if (PostProcessors.Count == 0)
+            {
+                yield return Maze;
+                yield break;
+            }
+
             foreach (var processor in PostProcessors)
             {
                 foreach (var maze in processor.Process(this))
@@ -186,12 +192,16 @@ namespace Labyrinthian
         /// {
         ///     // [Maze generation process here]
         ///     
-        ///     return ApplyPostProcessorsStepByStep().Last();
+        ///     return ApplyPostProcessorsStepByStep().Last();\
         /// }
         /// </code>
         /// </example>
         /// <returns>Generated maze.</returns>
-        public virtual Maze Generate() => GenerateStepByStep().Last();
+        public virtual Maze Generate()
+        {
+            GenerateStepByStep().Last();
+            return ApplyPostProcessorsStepByStep().Last();
+        }
 
         /// <summary>
         /// Check whether maze is classic orthogonal.

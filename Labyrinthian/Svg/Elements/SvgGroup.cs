@@ -29,5 +29,12 @@
 
         [SvgProperty("stroke-linecap")]
         public SvgLinecap? StrokeLinecap { get; set; }
+        [SvgProperty("stroke-linejoin")]
+        public SvgLinejoin? StrokeLinejoin { get; set; }
+        [SvgProperty("stroke-miterlimit")]
+        public float? StrokeMiterlimit { get; set; }
+
+        [SvgProperty("transform")]
+        public string? Transform { get; set; }
     }
 }

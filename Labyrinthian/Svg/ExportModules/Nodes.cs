@@ -11,10 +11,10 @@ namespace Labyrinthian.Svg
     public sealed class Nodes : IExportModule
     {
         private readonly SvgShape _nodeShape;
-        private readonly SvgGroup _nodesGroup;
+        private readonly SvgGroup? _nodesGroup;
         private IEnumerable<MazeCell>? _cells;
 
-        private Nodes(SvgShape? svgShape = null, SvgGroup? svgGroup = null, IEnumerable<MazeCell>? cells = null)
+        private Nodes(SvgShape? svgShape, SvgGroup? svgGroup, IEnumerable<MazeCell>? cells = null)
         {
             _nodeShape = svgShape ?? new SvgCircle()
             {
@@ -24,7 +24,7 @@ namespace Labyrinthian.Svg
                 StrokeWidth = 1f,
                 Id = "node"
             };
-            _nodesGroup = svgGroup ?? new SvgGroup();
+            _nodesGroup = svgGroup;
             _cells = cells;
         }
 
@@ -35,7 +35,7 @@ namespace Labyrinthian.Svg
             else if (!_cells.Any())
                 return;
 
-            svgWriter.StartElement(_nodesGroup);
+            if (_nodesGroup != null) svgWriter.StartElement(_nodesGroup);
             foreach (var cell in _cells)
             {
                 Vector2 cellCenter = exporter.Maze.GetCellCenter2D(cell);
@@ -53,7 +53,7 @@ namespace Labyrinthian.Svg
                 svgWriter.StartElement(use);
                 svgWriter.EndElement();
             }
-            svgWriter.EndElement();
+            if (_nodesGroup != null) svgWriter.EndElement();
         }
 
         /// <summary>
@@ -82,6 +82,28 @@ namespace Labyrinthian.Svg
         }
 
         /// <summary>
+        /// Export selected node.
+        /// </summary>
+        /// <param name="cell">
+        /// Selected node.
+        /// </param>
+        /// <param name="nodeShape">
+        /// Optional shape of the node.
+        /// Will be written in '&lt;defs&gt;' and then used with '&lt;use&gt;'.
+        /// If <see langword="null"/> then '&lt;circle&gt;' will be used.
+        /// Should have ID.
+        /// </param>
+        /// <exception cref="ArgumentNullException" />
+        public static Nodes Selected(MazeCell cell, SvgShape? nodeShape = null)
+        {
+            if (cell == null)
+            {
+                throw new ArgumentNullException(nameof(cell));
+            }
+            return new Nodes(nodeShape, null, new MazeCell[1] { cell });
+        }
+
+        /// <summary>
         /// Export all nodes.
         /// </summary>
         /// <param name="nodeShape">
@@ -94,7 +116,7 @@ namespace Labyrinthian.Svg
         /// </param>
         public static Nodes All(SvgShape? nodeShape = null, SvgGroup? nodesGroup = null)
         {
-            return new Nodes(nodeShape, nodesGroup);
+            return new Nodes(nodeShape, nodesGroup ?? new SvgGroup());
         }
     }
 }

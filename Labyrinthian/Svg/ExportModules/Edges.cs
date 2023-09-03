@@ -10,6 +10,7 @@ namespace Labyrinthian.Svg
     public sealed class Edges : IExportModule
     {
         private readonly bool _baseGraphEdges;
+        private readonly bool _includeExits;
         private readonly SvgPath _path;
         private IEnumerable<MazeEdge>? _edges;
 
@@ -20,16 +21,18 @@ namespace Labyrinthian.Svg
             StrokeWidth = 2f,
         };
 
-        private Edges(SvgPath? path, bool baseGraphEdges)
+        private Edges(SvgPath? path, bool baseGraphEdges, bool includeExits = true)
         {
             _path = path ?? DefaultPath;
             _baseGraphEdges = baseGraphEdges;
+            _includeExits = includeExits;
         }
 
         private Edges(SvgPath? path, IEnumerable<MazeEdge> edges)
         {
             _path = path ?? DefaultPath;
             _edges = edges;
+            _includeExits = false;
         }
 
         private static IEnumerable<MazeEdge> BaseGraphEdges(Maze maze)
@@ -40,7 +43,7 @@ namespace Labyrinthian.Svg
         private static IEnumerable<MazeEdge> PassagesGraphEdges(Maze maze)
         {
             return maze.FindGraphEdgesDFS(
-                edge => maze.AreCellsConnected(edge.Cell1, edge.Cell2), true);
+                 edge => maze.AreCellsConnected(edge.Cell1, edge.Cell2));
         }
 
         public void Export(MazeSvgExporter exporter, SvgWriter svgWriter)
@@ -53,13 +56,27 @@ namespace Labyrinthian.Svg
 
             StringBuilder pathBuilder = new StringBuilder();
             PathSegment? previousSegment = null;
-            foreach (var edge in _edges)
+
+            void ExportEdge(MazeEdge edge)
             {
                 PathSegment currentSegment = exporter.Maze.GetPathBetweenCells(edge);
                 pathBuilder.Append(
                     currentSegment.MoveNext(previousSegment, exporter.CellSize, exporter.Offset)
                     );
                 previousSegment = currentSegment;
+            }
+
+            foreach (var edge in _edges)
+            {
+                ExportEdge(edge);
+            }
+            if (_includeExits)
+            {
+                foreach (var path in exporter.Maze.Paths)
+                {
+                    ExportEdge(path.Entry);
+                    ExportEdge(path.Exit);
+                }
             }
 
             _path.D = pathBuilder.ToString();
@@ -75,9 +92,12 @@ namespace Labyrinthian.Svg
         /// Setting 'Fill' to <see cref="SvgFill.None"/> is
         /// recommended for this argument.
         /// </param>
-        public static Edges OfBaseGraph(SvgPath? path = null)
+        /// <param name="includeExits">
+        /// If <see langword="true"/> then edges that lead to entries/exits will be displayed too.
+        /// </param>
+        public static Edges OfBaseGraph(SvgPath? path = null, bool includeExits = true)
         {
-            return new Edges(path, true);
+            return new Edges(path, true, includeExits);
         }
 
         /// <summary>
@@ -88,9 +108,12 @@ namespace Labyrinthian.Svg
         /// Setting 'Fill' to <see cref="SvgFill.None"/> is
         /// recommended for this argument.
         /// </param>
-        public static Edges OfPassagesGraph(SvgPath? path = null)
+        /// <param name="includeExits">
+        /// If <see langword="true"/> then edges that lead to entries/exits will be displayed too.
+        /// </param>
+        public static Edges OfPassagesGraph(SvgPath? path = null, bool includeExits = true)
         {
-            return new Edges(path, false);
+            return new Edges(path, false, includeExits);
         }
 
         /// <summary>

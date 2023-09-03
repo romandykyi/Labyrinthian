@@ -21,8 +21,9 @@ namespace Labyrinthian.Svg
 
         private readonly SvgGroup _group;
         private readonly PathCreator _pathCreator;
+        private readonly bool _intersectOuterCells;
 
-        private Solutions(SvgGroup? group, PathCreator? pathCreator)
+        private Solutions(SvgGroup? group, PathCreator? pathCreator, bool intersectOuterCells)
         {
             if (group == null)
             {
@@ -38,12 +39,13 @@ namespace Labyrinthian.Svg
                 _group = group;
             }
             _pathCreator = pathCreator ?? (_ => new SvgPath());
+            _intersectOuterCells = intersectOuterCells;
         }
 
-        private static string GetSvgPath(MazeSvgExporter exporter, MazePath path)
+        private string GetSvgPath(MazeSvgExporter exporter, MazePath path)
         {
             StringBuilder stringBuilder = new StringBuilder();
-            var segments = path.GetSegments();
+            var segments = path.GetSegments(_intersectOuterCells);
             // Move to the start at the beginning(we shouldn't use MoveNext here)
             stringBuilder.Append(segments.First().MoveToStartSvg(exporter.CellSize, exporter.Offset));
             foreach (var segment in segments)
@@ -80,9 +82,13 @@ namespace Labyrinthian.Svg
         /// <param name="pathCreator">
         /// Creator for each path.
         /// </param>
-        public static Solutions All(SvgGroup? group = null, PathCreator? pathCreator = null)
+        /// <param name="intersectOuterCells">
+        /// If <see langword="true"/> then solutions lines will intersect outer cells.
+        /// </param>
+        public static Solutions All(SvgGroup? group = null, PathCreator? pathCreator = null, 
+            bool intersectOuterCells = true)
         {
-            return new Solutions(group, pathCreator);
+            return new Solutions(group, pathCreator, intersectOuterCells);
         }
     }
 }

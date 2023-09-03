@@ -9,6 +9,6 @@
         [SvgProperty("marker-mid")]
         public SvgMarker? MarkerMid { get; set; }
         [SvgProperty("marker-end")]
-        public SvgMarker? MarkersEnd { get; set; }
+        public SvgMarker? MarkerEnd { get; set; }
     }
 }

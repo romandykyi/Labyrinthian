@@ -15,7 +15,7 @@
 
         public SvgElement? UsedElement { get; set; }
 
-        [SvgProperty("href")]
+        [SvgProperty("href", Prefix = "xlink")]
         public ElementHref? Href
         {
             get

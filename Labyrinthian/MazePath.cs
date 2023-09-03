@@ -108,12 +108,16 @@ namespace Labyrinthian
         /// <summary>
         /// Get all vector path segments that represent this path.
         /// </summary>
-        public IEnumerable<PathSegment> GetSegments()
+        /// <param name="includeOuterCells">
+        /// If <see langword="true"/> then edges with outer cells will be returned too.
+        /// </param>
+        public IEnumerable<PathSegment> GetSegments(bool includeOuterCells = true)
         {
             MazeCell previousCell = Entry.Cell1;
             if (!Entry.Cell2.IsMazePart)
             {
-                yield return Maze.GetPathBetweenCells(Entry.Cell2, Entry.Cell1);
+                if (includeOuterCells)
+                    yield return Maze.GetPathBetweenCells(Entry.Cell2, Entry.Cell1);
             }
             else
             {
@@ -126,7 +130,10 @@ namespace Labyrinthian
                 yield return Maze.GetPathBetweenCells(previousCell, path[i]);
                 previousCell = path[i];
             }
-            yield return Maze.GetPathBetweenCells(Exit.Cell1, Exit.Cell2);
+            if (Exit.Cell2.IsMazePart || includeOuterCells)
+            {
+                yield return Maze.GetPathBetweenCells(Exit.Cell1, Exit.Cell2);
+            }
         }
     }
 }

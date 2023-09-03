@@ -88,16 +88,29 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Check whether cell is not null and a maze part
+        /// Check whether cell is not null and a maze part.
         /// </summary>
         /// <returns>
         /// <param name="cell"></param>
         /// <see langword="true"/> if cell is not null and a maze part;
-        /// <see langword="false"/> if cell is null or an outer
+        /// <see langword="false"/> if cell is null or an outer.
         /// </returns>
         public static bool IsNotNullAndMazePart(this MazeCell? cell)
         {
             return cell != null && cell.IsMazePart;
+        }
+
+        /// <summary>
+        /// Check whether cell is not null and an outer.
+        /// </summary>
+        /// <returns>
+        /// <param name="cell"></param>
+        /// <see langword="true"/> if cell is not null and an outer;
+        /// <see langword="false"/> if cell is null or a maze part.
+        /// </returns>
+        public static bool IsNotNullAndOuter(this MazeCell? cell)
+        {
+            return cell != null && !cell.IsMazePart;
         }
     }
 }

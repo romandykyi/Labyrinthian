@@ -21,6 +21,9 @@ namespace Labyrinthian.Svg
     [SvgElement("marker")]
     public sealed class SvgMarker : SvgViewBoxGroup, INeedsDefinition
     {
+        [SvgChildren]
+        public SvgElement? Shape { get; set; }
+
         [SvgProperty("refX")]
         public SvgLength? RefX { get; set; }
         [SvgProperty("refY")]

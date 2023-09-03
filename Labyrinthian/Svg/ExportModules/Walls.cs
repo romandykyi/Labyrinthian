@@ -82,7 +82,8 @@ namespace Labyrinthian.Svg
             {
                 Fill = SvgFill.None,
                 Stroke = SvgColor.Black,
-                StrokeWidth = 2f
+                StrokeWidth = 2f,
+                StrokeLinecap = SvgLinecap.Square
             };
             return new Walls(path, wallsWidth, false);
         }
@@ -105,7 +106,8 @@ namespace Labyrinthian.Svg
             path ??= new SvgPath();
             group ??= new SvgGroup()
             {
-                Fill = SvgFill.None
+                Fill = SvgFill.None,
+                StrokeLinecap = SvgLinecap.Square
             };
             return new Walls(path, wallsWidth, true, group);
         }

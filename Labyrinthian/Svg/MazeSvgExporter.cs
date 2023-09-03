@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Numerics;
-using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Labyrinthian.Svg
 {
@@ -12,18 +8,42 @@ namespace Labyrinthian.Svg
     /// Class that can export mazes into SVG format.
     /// </summary>
     /// <example>
-    /// Export an orthogonal maze 10x10 generated using Wilson's algorithm.
+    /// This code snippet demonstrates the creation, generation, and export of an orthogonal maze as an SVG file:
     /// <code>
-    /// Maze maze = new OrthogonalMaze(10, 10);
-    /// MazeGenerator generator = new WilsonGeneration(maze);
+    /// // Create an orthogonal maze 30x20
+    /// Maze maze = new OrthogonalMaze(30, 20);
+    /// // Generate it using Prim's algorithm
+    /// MazeGenerator generator = new PrimGeneration(maze);
     /// generator.Generate();
-    /// using (var fs = new FileStream(@"D:\Pictures\Maze.svg", FileMode.Create))
-    /// using (var svgExporter = new MazeSvgExporter(maze, fs))
+    /// 
+    /// // Create a maze exporter(it doesn't need to be closed or disposed)
+    /// MazeSvgExporter exporter = new MazeSvgExporter(maze)
     /// {
-    ///    var fill = new SvgColorFill(SvgColor.Black);
-    ///    var stroke = new SvgStroke(2f, fill);
-    ///    svgExporter.DrawWalls(stroke);
-    /// }
+    ///     // Here we're adding export modules.
+    ///     // You can also use MazeSvgExporter.Add(IExportModule) method for this
+    ///     Walls.AsOnePath()
+    ///
+    ///     /*
+    ///      Besides Walls there are others modules, including:
+    ///    
+    ///       * Background
+    ///       * Cells
+    ///       * Edges
+    ///       * MazeDescription
+    ///       * Nodes
+    ///       * Solutions
+    ///     */
+    /// };
+    /// 
+    /// // Use a FileStream for exporting.
+    /// // You can also use any Stream or TextWriter(e.g. StreamWriter) or XmlWriter
+    /// using var fs = File.Create(@"d:\orthogonal-maze.svg");
+    /// using var svgWriter = new SvgWriter(fs);
+    /// // Export a maze
+    /// exporter.Export(svgWriter);
+    /// 
+    /// // Note: SvgWriter should be disposed after exporting.
+    /// // Here we do it with 'using'
     /// </code>
     /// </example>
     public sealed class MazeSvgExporter : IEnumerable<IExportModule>
@@ -78,7 +98,7 @@ namespace Labyrinthian.Svg
         private void RecalculateSizes()
         {
             Offset = Padding;
-            if (_wallsModule != null) Offset += _wallsModule.WallsWidth;
+            if (_wallsModule != null) Offset += _wallsModule.WallsWidth / 2f;
 
             Width = Maze.Width2D * CellSize + Offset * 2f;
             Height = Maze.Height2D * CellSize + Offset * 2f;
@@ -125,8 +145,7 @@ namespace Labyrinthian.Svg
         /// SVG-writer to be used.
         /// </param>
         /// <param name="root">
-        /// Optional &lt;svg&gt; element parameters. Note, that 'viewBox' will be 
-        /// overwritten.
+        /// Optional &lt;svg&gt; element parameters.
         /// </param>
         /// <param name="style">
         /// Optional CSS style.
@@ -140,7 +159,7 @@ namespace Labyrinthian.Svg
             }
 
             SvgRoot svgRoot = root ?? new SvgRoot();
-            svgRoot.ViewBox = new SvgViewBox(0f, 0f, Width, Height);
+            svgRoot.ViewBox ??= new SvgViewBox(0f, 0f, Width, Height);
 
             svgWriter.StartRoot(svgRoot);
             if (style != null)
@@ -153,7 +172,7 @@ namespace Labyrinthian.Svg
             }
             svgWriter.EndRoot();
         }
-        
+
         public IEnumerator<IExportModule> GetEnumerator()
         {
             return ((IEnumerable<IExportModule>)_exportModules).GetEnumerator();
