@@ -34,5 +34,10 @@
 
         [SvgProperty("gradientTransform")]
         public string? GradientTransform { get; set; }
+
+        public static implicit operator SvgFill(SvgGradient gradient)
+        {
+            return new SvgGradientFill(gradient);
+        }
     }
 }
