@@ -19,14 +19,14 @@ namespace Labyrinthian.Tests.Svg
         [Test]
         public void OptionDisplaysCorrectly()
         {
-            SvgMixedEnum<TestEnum, float> mixedEnum = new(TestEnum.Test2);
+            SvgMixedEnum<TestEnum, float> mixedEnum = TestEnum.Test2;
             Assert.That(mixedEnum.ToString(), Is.EqualTo("test2"));
         }
 
         [Test]
         public void ValueDisplaysCorrectly()
         {
-            SvgMixedEnum<TestEnum, float> mixedEnum = new(value: 13.3f);
+            SvgMixedEnum<TestEnum, float> mixedEnum = 13.3f;
             Assert.That(mixedEnum.ToString(), Is.EqualTo("13.3"));
         }
     }

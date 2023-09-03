@@ -38,5 +38,15 @@ namespace Labyrinthian.Svg
             if (Option != null) return Option.GetSvgOption();
             return Convert.ToString(Value, CultureInfo.InvariantCulture);
         }
+
+        public static implicit operator SvgMixedEnum<TEnum, TValue>(TValue value)
+        {
+            return new SvgMixedEnum<TEnum, TValue>(value: value);
+        }
+
+        public static implicit operator SvgMixedEnum<TEnum, TValue>(TEnum option)
+        {
+            return new SvgMixedEnum<TEnum, TValue>(option);
+        }
     }
 }
