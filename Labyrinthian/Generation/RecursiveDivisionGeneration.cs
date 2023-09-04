@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Maze generator that uses Recursive division algorithm.
+    /// Can be used only for <see cref="OrthogonalMaze"/>.
+    /// </summary>
     public sealed class RecursiveDivisionGeneration : MazeGenerator
     {
         private readonly struct Rect
@@ -22,9 +26,18 @@ namespace Labyrinthian
         private readonly OrthogonalMaze _maze;
         private readonly float _horizontalBias;
 
+        /// <inheritdoc cref="RecursiveDivisionGeneration(Maze, int, float)"/>
         public RecursiveDivisionGeneration(Maze maze, float horizontalBias = 1f) :
             this(maze, Environment.TickCount, horizontalBias)
         { }
+
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+        /// <inheritdoc cref="MazeGenerator(Maze, int, MazeCell?, bool)"/>
+        /// <param name="horizontalBias">
+        /// Horizontal bias. 
+        /// The higher this number, the more horizontal walls there are generated.
+        /// Can't be negative.
+        /// </param>
         public RecursiveDivisionGeneration(Maze maze, int seed, float horizontalBias = 1f) :
             base(maze, seed, defaultVisited: true)
         {
@@ -34,9 +47,11 @@ namespace Labyrinthian
             _maze = (OrthogonalMaze)maze;
             _horizontalBias = horizontalBias;
         }
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
         protected override bool IsSuitableFor(Maze maze) => IsMazeDefaultOrthogonal(maze);
 
+        // Probably needs refactor:
         private void DivideHorizontally(int row, int column, int columns)
         {
             int entryColumn = Rnd.Next(column, column + columns);

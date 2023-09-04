@@ -77,7 +77,7 @@ namespace Labyrinthian
         public event Action<MazeCell>? CellStateChanged;
 
         /// <summary>
-        /// Constructor with default seed.
+        /// Construct a generator with a default seed.
         /// </summary>
         /// <param name="maze">Maze used for generation.</param>
         /// <param name="initialCell">Cell that will be current at the start of generation(optional).</param>
@@ -88,7 +88,7 @@ namespace Labyrinthian
         { }
 
         /// <summary>
-        /// Constructor with specified seed.
+        /// Construct a generator with specified seed.
         /// </summary>
         /// <param name="maze">Maze used for generation.</param>
         /// <param name="seed">Seed for random numbers generator.</param>

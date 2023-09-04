@@ -2,11 +2,16 @@ using System.Collections.Generic;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Maze generator that uses randomized Prim's algorithm.
+    /// </summary>
     public sealed class PrimGeneration : MazeGenerator
     {
+        /// <inheritdoc cref="MazeGenerator(Maze, MazeCell?, bool)" />
         public PrimGeneration(Maze maze, MazeCell? initialCell = null) :
             base(maze, initialCell)
         { }
+        /// <inheritdoc cref="MazeGenerator(Maze, int, MazeCell?, bool)" />
         public PrimGeneration(Maze maze, int seed, MazeCell? initialCell = null) :
             base(maze, seed, initialCell)
         { }

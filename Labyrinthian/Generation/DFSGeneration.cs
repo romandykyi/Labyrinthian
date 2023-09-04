@@ -2,14 +2,17 @@ using System.Collections.Generic;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Maze generator that uses randomized Depth-first search algorithm.
+    /// </summary>
     public sealed class DFSGeneration : MazeGenerator
     {
+        /// <inheritdoc cref="MazeGenerator(Maze, MazeCell?, bool)" />
         public DFSGeneration(Maze maze, MazeCell? initialCell = null) :
-            base(maze, initialCell)
-        { }
+            base(maze, initialCell) { }
+        /// <inheritdoc cref="MazeGenerator(Maze, int, MazeCell?, bool)" />
         public DFSGeneration(Maze maze, int seed, MazeCell? initialCell = null) :
-            base(maze, seed, initialCell)
-        { }
+            base(maze, seed, initialCell) { }
 
         protected override IEnumerable<Maze> Generation()
         {

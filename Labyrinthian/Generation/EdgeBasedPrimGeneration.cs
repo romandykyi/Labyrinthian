@@ -2,11 +2,15 @@ using System.Collections.Generic;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Maze generator that uses Edge-based Prim's algorithm.
+    /// </summary>
     public sealed class EdgeBasedPrimGeneration : MazeGenerator
     {
+        /// <inheritdoc cref="MazeGenerator(Maze, MazeCell?, bool)" />
         public EdgeBasedPrimGeneration(Maze maze, MazeCell? initialCell = null) :
-            base(maze, initialCell)
-        { }
+            base(maze, initialCell) { }
+        /// <inheritdoc cref="MazeGenerator(Maze, int, MazeCell?, bool)" />
         public EdgeBasedPrimGeneration(Maze maze, int seed, MazeCell? initialCell = null) :
             base(maze, seed, initialCell)
         { }

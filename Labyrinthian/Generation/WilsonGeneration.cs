@@ -2,11 +2,16 @@ using System.Collections.Generic;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Maze generator that uses Wilson's algorithm.
+    /// </summary>
     public sealed class WilsonGeneration : MazeGenerator
     {
+        /// <inheritdoc cref="MazeGenerator(Maze, MazeCell?, bool)" />
         public WilsonGeneration(Maze maze, MazeCell? initialCell = null) :
             base(maze, initialCell)
         { }
+        /// <inheritdoc cref="MazeGenerator(Maze, int, MazeCell?, bool)" />
         public WilsonGeneration(Maze maze, int seed, MazeCell? initialCell = null) :
             base(maze, seed, initialCell)
         { }

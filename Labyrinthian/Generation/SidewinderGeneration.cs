@@ -3,11 +3,17 @@ using System.Collections.Generic;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Maze generator that uses Sidewinder algorithm.
+    /// Can be used only for <see cref="OrthogonalMaze"/>.
+    /// </summary>
     public sealed class SidewinderGeneration : MazeGenerator
     {
         private readonly float m_horizontalCarveProbability = 0.5f;
 
+        /// <inheritdoc cref="MazeGenerator(Maze, MazeCell?, bool)" />
         public SidewinderGeneration(Maze maze) : this(maze, Environment.TickCount) { }
+        /// <inheritdoc cref="MazeGenerator(Maze, int, MazeCell?, bool)" />
         public SidewinderGeneration(Maze maze, int seed, float horizontalCarveProbability = 0.5f) : base(maze, seed)
         {
             m_horizontalCarveProbability = horizontalCarveProbability;

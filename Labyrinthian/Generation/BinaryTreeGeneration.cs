@@ -2,9 +2,15 @@ using System.Collections.Generic;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Maze generator that uses Binary tree algorithm.
+    /// Can be used only for <see cref="OrthogonalMaze"/>.
+    /// </summary>
     public sealed class BinaryTreeGeneration : MazeGenerator
     {
+        /// <inheritdoc cref="MazeGenerator(Maze, MazeCell?, bool)" />
         public BinaryTreeGeneration(Maze maze) : base(maze) { }
+        /// <inheritdoc cref="MazeGenerator(Maze, int, MazeCell?, bool)" />
         public BinaryTreeGeneration(Maze maze, int seed) : base(maze, seed) { }
 
         protected override bool IsSuitableFor(Maze maze) => maze is OrthogonalMaze;

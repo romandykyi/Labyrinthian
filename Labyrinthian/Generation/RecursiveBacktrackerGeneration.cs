@@ -3,11 +3,16 @@ using System.Collections.Generic;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Maze generator that uses Recursive Backtracker algorithm.
+    /// </summary>
     public sealed class RecursiveBacktrackerGeneration : MazeGeneratorWithCustomSelection
     {
+        /// <inheritdoc cref="MazeGeneratorWithCustomSelection(Maze, MazeCellSelection?, MazeCell?, bool)"/>
         public RecursiveBacktrackerGeneration(Maze maze, MazeCellSelection? selection = null, MazeCell? initialCell = null) :
             base(maze, Environment.TickCount, selection, initialCell)
         { }
+        /// <inheritdoc cref="MazeGeneratorWithCustomSelection(Maze, int, MazeCellSelection?, MazeCell?, bool)"/>
         public RecursiveBacktrackerGeneration(Maze maze, int seed, MazeCellSelection? selection = null,
             MazeCell? initialCell = null) : base(maze, seed, selection, initialCell) { }
 

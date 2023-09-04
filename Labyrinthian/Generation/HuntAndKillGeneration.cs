@@ -2,15 +2,21 @@ using System.Collections.Generic;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Maze generator that uses Hunt and Kill algorithm.
+    /// </summary>
     public sealed class HuntAndKillGeneration : MazeGenerator
     {
+        /// <inheritdoc cref="MazeGenerator(Maze, MazeCell?, bool)" />
         public HuntAndKillGeneration(Maze maze, MazeCell? initialCell = null) :
             base(maze, initialCell)
         { }
+        /// <inheritdoc cref="MazeGenerator(Maze, int, MazeCell?, bool)" />
         public HuntAndKillGeneration(Maze maze, int seed, MazeCell? initialCell = null) :
             base(maze, seed, initialCell)
         { }
 
+        // Implementation may be incorrect, but it works
         protected override IEnumerable<Maze> Generation()
         {
             int currentIndex = 0, visitedCells = 1;

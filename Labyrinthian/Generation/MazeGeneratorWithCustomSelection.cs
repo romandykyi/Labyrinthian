@@ -10,6 +10,18 @@ namespace Labyrinthian
     /// </param>
     /// <param name="count">Size of the list</param>
     /// <returns>Index of the selected cell in the list.</returns>
+    /// <example>
+    /// Select the newest cell:
+    /// <code>MazeCellSelection newestCell = (rnd, count) => count - 1;</code>
+    /// </example>
+    /// <example>
+    /// Select the oldest cell:
+    /// <code>MazeCellSelection newestCell = (rnd, count) => 0;</code>
+    /// </example>
+    /// <example>
+    /// Select a random cell:
+    /// <code>MazeCellSelection newestCell = (rnd, count) => rnd.Next(count);</code>
+    /// </example>
     public delegate int MazeCellSelection(Random rnd, int count);
 
     /// <summary>

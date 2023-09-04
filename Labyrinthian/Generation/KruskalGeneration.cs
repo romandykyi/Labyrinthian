@@ -3,12 +3,16 @@ using System.Linq;
 
 namespace Labyrinthian
 {
+    /// <summary>
+    /// Maze generator that uses randomized Kruskal's algorithm.
+    /// </summary>
     public sealed class KruskalGeneration : MazeGenerator
     {
+        /// <inheritdoc cref="MazeGenerator(Maze, MazeCell?, bool)" />
         public KruskalGeneration(Maze maze) : base(maze, defaultVisited: true) { }
+        /// <inheritdoc cref="MazeGenerator(Maze, int, MazeCell?, bool)" />
         public KruskalGeneration(Maze maze, int seed) :
-            base(maze, seed, defaultVisited: true)
-        { }
+            base(maze, seed, defaultVisited: true) { }
 
         protected override IEnumerable<Maze> Generation()
         {
