@@ -19,7 +19,7 @@ namespace Labyrinthian.Svg
             _nodeShape = svgShape ?? new SvgCircle()
             {
                 R = 4f,
-                Fill = SvgColor.Red,
+                Fill = SvgColor.White,
                 Stroke = SvgColor.Black,
                 StrokeWidth = 1f,
                 Id = "node"
