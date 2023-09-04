@@ -1,7 +1,6 @@
-using Labyrinthian.Svg;
 using System;
 
-namespace Labyrinthian
+namespace Labyrinthian.Svg
 {
     /// <summary>
     /// Exception that replaces <see cref="ArgumentNullException"/> for <see cref="SvgFill"/>.

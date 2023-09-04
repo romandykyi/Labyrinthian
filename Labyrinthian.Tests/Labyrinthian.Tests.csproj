@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Labyrinthian.Svg\Labyrinthian.Svg.csproj" />
     <ProjectReference Include="..\Labyrinthian\Labyrinthian.csproj" />
   </ItemGroup>
 

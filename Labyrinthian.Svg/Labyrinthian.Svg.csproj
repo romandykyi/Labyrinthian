@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <AppDesignerFolder>3</AppDesignerFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Labyrinthian\Labyrinthian.csproj" />
+  </ItemGroup>
+
+</Project>
