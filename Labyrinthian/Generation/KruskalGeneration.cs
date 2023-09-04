@@ -12,7 +12,8 @@ namespace Labyrinthian
         public KruskalGeneration(Maze maze) : base(maze, defaultVisited: true) { }
         /// <inheritdoc cref="MazeGenerator(Maze, int, MazeCell?, bool)" />
         public KruskalGeneration(Maze maze, int seed) :
-            base(maze, seed, defaultVisited: true) { }
+            base(maze, seed, defaultVisited: true)
+        { }
 
         protected override IEnumerable<Maze> Generation()
         {

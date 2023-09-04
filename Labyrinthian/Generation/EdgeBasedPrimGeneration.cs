@@ -9,7 +9,8 @@ namespace Labyrinthian
     {
         /// <inheritdoc cref="MazeGenerator(Maze, MazeCell?, bool)" />
         public EdgeBasedPrimGeneration(Maze maze, MazeCell? initialCell = null) :
-            base(maze, initialCell) { }
+            base(maze, initialCell)
+        { }
         /// <inheritdoc cref="MazeGenerator(Maze, int, MazeCell?, bool)" />
         public EdgeBasedPrimGeneration(Maze maze, int seed, MazeCell? initialCell = null) :
             base(maze, seed, initialCell)

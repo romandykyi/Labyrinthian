@@ -85,7 +85,7 @@ namespace Labyrinthian.Svg
         /// <param name="intersectOuterCells">
         /// If <see langword="true"/> then solutions lines will intersect outer cells.
         /// </param>
-        public static Solutions All(SvgGroup? group = null, PathCreator? pathCreator = null, 
+        public static Solutions All(SvgGroup? group = null, PathCreator? pathCreator = null,
             bool intersectOuterCells = true)
         {
             return new Solutions(group, pathCreator, intersectOuterCells);

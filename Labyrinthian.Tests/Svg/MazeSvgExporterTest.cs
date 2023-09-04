@@ -1,8 +1,8 @@
-﻿using NUnit.Framework;
+﻿using Labyrinthian.Svg;
+using NUnit.Framework;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Labyrinthian.Svg;
 
 namespace Labyrinthian.Tests.Svg
 {

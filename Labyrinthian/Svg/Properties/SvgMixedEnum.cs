@@ -8,7 +8,7 @@ namespace Labyrinthian.Svg
     /// </summary>
     /// <typeparam name="TEnum">Type of the <see cref="Enum"/> with SVG-options.</typeparam>
     /// <typeparam name="TValue">Type of the value that is used when SVG-option is null.</typeparam>
-    public struct SvgMixedEnum<TEnum, TValue> 
+    public struct SvgMixedEnum<TEnum, TValue>
         where TEnum : struct, Enum
         where TValue : struct
     {
