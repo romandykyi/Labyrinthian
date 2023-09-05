@@ -1,5 +1,5 @@
 # Labyrinthian
-![labyrinthian-l](https://github.com/romandykyi/Labyrinthian/assets/94003504/36b5090b-a772-412a-a533-ef249a488228)
+![labyrinthian-l](https://github.com/romandykyi/Labyrinthian/assets/94003504/8e4a2bde-4582-4d11-9386-be6121eee432)
 
 Labyrinthian is a .NET Standard 2.1 C# library for generating mazes step by step. It provides a versatile toolkit for maze enthusiasts, game developers, and educators, allowing you to effortlessly create mazes with various algorithms and export them in SVG format. 
 
@@ -13,8 +13,8 @@ This library is lightweight and comes with no external dependencies.
 
 ## Mazes, that was generated using Labyrinthian.Svg
 
-![gradient-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/71d40c9c-92a1-41aa-a1e4-5031b14ec823)
-![lines-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/b84d2bf9-3f71-461c-9231-8f9ff4766330)
+![lines-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/4b641816-3976-4eee-8edb-8a3acec09a19)
+![gradient-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/de1fc580-e72a-45dc-ab15-a376addebad9)
 
 ## Supported Maze Generation Algorithms
 * Aldous Broder
@@ -63,7 +63,7 @@ exporter.Export(svgWriter);
 ```
 Possible output:
 
-![orthogonal-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/74e10a4b-6f91-40f3-87d8-a88e16dfbd98)
+![orthogonal-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/a6c20704-ab86-4247-8419-4e1b1fc84aa5)
 
 More examples [here](https://github.com/romandykyi/Labyrinthian/blob/master/Examples/MazeExportingExamples.cs).
 
