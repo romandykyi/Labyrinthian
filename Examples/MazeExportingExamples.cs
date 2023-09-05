@@ -8,7 +8,7 @@ namespace LabyrinthianExamples
     {
         // Default orthogonal maze
         private static void ExportOrthogonalMaze()
-        {
+            {
             // Create an orthogonal maze 30x20
             Maze maze = new OrthogonalMaze(30, 20);
             // Generate it using Prim's algorithm
@@ -23,7 +23,7 @@ namespace LabyrinthianExamples
                 Walls.AsOnePath()
 
                 /*
-                 Besides Walls there are others modules, including:
+                    Besides Walls there are others modules, including:
 
                     * Background
                     * Cells
@@ -31,7 +31,7 @@ namespace LabyrinthianExamples
                     * MazeDescription
                     * Nodes
                     * Solutions
-                 */
+                    */
             };
 
             // Use a FileStream for exporting.

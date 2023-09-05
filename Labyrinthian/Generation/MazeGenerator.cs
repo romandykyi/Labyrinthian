@@ -7,6 +7,18 @@ namespace Labyrinthian
     /// <summary>
     /// Class for step by step visualization of maze generation process.
     /// </summary>
+    /// <example>
+    /// This code snippet demonstrates the creation and generation of an orthogonal maze using Prim's algorithm:
+    /// <code>
+    /// using Labyrinthian;
+    /// 
+    /// // Create an orthogonal maze 30x20
+    /// Maze maze = new OrthogonalMaze(30, 20);
+    /// // Generate it using Prim's algorithm
+    /// MazeGenerator generator = new PrimGeneration(maze);
+    /// generator.Generate();
+    /// </code>
+    /// </example>
     public abstract class MazeGenerator
     {
         private MazeCell? _selectedCell;

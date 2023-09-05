@@ -10,6 +10,9 @@ namespace Labyrinthian.Svg
     /// <example>
     /// This code snippet demonstrates the creation, generation, and export of an orthogonal maze as an SVG file:
     /// <code>
+    /// using Labyrinthian;
+    /// using Labyrinthian.Svg;
+    /// 
     /// // Create an orthogonal maze 30x20
     /// Maze maze = new OrthogonalMaze(30, 20);
     /// // Generate it using Prim's algorithm
