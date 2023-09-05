@@ -9,9 +9,12 @@
     <Description>Labyrinthian is a dependency-free .NET Standard 2.1 C# library that empowers game developers and enthusiasts with versatile maze generation capabilities</Description>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageIcon>labyrinthian-logo.png</PackageIcon>
-    <PackageReadmeFile></PackageReadmeFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/romandykyi/Labyrinthian</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <AssemblyVersion></AssemblyVersion>
+    <Version>1.0.0.1</Version>
+    <Authors>Roman Dykyi</Authors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -28,6 +31,10 @@
       <PackagePath>\</PackagePath>
     </None>
     <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

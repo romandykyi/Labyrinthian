@@ -1,28 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <Nullable>enable</Nullable>
-    <AppDesignerFolder>3</AppDesignerFolder>
-    <Title>Labyrinthian.Svg - SVG support for Labyrinthian</Title>
-    <Description>Labyrinthian.Svg is a dependency-free .NET Standard 2.1 C# library that provides SVG support for Labyrinthian</Description>
-    <RepositoryUrl>https://github.com/romandykyi/Labyrinthian</RepositoryUrl>
-    <PackageReadmeFile></PackageReadmeFile>
-    <PackageIcon>labyrinthian.svg-logo.png</PackageIcon>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<Nullable>enable</Nullable>
+		<AppDesignerFolder>3</AppDesignerFolder>
+		<Title>Labyrinthian.Svg - SVG support for Labyrinthian</Title>
+		<Description>Labyrinthian.Svg is a dependency-free .NET Standard 2.1 C# library that provides SVG support for Labyrinthian</Description>
+		<RepositoryUrl>https://github.com/romandykyi/Labyrinthian</RepositoryUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>labyrinthian.svg-logo.png</PackageIcon>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<Version>1.0.0.1</Version>
+		<Authors>Roman Dykyi</Authors>
+		<AssemblyVersion></AssemblyVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\labyrinthian.svg-logo.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\labyrinthian.svg-logo.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Labyrinthian\Labyrinthian.csproj" />
-	  <PackageReference Include="Labyrinthian" Version="1.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Labyrinthian\Labyrinthian.csproj" />
+		<PackageReference Include="Labyrinthian" />
+	</ItemGroup>
 
 </Project>
