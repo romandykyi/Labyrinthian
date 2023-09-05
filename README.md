@@ -7,11 +7,14 @@ This library is lightweight and comes with no external dependencies.
 
 **Note: This project is currently in active development.**
 
+## NuGet Packages
+* [Labyrinthian](https://www.nuget.org/packages/Labyrinthian/)
+* [Labyrinthian.Svg](https://www.nuget.org/packages/Labyrinthian.Svg/)
+
 ## Mazes, that was generated using Labyrinthian.Svg
 
 ![gradient-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/71d40c9c-92a1-41aa-a1e4-5031b14ec823)
 ![lines-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/b84d2bf9-3f71-461c-9231-8f9ff4766330)
-
 
 ## Supported Maze Generation Algorithms
 * Aldous Broder
