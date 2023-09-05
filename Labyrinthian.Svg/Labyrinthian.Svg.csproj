@@ -4,7 +4,20 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
     <AppDesignerFolder>3</AppDesignerFolder>
+    <Title>Labyrinthian.Svg - SVG support for Labyrinthian</Title>
+    <Description>Labyrinthian.Svg is a dependency-free .NET Standard 2.1 C# library that provides SVG support for Labyrinthian</Description>
+    <RepositoryUrl>https://github.com/romandykyi/Labyrinthian</RepositoryUrl>
+    <PackageReadmeFile></PackageReadmeFile>
+    <PackageIcon>labyrinthian.svg-logo.png</PackageIcon>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\labyrinthian.svg-logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Labyrinthian\Labyrinthian.csproj" />
