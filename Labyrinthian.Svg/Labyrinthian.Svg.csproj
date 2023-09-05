@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Labyrinthian\Labyrinthian.csproj" />
+	  <PackageReference Include="Labyrinthian" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
