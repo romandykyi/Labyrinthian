@@ -10,6 +10,7 @@
     <PackageReadmeFile></PackageReadmeFile>
     <PackageIcon>labyrinthian.svg-logo.png</PackageIcon>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
