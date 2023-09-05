@@ -60,5 +60,7 @@ Possible output:
 
 ![orthogonal-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/74e10a4b-6f91-40f3-87d8-a88e16dfbd98)
 
+More examples [here](https://github.com/romandykyi/Labyrinthian/blob/master/Examples/MazeExportingExamples.cs).
+
 ## License
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/romandykyi/Labyrinthian/blob/master/LICENSE) file for details.
