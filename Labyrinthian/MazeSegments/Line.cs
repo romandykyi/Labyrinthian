@@ -4,35 +4,33 @@ namespace Labyrinthian
 {
     public sealed class Line : PathSegment
     {
-        public Vector2 From { get; set; }
-        public Vector2 To { get; set; }
+        private readonly Vector2 _start, _end;
 
-        public Line(Vector2 from, Vector2 to)
+        public override Vector2 StartPoint => _start;
+        public override Vector2 EndPoint => _end;
+
+        public Line(Vector2 start, Vector2 end)
         {
-            From = from;
-            To = to;
+            _start = start;
+            _end = end;
         }
 
-        public Line(float x0, float y0, float x1, float y1)
-        {
-            From = new Vector2(x0, y0);
-            To = new Vector2(x1, y1);
-        }
+        public Line(float x1, float y1, float x2, float y2) :
+            this(new Vector2(x1, y1), new Vector2(x2, y2))
+        { }
 
-        public override Vector2 StartPoint => From;
-        public override Vector2 EndPoint => To;
-
-        protected override string MoveToEndSvg(Vector2 v)
+        public override string MoveToEndSvg(float cellSize, float offset)
         {
-            if (From.X.ApproximatelyEquals(To.X))
+            Vector2 end = TransformPoint(EndPoint, cellSize, offset);
+            if (_start.X.ApproximatelyEquals(_end.X))
             {
-                return $"V{v.Y.ToInvariantString()} ";
+                return $"V{end.Y.ToInvariantString()} ";
             }
-            if (From.Y.ApproximatelyEquals(To.Y))
+            if (_start.Y.ApproximatelyEquals(_end.Y))
             {
-                return $"H{v.X.ToInvariantString()} ";
+                return $"H{end.X.ToInvariantString()} ";
             }
-            return $"L{v.X.ToInvariantString()},{v.Y.ToInvariantString()} ";
+            return $"L{end.X.ToInvariantString()},{end.Y.ToInvariantString()} ";
         }
     }
 }

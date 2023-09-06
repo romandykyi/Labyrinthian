@@ -8,24 +8,23 @@ namespace Labyrinthian
         public abstract Vector2 EndPoint { get; }
         public virtual Vector2 Center => Vector2.Lerp(StartPoint, EndPoint, 0.5f);
 
-        protected Vector2 Transform(Vector2 v, float cellSize, float offset)
+        protected float TransformSize(float size, float cellSize)
         {
-            return new Vector2(v.X * cellSize + offset, v.Y * cellSize + offset);
+            return size * cellSize;
         }
 
-        protected virtual string MoveToStartSvg(Vector2 v) =>
-            $"M{v.X.ToInvariantString()},{v.Y.ToInvariantString()} ";
-
-        protected abstract string MoveToEndSvg(Vector2 v);
-
-        public string MoveToStartSvg(float cellSize, float offset)
+        protected Vector2 TransformPoint(Vector2 point, float cellSize, float offset)
         {
-            return MoveToStartSvg(Transform(StartPoint, cellSize, offset));
+            return new Vector2(point.X * cellSize + offset, point.Y * cellSize + offset);
         }
-        public string MoveToEndSvg(float cellSize, float offset)
+
+        public virtual string MoveToStartSvg(float cellSize, float offset)
         {
-            return MoveToEndSvg(Transform(EndPoint, cellSize, offset));
-        }
+            Vector2 point = TransformPoint(StartPoint, cellSize, offset);
+            return $"M{point.X.ToInvariantString()},{point.Y.ToInvariantString()} ";
+        }   
+
+        public abstract string MoveToEndSvg(float cellSize, float offset);
 
         public string MoveNext(PathSegment? from, float cellSize, float offset)
         {
