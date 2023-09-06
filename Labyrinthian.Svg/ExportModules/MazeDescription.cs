@@ -1,4 +1,6 @@
-﻿namespace Labyrinthian.Svg
+﻿using System.Threading.Tasks;
+
+namespace Labyrinthian.Svg
 {
     /// <summary>
     /// Export module for maze description.
@@ -12,9 +14,9 @@
         /// </summary>
         public static MazeDescription Default => new MazeDescription();
 
-        public void Export(MazeSvgExporter exporter, SvgWriter svgWriter)
+        public async Task ExportAsync(MazeSvgExporter exporter, SvgWriter svgWriter)
         {
-            svgWriter.WriteStringElement("desc", $"{exporter.Maze.Description}; Generator: Labyrinthian");
+            await svgWriter.WriteStringElementAsync("desc", $"{exporter.Maze.Description}; Generator: Labyrinthian");
         }
     }
 }

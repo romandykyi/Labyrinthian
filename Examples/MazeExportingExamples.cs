@@ -1,6 +1,9 @@
-﻿#pragma warning disable IDE0051 // Remove unused private members
-using Labyrinthian;
+﻿using Labyrinthian;
 using Labyrinthian.Svg;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LabyrinthianExamples
 {
@@ -8,7 +11,7 @@ namespace LabyrinthianExamples
     {
         // Default orthogonal maze
         private static void ExportOrthogonalMaze()
-            {
+        {
             // Create an orthogonal maze 30x20
             Maze maze = new OrthogonalMaze(30, 20);
             // Generate it using Prim's algorithm
@@ -388,8 +391,8 @@ namespace LabyrinthianExamples
             exporter.Export(svgWriter);
         }
 
-        // Export visualization of generation process as multiple SVG-files
-        private static void ExportGenerationVisualization()
+        // Export visualization of generation process as multiple SVG-files asynchronously
+        private static async Task ExportGenerationVisualizationAsync()
         {
             // Create an orthogonal maze 10x10
             Maze maze = new OrthogonalMaze(10, 10);
@@ -452,9 +455,8 @@ namespace LabyrinthianExamples
                 using var fs = File.Create(Path.Combine(directory, $"{i++}.svg"));
                 using var svgWriter = new SvgWriter(fs);
                 // Export a maze frame
-                exporter.Export(svgWriter);
+                await exporter.ExportAsync(svgWriter);
             }
         }
     }
 }
-#pragma warning restore IDE0051 // Remove unused private members

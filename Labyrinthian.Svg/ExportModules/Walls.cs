@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 
 namespace Labyrinthian.Svg
 {
@@ -24,21 +25,21 @@ namespace Labyrinthian.Svg
             _group = group;
         }
 
-        private void ExportAsSeparatePaths(MazeSvgExporter exporter, SvgWriter svgWriter)
+        private async Task ExportAsSeparatePaths(MazeSvgExporter exporter, SvgWriter svgWriter)
         {
-            svgWriter.StartElement(_group!);
+            await svgWriter.StartElementAsync(_group!);
             foreach (var wall in exporter.Maze.GetWalls())
             {
                 _path.D = exporter.Maze.GetWallPosition(wall).
                     FromStartToEnd(exporter.CellSize, exporter.Offset);
 
-                svgWriter.StartElement(_path);
-                svgWriter.EndElement();
+                await svgWriter.StartElementAsync(_path);
+                await svgWriter.EndElementAsync();
             }
-            svgWriter.EndElement();
+            await svgWriter.EndElementAsync();
         }
 
-        private void ExportAsOnePath(MazeSvgExporter exporter, SvgWriter svgWriter)
+        private async Task ExportAsOnePath(MazeSvgExporter exporter, SvgWriter svgWriter)
         {
             PathSegment? previous = null;
             StringBuilder pathD = new StringBuilder();
@@ -51,19 +52,19 @@ namespace Labyrinthian.Svg
                 previous = segment;
             }
             _path.D = pathD.ToString();
-            svgWriter.StartElement(_path);
-            svgWriter.EndElement();
+            await svgWriter.StartElementAsync(_path);
+            await svgWriter.EndElementAsync();
         }
 
-        public void Export(MazeSvgExporter exporter, SvgWriter svgWriter)
+        public async Task ExportAsync(MazeSvgExporter exporter, SvgWriter svgWriter)
         {
             if (_separatePaths)
             {
-                ExportAsSeparatePaths(exporter, svgWriter);
+                await ExportAsSeparatePaths(exporter, svgWriter);
             }
             else
             {
-                ExportAsOnePath(exporter, svgWriter);
+                await ExportAsOnePath(exporter, svgWriter);
             }
         }
 

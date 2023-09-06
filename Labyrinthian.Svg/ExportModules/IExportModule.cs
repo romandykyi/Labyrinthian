@@ -1,4 +1,6 @@
-﻿namespace Labyrinthian.Svg
+﻿using System.Threading.Tasks;
+
+namespace Labyrinthian.Svg
 {
     public interface IExportModule
     {
@@ -11,6 +13,6 @@
         /// <param name="svgWriter">
         /// Writer for exporting.
         /// </param>
-        void Export(MazeSvgExporter exporter, SvgWriter svgWriter);
+        Task ExportAsync(MazeSvgExporter exporter, SvgWriter svgWriter);
     }
 }

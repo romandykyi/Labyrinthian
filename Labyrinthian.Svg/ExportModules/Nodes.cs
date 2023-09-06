@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 
 namespace Labyrinthian.Svg
 {
@@ -28,14 +29,14 @@ namespace Labyrinthian.Svg
             _cells = cells;
         }
 
-        public void Export(MazeSvgExporter exporter, SvgWriter svgWriter)
+        public async Task ExportAsync(MazeSvgExporter exporter, SvgWriter svgWriter)
         {
             if (_cells == null)
                 _cells = exporter.Maze.Cells;
             else if (!_cells.Any())
                 return;
 
-            if (_nodesGroup != null) svgWriter.StartElement(_nodesGroup);
+            if (_nodesGroup != null) await svgWriter.StartElementAsync(_nodesGroup);
             foreach (var cell in _cells)
             {
                 Vector2 cellCenter = exporter.Maze.GetCellCenter2D(cell);
@@ -50,10 +51,10 @@ namespace Labyrinthian.Svg
                     Y = cellCenter.Y
                 };
 
-                svgWriter.StartElement(use);
-                svgWriter.EndElement();
+                await svgWriter.StartElementAsync(use);
+                await svgWriter.EndElementAsync();
             }
-            if (_nodesGroup != null) svgWriter.EndElement();
+            if (_nodesGroup != null) await svgWriter.EndElementAsync();
         }
 
         /// <summary>

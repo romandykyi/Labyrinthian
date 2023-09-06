@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Labyrinthian.Svg
 {
@@ -46,7 +47,7 @@ namespace Labyrinthian.Svg
                  edge => maze.AreCellsConnected(edge.Cell1, edge.Cell2));
         }
 
-        public void Export(MazeSvgExporter exporter, SvgWriter svgWriter)
+        public async Task ExportAsync(MazeSvgExporter exporter, SvgWriter svgWriter)
         {
             _edges ??= _baseGraphEdges ?
                 BaseGraphEdges(exporter.Maze) :
@@ -80,8 +81,8 @@ namespace Labyrinthian.Svg
             }
 
             _path.D = pathBuilder.ToString();
-            svgWriter.StartElement(_path);
-            svgWriter.EndElement();
+            await svgWriter.StartElementAsync(_path);
+            await svgWriter.EndElementAsync();
         }
 
         /// <summary>

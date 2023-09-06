@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Labyrinthian.Svg
 {
@@ -32,24 +33,24 @@ namespace Labyrinthian.Svg
             return stringBuilder.ToString();
         }
 
-        public void Export(MazeSvgExporter exporter, SvgWriter svgWriter)
+        public async Task ExportAsync(MazeSvgExporter exporter, SvgWriter svgWriter)
         {
             if (_cells == null)
                 _cells = exporter.Maze.Cells;
             else if (!_cells.Any())
                 return;
 
-            svgWriter.StartElement(_group);
+            await svgWriter.StartElementAsync(_group);
             foreach (var cell in _cells)
             {
                 SvgPath path = new SvgPath()
                 {
                     D = GetPath(cell, exporter)
                 };
-                svgWriter.StartElement(path);
-                svgWriter.EndElement();
+                await svgWriter.StartElementAsync(path);
+                await svgWriter.EndElementAsync();
             }
-            svgWriter.EndElement();
+            await svgWriter.EndElementAsync();
         }
 
         /// <summary>

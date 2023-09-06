@@ -1,4 +1,6 @@
-﻿namespace Labyrinthian.Svg
+﻿using System.Threading.Tasks;
+
+namespace Labyrinthian.Svg
 {
     /// <summary>
     /// Export module for background.
@@ -12,7 +14,7 @@
             _fill = fill;
         }
 
-        public void Export(MazeSvgExporter exporter, SvgWriter svgWriter)
+        public async Task ExportAsync(MazeSvgExporter exporter, SvgWriter svgWriter)
         {
             SvgRect rect = new SvgRect()
             {
@@ -22,8 +24,8 @@
                 Width = new SvgLength(100f, SvgLengthUnit.Percentage),
                 Height = new SvgLength(100f, SvgLengthUnit.Percentage)
             };
-            svgWriter.StartElement(rect);
-            svgWriter.EndElement();
+            await svgWriter.StartElementAsync(rect);
+            await svgWriter.EndElementAsync();
         }
 
         /// <summary>

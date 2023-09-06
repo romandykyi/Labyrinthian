@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Labyrinthian.Svg
 {
@@ -55,20 +56,20 @@ namespace Labyrinthian.Svg
             return stringBuilder.ToString();
         }
 
-        public void Export(MazeSvgExporter exporter, SvgWriter svgWriter)
+        public async Task ExportAsync(MazeSvgExporter exporter, SvgWriter svgWriter)
         {
             if (exporter.Maze.Paths.Count == 0) return;
 
-            svgWriter.StartElement(_group);
+            await svgWriter.StartElementAsync(_group);
             for (int i = 0; i < exporter.Maze.Paths.Count; ++i)
             {
                 SvgPath path = _pathCreator(i);
                 path.D = GetSvgPath(exporter, exporter.Maze.Paths[i]);
 
-                svgWriter.StartElement(path);
-                svgWriter.EndElement();
+                await svgWriter.StartElementAsync(path);
+                await svgWriter.EndElementAsync();
             }
-            svgWriter.EndElement();
+            await svgWriter.EndElementAsync();
         }
 
         /// <summary>

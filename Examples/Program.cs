@@ -1,8 +1,11 @@
-﻿namespace LabyrinthianExamples
+﻿using System;
+using System.Threading.Tasks;
+
+namespace LabyrinthianExamples
 {
     internal partial class Program
     {
-        private static void Main()
+        private static async Task Main()
         {
             //ExportOrthogonalMaze();
             ExportOrthogonalMazeWithSolution();
@@ -11,7 +14,7 @@
             //ExportMazeAsBinaryTree();
             //ExportLinesMaze();
             //ExportRainbowTriangularMaze();
-            //ExportGenerationVisualization();
+            //await ExportGenerationVisualizationAsync();
         }
     }
 }

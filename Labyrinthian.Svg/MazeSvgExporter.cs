@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Labyrinthian.Svg
 {
@@ -141,6 +142,12 @@ namespace Labyrinthian.Svg
             }
         }
 
+        /// <inheritdoc cref="ExportAsync" />
+        public void Export(SvgWriter svgWriter, SvgRoot? root = null, string? style = null)
+        {
+            AsyncHelper.RunSync(() => ExportAsync(svgWriter, root, style));
+        }
+
         /// <summary>
         /// Export a maze using provided SVG-writer.
         /// </summary>
@@ -154,7 +161,7 @@ namespace Labyrinthian.Svg
         /// Optional CSS style.
         /// </param>
         /// <exception cref="InvalidOperationException" />
-        public void Export(SvgWriter svgWriter, SvgRoot? root = null, string? style = null)
+        public async Task ExportAsync(SvgWriter svgWriter, SvgRoot? root = null, string? style = null)
         {
             if (_exportModules.Count == 0)
             {
@@ -164,16 +171,16 @@ namespace Labyrinthian.Svg
             SvgRoot svgRoot = root ?? new SvgRoot();
             svgRoot.ViewBox ??= new SvgViewBox(0f, 0f, Width, Height);
 
-            svgWriter.StartRoot(svgRoot);
+            await svgWriter.StartRootAsync(svgRoot);
             if (style != null)
             {
-                svgWriter.WriteStringElement("style", style);
+                await svgWriter.WriteStringElementAsync("style", style);
             }
             foreach (IExportModule exportModule in _exportModules)
             {
-                exportModule.Export(this, svgWriter);
+                await exportModule.ExportAsync(this, svgWriter);
             }
-            svgWriter.EndRoot();
+            await svgWriter.EndRootAsync();
         }
 
         public IEnumerator<IExportModule> GetEnumerator()

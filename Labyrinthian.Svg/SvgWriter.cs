@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -9,25 +10,31 @@ using System.Xml;
 
 namespace Labyrinthian.Svg
 {
-    public class SvgWriter : IDisposable
+    public sealed class SvgWriter : IDisposable
     {
         private readonly XmlWriter _writer;
         private readonly HashSet<SvgElement> _definitions = new HashSet<SvgElement>();
+        private readonly static XmlWriterSettings s_defaultSettings = new XmlWriterSettings()
+        {
+            Async = true
+        };
 
         public SvgWriter(XmlWriter writer)
         {
+            if (!writer.Settings.Async)
+            {
+                throw new InvalidOperationException("Please, set XmlWriterSettings Async to true.");
+            }
             _writer = writer;
         }
 
-        public SvgWriter(Stream stream, XmlWriterSettings? xmlSettings = null)
-        {
-            _writer = XmlWriter.Create(stream, xmlSettings);
-        }
+        public SvgWriter(Stream stream, XmlWriterSettings? xmlSettings = null) :
+            this(XmlWriter.Create(stream, xmlSettings ?? s_defaultSettings))
+        { }
 
-        public SvgWriter(TextWriter tw, XmlWriterSettings? xmlSettings = null)
-        {
-            _writer = XmlWriter.Create(tw, xmlSettings);
-        }
+        public SvgWriter(TextWriter tw, XmlWriterSettings? xmlSettings = null) :
+            this(XmlWriter.Create(tw, xmlSettings ?? s_defaultSettings))
+        { }
 
         private string? SvgPropertyToString(SvgPropertyAttribute property, object propertyValue)
         {
@@ -74,13 +81,13 @@ namespace Labyrinthian.Svg
             return result;
         }
 
-        private void StartElement(SvgElement element, string? ns)
+        private async Task StartElementAsync(SvgElement element, string? ns)
         {
             var elementAttribute =
                 element.GetType().GetCustomAttribute<SvgElementAttribute>() ??
                 throw new InvalidOperationException($"Only svg-elements with {nameof(SvgElementAttribute)} are supported.");
 
-            _writer.WriteStartElement(elementAttribute.Name, ns);
+            await _writer.WriteStartElementAsync(null, elementAttribute.Name, ns);
 
             var children = new List<SvgElement>();
             // Attributes
@@ -112,65 +119,65 @@ namespace Labyrinthian.Svg
 
                 if (svgProperty.Prefix != null)
                 {
-                    _writer.WriteAttributeString(svgProperty.Prefix, svgProperty.Name, null, propertyValueStr);
+                    await _writer.WriteAttributeStringAsync(svgProperty.Prefix, svgProperty.Name, null, propertyValueStr);
                 }
                 else
                 {
-                    _writer.WriteAttributeString(svgProperty.Name, propertyValueStr);
+                    await _writer.WriteAttributeStringAsync(null, svgProperty.Name, null, propertyValueStr);
                 }
             }
             // Children
             foreach (var child in children)
             {
-                StartElement(child);
-                EndElement();
+                await StartElementAsync(child);
+                await EndElementAsync();
             }
         }
 
         /// <summary>
         /// Start root '&lt;svg&gt;' element and the xml document.
         /// </summary>
-        public void StartRoot(SvgRoot root)
+        public async Task StartRootAsync(SvgRoot root)
         {
             _writer.WriteStartDocument();
-            StartElement(root, root.Xmlns);
+            await StartElementAsync(root, root.Xmlns);
         }
 
         /// <summary>
         /// End the root element and a document.
         /// </summary>
-        public void EndRoot()
+        public async Task EndRootAsync()
         {
             if (_definitions.Count > 0)
             {
-                _writer.WriteStartElement("defs");
+                await _writer.WriteStartElementAsync(null, "defs", null);
                 foreach (var definition in _definitions)
                 {
-                    StartElement(definition);
-                    EndElement();
+                    await StartElementAsync(definition);
+                    await EndElementAsync();
                 }
-                _writer.WriteEndElement();
+                await _writer.WriteEndElementAsync();
             }
 
-            EndElement(); // end <svg>
-            _writer.WriteEndDocument();
+            await EndElementAsync(); // end <svg>
+            await _writer.WriteEndDocumentAsync();
         }
 
         /// <summary>
         /// Start writing an SVG-element.
         /// </summary>
         /// <param name="element">Element which will be written.</param>
-        public void StartElement(SvgElement element)
+        public async Task StartElementAsync(SvgElement element)
         {
-            StartElement(element, null);
+            await StartElementAsync(element, null);
         }
 
         /// <summary>
         /// End writing an SVG-element
         /// </summary>
-        public void EndElement()
+        public async Task EndElementAsync()
         {
-            _writer.WriteEndElement();
+            await _writer.WriteEndElementAsync();
         }
 
         /// <summary>
@@ -180,11 +187,11 @@ namespace Labyrinthian.Svg
         /// <param name="element">Element's name.</param>
         /// <param name="value">String value of the element(optional).</param>
         /// <param name="prefix">Prefix of the element(optional).</param>
-        public void WriteStringElement(string element, string? value = null, string? prefix = null)
+        public async Task WriteStringElementAsync(string element, string? value = null, string? prefix = null)
         {
-            _writer.WriteStartElement(prefix, element, null);
-            if (value != null) _writer.WriteValue(value);
-            _writer.WriteEndElement();
+            await _writer.WriteStartElementAsync(prefix, element, null);
+            if (value != null) await _writer.WriteStringAsync(value);
+            await _writer.WriteEndElementAsync();
         }
 
         public void Dispose()
