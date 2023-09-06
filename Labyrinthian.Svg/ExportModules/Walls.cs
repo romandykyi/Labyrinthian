@@ -108,6 +108,8 @@ namespace Labyrinthian.Svg
             group ??= new SvgGroup()
             {
                 Fill = SvgFill.None,
+                Stroke = SvgColor.Black,
+                StrokeWidth = 2f,
                 StrokeLinecap = SvgLinecap.Square
             };
             return new Walls(path, wallsWidth, true, group);
