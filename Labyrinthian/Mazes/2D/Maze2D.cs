@@ -70,7 +70,7 @@ namespace Labyrinthian
                 previousPoint = currentPoint;
             }
 
-            yield return new Line(
+            yield return new ClosePath(
                 previousPoint[0], previousPoint[1],
                 firstPoint[0], firstPoint[1]);
         }
