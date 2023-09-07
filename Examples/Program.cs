@@ -10,6 +10,7 @@ namespace LabyrinthianExamples
             //ExportOrthogonalMaze();
             ExportOrthogonalMazeWithSolution();
             //ExportOrthogonalMazeWithMultipleSolutions();
+            //ExportCircularMaze();
             //ExportMazeAsGraph();
             //ExportMazeAsBinaryTree();
             //ExportLinesMaze();

@@ -9,8 +9,8 @@ namespace LabyrinthianExamples
 {
     internal partial class Program
     {
-        // Default orthogonal maze
-        private static void ExportOrthogonalMaze()
+        // Export default orthogonal maze
+        public static void ExportOrthogonalMaze()
         {
             // Create an orthogonal maze 30x20
             Maze maze = new OrthogonalMaze(30, 20);
@@ -48,8 +48,8 @@ namespace LabyrinthianExamples
             // Here we do it with 'using'
         }
 
-        // Orthogonal maze with a solution
-        private static void ExportOrthogonalMazeWithSolution()
+        // Export orthogonal maze with a solution
+        public static void ExportOrthogonalMazeWithSolution()
         {
             // Create an orthogonal maze 30x20
             Maze maze = new OrthogonalMaze(30, 20);
@@ -92,8 +92,8 @@ namespace LabyrinthianExamples
             // Here we do it with 'using'
         }
 
-        // Orthogonal maze with multiple solutions
-        private static void ExportOrthogonalMazeWithMultipleSolutions()
+        // Export orthogonal maze with multiple solutions
+        public static void ExportOrthogonalMazeWithMultipleSolutions()
         {
             // Create an orthogonal maze 25x25
             GridMaze2D maze = new OrthogonalMaze(25, 25);
@@ -169,8 +169,74 @@ namespace LabyrinthianExamples
             // Here we do it with 'using'
         }
 
+        // Export Theta(circular) maze
+        public static void ExportCircularMaze()
+        {
+            // Create a Theta maze with radius 18, inner radius 3 and 40 cells on each circle
+            Maze maze = new ThetaMaze(18, 3, 40);
+
+            // Specify entry and exit of the maze.
+            // You can also do it after maze generation
+            MazeEdge entry = maze.GetOuterWalls().First(); // First outer wall
+            MazeEdge exit = maze.GetOuterWalls().Last(); // Last outer wall
+            maze.Paths.Add(new(maze, entry, exit));
+
+            // Selection method for a cell.
+            // It's a newest cell with 50% probability, or a random cell
+            MazeCellSelection newestOrRandom = (rnd, n) => rnd.Next(2) == 0 ? n - 1 : rnd.Next(n);
+            // Generate it using Growing tree algorithm
+            MazeGenerator generator = new GrowingTreeGeneration(maze, newestOrRandom);
+            generator.Generate();
+
+            // Specify radient stops
+            var stops = new SvgStop[2]
+            {
+                new(0f, SvgColor.FromHexCode("#ff0000")),
+                new(1f, SvgColor.FromHexCode("#ffa600")),
+            };
+            // Create a radial gradient
+            SvgGradient radialGradient = new SvgRadialGradient()
+            {
+                Id = "wallsGradient", // Each gradient should have an Id
+                Stops = stops,
+                GradientUnits = SvgGradientUnits.UserSpaceOnUse,
+                Cx = new SvgLength(50f, SvgLengthUnit.Percentage),
+                Cy = new SvgLength(50f, SvgLengthUnit.Percentage),
+                R = new SvgLength(50f, SvgLengthUnit.Percentage),
+            };
+            // Custom path for walls.
+            SvgPath wallsPath = new()
+            {
+                Stroke = radialGradient,
+                StrokeWidth = 5f,
+                Fill = SvgFill.None,
+                StrokeLinecap = SvgLinecap.Round,
+                StrokeLinejoin = SvgLinejoin.Round
+            };
+
+            // Create a maze exporter(it doesn't need to be closed or disposed)
+            MazeSvgExporter exporter = new(maze, padding: 2.5f)
+            {
+                // This module will write a description about the maze in SVG-file.
+                // It doesn't affect maze appearance
+                MazeDescription.Default,
+                // Export walls
+                Walls.AsOnePath(wallsPath),
+            };
+
+            // Use a FileStream for exporting.
+            // You can also use any Stream or TextWriter(e.g. StreamWriter) or XmlWriter
+            using var fs = File.Create(@"d:\theta-maze.svg");
+            using var svgWriter = new SvgWriter(fs);
+            // Export a maze
+            exporter.Export(svgWriter);
+
+            // Note: SvgWriter should be disposed after exporting.
+            // Here we do it with 'using'
+        }
+
         // Export graph representation of a maze
-        private static void ExportMazeAsGraph()
+        public static void ExportMazeAsGraph()
         {
             // Create a Hexagonal Sigma Maze
             Maze maze = new SigmaMaze(15);
@@ -201,7 +267,7 @@ namespace LabyrinthianExamples
 
         // Export binary tree representation of an orthogonal maze
         // generated with Binary tree algorithn
-        private static void ExportMazeAsBinaryTree()
+        public static void ExportMazeAsBinaryTree()
         {
             // Create an Orthogonal Maze 10x10
             Maze maze = new OrthogonalMaze(10, 10);
@@ -242,7 +308,7 @@ namespace LabyrinthianExamples
         }
 
         // Maze that consists only of lines
-        private static void ExportLinesMaze()
+        public static void ExportLinesMaze()
         {
             // You can use here any type of maze
             Maze maze = new UpsilonMaze(20, 20, 0, 0);
@@ -335,7 +401,7 @@ namespace LabyrinthianExamples
         }
 
         // Triangular maze with rainbow walls
-        private static void ExportRainbowTriangularMaze()
+        public static void ExportRainbowTriangularMaze()
         {
             // Triangular maze with inner triangular room
             GridMaze2D maze = new DeltaMaze(30, 10);
@@ -392,7 +458,7 @@ namespace LabyrinthianExamples
         }
 
         // Export visualization of generation process as multiple SVG-files asynchronously
-        private static async Task ExportGenerationVisualizationAsync()
+        public static async Task ExportGenerationVisualizationAsync()
         {
             // Create an orthogonal maze 10x10
             Maze maze = new OrthogonalMaze(10, 10);
