@@ -1,6 +1,6 @@
 ﻿namespace Labyrinthian.Svg
 {
-    public abstract class SvgViewBoxGroup : SvgGroup
+    public abstract class SvgViewBoxElement : SvgPresentationElement
     {
         [SvgProperty("viewBox")]
         public SvgViewBox? ViewBox { get; set; }
