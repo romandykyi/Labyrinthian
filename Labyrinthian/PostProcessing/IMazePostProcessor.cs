@@ -12,7 +12,7 @@ namespace Labyrinthian
         /// </summary>
         /// <param name="caller">Maze generator, that calls this method.</param>
         /// <returns>
-        /// Step by step maze post processing.
+        /// Step-by-step maze post processing.
         /// </returns>
         IEnumerable<Maze> Process(MazeGenerator caller);
     }

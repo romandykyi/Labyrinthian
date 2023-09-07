@@ -5,7 +5,7 @@ using System.Linq;
 namespace Labyrinthian
 {
     /// <summary>
-    /// Class for step by step visualization of maze generation process.
+    /// Class for step-by-step visualization of maze generation process.
     /// </summary>
     /// <example>
     /// This code snippet demonstrates the creation and generation of an orthogonal maze using Prim's algorithm:
@@ -141,7 +141,7 @@ namespace Labyrinthian
         /// <summary>
         /// Apply all post processors.
         /// </summary>
-        /// <returns>Step by step maze post processing.</returns>
+        /// <returns>Step-by-step maze post processing.</returns>
         protected IEnumerable<Maze> ApplyPostProcessorsStepByStep()
         {
             if (PostProcessors.Count == 0)
@@ -170,13 +170,13 @@ namespace Labyrinthian
         protected virtual bool IsSuitableFor(Maze maze) => true;
 
         /// <summary>
-        /// Step by step generation of maze.
+        /// Step-by-step generation of maze.
         /// </summary>
         /// <returns>Each step of the generation process.</returns>
         protected abstract IEnumerable<Maze> Generation();
 
         /// <summary>
-        /// Step by step generation of maze. 
+        /// Step-by-step generation of maze. 
         /// All post processors from <see cref="PostProcessors" /> will be applied.
         /// </summary>
         /// <returns>Each step of the generation process.</returns>
@@ -194,7 +194,7 @@ namespace Labyrinthian
         /// </summary>
         /// <remarks>
         /// By default it just returns the last element of <see cref="GenerateStepByStep"/>.
-        /// You can override this method to optimize generation process without step by step
+        /// You can override this method to optimize generation process without step-by-step
         /// visualisation.
         /// </remarks>
         /// <example>
