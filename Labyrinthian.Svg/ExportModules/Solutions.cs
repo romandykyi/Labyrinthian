@@ -77,7 +77,7 @@ namespace Labyrinthian.Svg
         /// </summary>
         /// <param name="group">
         /// Optional params for the group in which all solutions will be placed.
-        /// Setting <see cref="SvgGroup.Fill"/> to <see cref="SvgFill.None"/> is
+        /// Setting <see cref="SvgPresentationElement.Fill"/> to <see cref="SvgFill.None"/> is
         /// recommended for this argument.
         /// </param>
         /// <param name="pathCreator">
