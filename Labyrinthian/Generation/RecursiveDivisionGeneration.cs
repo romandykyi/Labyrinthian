@@ -5,7 +5,7 @@ namespace Labyrinthian
 {
     /// <summary>
     /// Maze generator that uses Recursive division algorithm.
-    /// Can be used only for <see cref="OrthogonalMaze"/>.
+    /// Can be used only for <see cref="OrthogonalMaze"/> or <see cref="ThetaMaze"/>.
     /// </summary>
     public sealed class RecursiveDivisionGeneration : MazeGenerator
     {
@@ -23,7 +23,7 @@ namespace Labyrinthian
             }
         }
 
-        private readonly OrthogonalMaze _maze;
+        private readonly GridMaze2D _maze;
         private readonly float _horizontalBias;
 
         /// <inheritdoc cref="RecursiveDivisionGeneration(Maze, int, float)"/>
@@ -36,6 +36,7 @@ namespace Labyrinthian
         /// <param name="horizontalBias">
         /// Horizontal bias. 
         /// The higher this number, the more horizontal walls there are generated.
+        /// If number is less than 1, then more vertical walls will be generated.
         /// Can't be negative.
         /// </param>
         public RecursiveDivisionGeneration(Maze maze, int seed, float horizontalBias = 1f) :
@@ -44,12 +45,12 @@ namespace Labyrinthian
             if (horizontalBias < 0f)
                 throw new ArgumentOutOfRangeException(nameof(horizontalBias));
 
-            _maze = (OrthogonalMaze)maze;
+            _maze = (GridMaze2D)maze;
             _horizontalBias = horizontalBias;
         }
 #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
-        protected override bool IsSuitableFor(Maze maze) => IsMazeDefaultOrthogonal(maze);
+        protected override bool IsSuitableFor(Maze maze) => IsSuitableForSidewinder(maze);
 
         // Probably needs refactor:
         private void DivideHorizontally(int row, int column, int columns)

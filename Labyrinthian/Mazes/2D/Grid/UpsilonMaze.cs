@@ -75,7 +75,8 @@ namespace Labyrinthian
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException" />
         public UpsilonMaze(int width, int height, int inWidth = 0, int inHeight = 0, int reminder = 0) :
-            this(width, height, RectangularPattern(width, height, inWidth, inHeight), reminder)
+            this(width, height, 
+                Grid2DPatterns.RectangularPattern(width, height, inWidth, inHeight), reminder)
         {
             if (reminder != 0 && reminder != 1)
             {

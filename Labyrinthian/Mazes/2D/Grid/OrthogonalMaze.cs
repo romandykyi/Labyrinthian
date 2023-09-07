@@ -5,7 +5,7 @@ namespace Labyrinthian
     /// <summary>
     /// 2-dimensional Maze that consists of Squares.
     /// </summary>
-    public sealed class OrthogonalMaze : GridMaze2D
+    public class OrthogonalMaze : GridMaze2D
     {
         /// <summary>
         /// Create a custom orthogonal maze.
@@ -35,7 +35,7 @@ namespace Labyrinthian
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException" />
         public OrthogonalMaze(int width, int height, int inWidth = 0, int inHeight = 0) :
-            this(width, height, RectangularPattern(width, height, inWidth, inHeight))
+            this(width, height, Grid2DPatterns.RectangularPattern(width, height, inWidth, inHeight))
         {
             Description = $"Orthogonal maze {Columns}x{Rows}";
             if (inWidth * inHeight > 0)
@@ -86,12 +86,12 @@ namespace Labyrinthian
         protected override MazeCell[] GetDirectedNeighbors(MazeCell cell, int row, int col)
         {
             return new MazeCell[4]
-                {
-                    GetCell(row, col + 1, cell, 1), // Right
-                    GetCell(row, col - 1, cell, 0), // Left
-                    GetCell(row + 1, col, cell, 3), // Down
-                    GetCell(row - 1, col, cell, 2)  // Up
-                };
+            {
+                GetCell(row, col + 1, cell, 1), // Right
+                GetCell(row, col - 1, cell, 0), // Left
+                GetCell(row + 1, col, cell, 3), // Down
+                GetCell(row - 1, col, cell, 2)  // Up
+            };
         }
     }
 }

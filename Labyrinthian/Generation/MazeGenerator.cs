@@ -216,19 +216,20 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Check whether maze is classic orthogonal.
+        /// Check whether maze is suitable for Sidewinder and Recursive division algorithms.
         /// </summary>
         /// <param name="maze">Maze to be checked.</param>
-        /// <returns>
-        /// <see langword="true"/> if maze is orthogonal without 'holes' in it;
-        /// <see langword="false"/> otherwise if maze is not orthogonal or
-        /// has 'holes' in it.
-        /// </returns>
-        protected static bool IsMazeDefaultOrthogonal(Maze maze)
+        protected static bool IsSuitableForSidewinder(Maze maze)
         {
-            if (!(maze is OrthogonalMaze orthogonalMaze)) return false;
-
-            return orthogonalMaze.Cells.Length == orthogonalMaze.Columns * orthogonalMaze.Rows;
+            if (maze is OrthogonalMaze orthogonalMaze)
+            {
+                return orthogonalMaze.Cells.Length == orthogonalMaze.Columns * orthogonalMaze.Rows;
+            }
+            else if (maze is ThetaMaze thetaMaze)
+            {
+                return thetaMaze.InRadius != -1;
+            }
+            return false;
         }
 
         /// <summary>

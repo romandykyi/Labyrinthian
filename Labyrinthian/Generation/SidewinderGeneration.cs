@@ -5,7 +5,7 @@ namespace Labyrinthian
 {
     /// <summary>
     /// Maze generator that uses Sidewinder algorithm.
-    /// Can be used only for <see cref="OrthogonalMaze"/>.
+    /// Can be used only for <see cref="OrthogonalMaze"/> or <see cref="ThetaMaze"/>.
     /// </summary>
     public sealed class SidewinderGeneration : MazeGenerator
     {
@@ -19,21 +19,26 @@ namespace Labyrinthian
             m_horizontalCarveProbability = horizontalCarveProbability;
         }
 
-        protected override bool IsSuitableFor(Maze maze) => IsMazeDefaultOrthogonal(maze);
+        protected override bool IsSuitableFor(Maze maze) => IsSuitableForSidewinder(maze);
 
         protected override IEnumerable<Maze> Generation()
         {
+            GridMaze2D gridMaze2D = (GridMaze2D)Maze;
+
+            int horizontal = 0;
+            int vertical = Maze is OrthogonalMaze ? 3 : 2;
             List<MazeCell> cells = new List<MazeCell>();
 
+            int column = 0;
             foreach (var cell in Maze.Cells)
             {
                 SelectedCell = cell;
                 VisitedCells[cell] = true;
-                if (!cell.DirectedNeighbors[3].IsNotNullAndMazePart())
+                if (!cell.DirectedNeighbors[vertical].IsNotNullAndMazePart())
                 {
-                    if (cell.DirectedNeighbors[0].IsNotNullAndMazePart())
+                    if (cell.DirectedNeighbors[horizontal].IsNotNullAndMazePart())
                     {
-                        Maze.ConnectCells(cell, cell.DirectedNeighbors[0]!);
+                        Maze.ConnectCells(cell, cell.DirectedNeighbors[horizontal]!);
                     }
                     yield return Maze;
                     continue;
@@ -43,17 +48,19 @@ namespace Labyrinthian
                 if (cells.Count > 0) Maze.ConnectCells(cell, cells[^1]);
                 cells.Add(cell);
 
-                if (!cell.DirectedNeighbors[0].IsNotNullAndMazePart() ||
+                column++;
+                if (column == gridMaze2D.Columns ||
                     (float)Rnd.NextDouble() < m_horizontalCarveProbability)
                 {
                     MazeCell rndCell = cells[Rnd.Next(0, cells.Count)];
-                    Maze.ConnectCells(rndCell, rndCell.DirectedNeighbors[3]!);
+                    Maze.ConnectCells(rndCell, rndCell.DirectedNeighbors[vertical]!);
                     foreach (var activeCell in cells)
                     {
                         HighlightedCells[activeCell] = false;
                     }
                     cells.Clear();
                 }
+                column %= gridMaze2D.Columns;
 
                 yield return Maze;
             }

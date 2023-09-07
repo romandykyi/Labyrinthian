@@ -53,7 +53,8 @@ namespace Labyrinthian
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException" />
         public SigmaMaze(int width, int height, int inWidth, int inHeight, int reminder = 0) :
-            this(width, height, RectangularPattern(width, height, inWidth, inHeight), reminder)
+            this(width, height, 
+                Grid2DPatterns.RectangularPattern(width, height, inWidth, inHeight), reminder)
         {
             Description = $"Rectangular Sigma maze {Columns}x{Rows}";
             if (inWidth * inHeight > 0)
@@ -72,7 +73,8 @@ namespace Labyrinthian
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException" />
         public SigmaMaze(int sideLength, int inSideLength = 0) :
-            this(2 * sideLength - 1, 2 * sideLength - 1, HexagonalPattern(sideLength, inSideLength), sideLength % 2)
+            this(2 * sideLength - 1, 2 * sideLength - 1,
+                Grid2DPatterns.HexagonalPattern(sideLength, inSideLength), sideLength % 2)
         {
             Description = $"Hexagonal Sigma maze(size {sideLength})";
             if (inSideLength > 0)

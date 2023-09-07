@@ -57,7 +57,7 @@ namespace Labyrinthian
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException" />
         public DeltaMaze(int width, int height, int inWidth, int inHeight, int reminder = 0) :
-            this(width, height, RectangularPattern(width, height, inWidth, inHeight), reminder)
+            this(width, height, Grid2DPatterns.RectangularPattern(width, height, inWidth, inHeight), reminder)
         {
             Description = $"Rectangular Delta maze {Columns}x{Rows}";
             if (inWidth * inHeight > 0)
@@ -76,7 +76,8 @@ namespace Labyrinthian
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException" />
         public DeltaMaze(int sideLength, int inSideLength = 0) :
-            this(2 * sideLength - 1, sideLength, TriangularPattern(sideLength, inSideLength), (sideLength + 1) % 2)
+            this(2 * sideLength - 1, sideLength, 
+                Grid2DPatterns.TriangularPattern(sideLength, inSideLength), (sideLength + 1) % 2)
         {
             Description = $"Triangular maze(size {sideLength})";
             if (inSideLength > 0)
@@ -99,7 +100,7 @@ namespace Labyrinthian
             int size = 2 * sideLength - 1;
 
             DeltaMaze maze = new DeltaMaze(3 * size, 2 * size,
-                DeltaHexagonalPattern(sideLength, inSideLength),
+                Grid2DPatterns.DeltaHexagonalPattern(sideLength, inSideLength),
                 (sideLength + 1) % 2)
             {
                 Description = $"Hexagonal Delta maze(size {sideLength})"
