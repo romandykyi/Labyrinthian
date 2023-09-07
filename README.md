@@ -1,7 +1,7 @@
 # Labyrinthian
 ![labyrinthian-l](https://github.com/romandykyi/Labyrinthian/assets/94003504/8e4a2bde-4582-4d11-9386-be6121eee432)
 
-Labyrinthian is a .NET Standard 2.1 C# library for generating mazes step by step. It provides a versatile toolkit for maze enthusiasts, game developers, and educators, allowing you to effortlessly create mazes with various algorithms and export them in SVG format. 
+Labyrinthian is a .NET Standard 2.1 C# library for generating mazes step-by-step. It provides a versatile toolkit for maze enthusiasts, game developers, and educators, allowing you to effortlessly create mazes with various algorithms and export them in SVG format. 
 
 This library is lightweight and comes with no external dependencies.
 
