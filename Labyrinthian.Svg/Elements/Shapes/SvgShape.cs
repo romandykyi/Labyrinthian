@@ -1,6 +1,6 @@
 ﻿namespace Labyrinthian.Svg
 {
-    public abstract class SvgShape : SvgGroup
+    public abstract class SvgShape : SvgPresentationElement
     {
         [SvgProperty("pathLength")]
         public float? PathLength { get; set; }

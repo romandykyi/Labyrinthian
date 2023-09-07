@@ -19,7 +19,7 @@ namespace Labyrinthian.Svg
     }
 
     [SvgElement("marker")]
-    public sealed class SvgMarker : SvgViewBoxGroup, INeedsDefinition
+    public sealed class SvgMarker : SvgViewBoxElement, INeedsDefinition
     {
         [SvgChildren]
         public SvgElement? Shape { get; set; }

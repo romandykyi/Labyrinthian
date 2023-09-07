@@ -1,7 +1,7 @@
 ﻿namespace Labyrinthian.Svg
 {
     [SvgElement("use")]
-    public sealed class SvgUse : SvgGroup
+    public sealed class SvgUse : SvgPresentationElement
     {
         public class ElementHref : INeedsDefinition
         {
