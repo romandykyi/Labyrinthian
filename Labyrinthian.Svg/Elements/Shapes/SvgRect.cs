@@ -11,5 +11,9 @@
         public SvgLength? Width { get; set; }
         [SvgProperty("height")]
         public SvgLength? Height { get; set; }
+        [SvgProperty("rx")]
+        public SvgLength? Rx { get; set; }
+        [SvgProperty("ry")]
+        public SvgLength? Ry { get; set; }
     }
 }
