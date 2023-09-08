@@ -12,6 +12,11 @@ namespace Labyrinthian
     /// </remarks>
     public sealed class ThetaMaze : GridMaze2D
     {
+        public const int East = 0;
+        public const int West = 1;
+        public const int North = 2;
+        public const int South = 3;
+
         private const int DefaultSegmentsNumber = 20;
 
         /// <summary>
@@ -109,10 +114,10 @@ namespace Labyrinthian
 
             return new MazeCell[4]
             {
-                GetCell(row, right, cell, 1), // Right
-                GetCell(row, left, cell, 0), // Left
-                GetCell(row + 1, col, cell, 3), // Up
-                GetCell(row - 1, col, cell, 2)  // Bottom
+                GetCell(row, right, cell, West), // Right
+                GetCell(row, left, cell, East), // Left
+                GetCell(row + 1, col, cell, South), // Up
+                GetCell(row - 1, col, cell, North)  // Bottom
             };
         }
 
@@ -128,12 +133,12 @@ namespace Labyrinthian
 
             switch (wall.Direction)
             {
-                case 0:
-                case 1:
+                case East:
+                case West:
                     return new Line(p1[0], p1[1], p2[0], p2[1]);
-                case 2:
+                case North:
                     return new Arc(p1[0], p1[1], p2[0], p2[1], circlePoint.Row + 2f, true);
-                case 3:
+                case South:
                     return new Arc(p1[0], p1[1], p2[0], p2[1], circlePoint.Row + 1f, false);
 
                 default:
@@ -145,7 +150,7 @@ namespace Labyrinthian
         {
             int direction = relation.Direction;
             // Basic line
-            if (direction != 0 && direction != 1)
+            if (direction != East && direction != West)
             {
                 return base.GetPath(relation);
             }

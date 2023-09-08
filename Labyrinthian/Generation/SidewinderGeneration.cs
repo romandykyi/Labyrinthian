@@ -25,8 +25,8 @@ namespace Labyrinthian
         {
             GridMaze2D gridMaze2D = (GridMaze2D)Maze;
 
-            int horizontal = 0;
-            int vertical = Maze is OrthogonalMaze ? 3 : 2;
+            int horizontal = OrthogonalMaze.East;
+            int vertical = Maze is OrthogonalMaze ? OrthogonalMaze.North : ThetaMaze.North;
             List<MazeCell> cells = new List<MazeCell>();
 
             int column = 0;

@@ -7,6 +7,11 @@ namespace Labyrinthian
     /// </summary>
     public sealed class DeltaMaze : GridMaze2D
     {
+        public const int East = 0;
+        public const int West = 1;
+        public const int South = 2;
+        public const int North = 3;
+
         // Const that's equal to sqrt(3) / 2
         private const float WidthToHeight = 0.86602540378443864676372317075294f;
 

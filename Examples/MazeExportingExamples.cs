@@ -109,12 +109,10 @@ namespace LabyrinthianExamples
             // We have entry/exits cells. Now we need to find outer walls
             // to specify entries and exits.
             // We can use 'MazeCell' property 'DirectedNeighbors' for this purpose.
-            // Indices there mean directions, for orthogonal mazes it always:
-            // 0 - east, 1 - west, 2 - south, 3 - north
-            MazeEdge northWall = new(northCell, northCell.DirectedNeighbors[3]!);
-            MazeEdge southWall = new(southCell, southCell.DirectedNeighbors[2]!);
-            MazeEdge westWall = new(westCell, westCell.DirectedNeighbors[1]!);
-            MazeEdge eastWall = new(eastCell, eastCell.DirectedNeighbors[0]!);
+            MazeEdge northWall = new(northCell, northCell.DirectedNeighbors[OrthogonalMaze.North]!);
+            MazeEdge southWall = new(southCell, southCell.DirectedNeighbors[OrthogonalMaze.South]!);
+            MazeEdge westWall = new(westCell, westCell.DirectedNeighbors[OrthogonalMaze.West]!);
+            MazeEdge eastWall = new(eastCell, eastCell.DirectedNeighbors[OrthogonalMaze.East]!);
             // When creating maze edges for paths make sure that second cell is always outer.
 
             // Add paths
@@ -311,7 +309,7 @@ namespace LabyrinthianExamples
         public static void ExportLinesMaze()
         {
             // You can use here any type of maze
-            Maze maze = new UpsilonMaze(20, 20, 0, 0);
+            Maze maze = new UpsilonMaze(20, 20);
             MazeGenerator generator = new WilsonGeneration(maze);
             generator.Generate();
 
@@ -389,7 +387,7 @@ namespace LabyrinthianExamples
 
                 Nodes.Selected(entry, entryTriangle),
                 Nodes.Selected(exit, exitTriangle),
-                Nodes.Selected(deadEnds, deadEndCircle)
+                Nodes.Selected(deadEnds, deadEndCircle),
                 
                 // Remember, that order here matters and nodes should be added
                 // after edges to be displayed correctly.
@@ -407,8 +405,8 @@ namespace LabyrinthianExamples
             GridMaze2D maze = new DeltaMaze(30, 10);
             // Add entry and exit using cells coordinates.
             // Note that coordinates here are [row, column] and not [x, y]
-            MazeEdge entry = new(maze[11, 27]!, maze[11, 27]!.DirectedNeighbors[0]!);
-            MazeEdge exit = new(maze[29, 30]!, maze[29, 30]!.DirectedNeighbors[2]!);
+            MazeEdge entry = new(maze[11, 27]!, maze[11, 27]!.DirectedNeighbors[DeltaMaze.East]!);
+            MazeEdge exit = new(maze[29, 30]!, maze[29, 30]!.DirectedNeighbors[DeltaMaze.South]!);
             maze.Paths.Add(new(maze, entry, exit));
 
             // Use Kruskal's algorithm for generation

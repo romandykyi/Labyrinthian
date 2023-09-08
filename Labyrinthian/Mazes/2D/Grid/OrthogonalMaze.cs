@@ -5,8 +5,13 @@ namespace Labyrinthian
     /// <summary>
     /// 2-dimensional Maze that consists of Squares.
     /// </summary>
-    public class OrthogonalMaze : GridMaze2D
+    public sealed class OrthogonalMaze : GridMaze2D
     {
+        public const int East = 0;
+        public const int West = 1;
+        public const int South = 2;
+        public const int North = 3;
+
         /// <summary>
         /// Create a custom orthogonal maze.
         /// </summary>
@@ -87,10 +92,10 @@ namespace Labyrinthian
         {
             return new MazeCell[4]
             {
-                GetCell(row, col + 1, cell, 1), // Right
-                GetCell(row, col - 1, cell, 0), // Left
-                GetCell(row + 1, col, cell, 3), // Down
-                GetCell(row - 1, col, cell, 2)  // Up
+                GetCell(row, col + 1, cell, West), // Right
+                GetCell(row, col - 1, cell, East), // Left
+                GetCell(row + 1, col, cell, North), // Down
+                GetCell(row - 1, col, cell, South)  // Up
             };
         }
     }

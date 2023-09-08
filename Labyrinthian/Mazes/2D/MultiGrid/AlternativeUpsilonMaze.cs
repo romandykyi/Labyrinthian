@@ -15,6 +15,15 @@ namespace Labyrinthian
     /// </summary>
     public class AlternativeUpsilonMaze : MultiGridMaze2D
     {
+        public const int SouthEast = 0;
+        public const int NorthWest = 1;
+        public const int SouthWest = 2;
+        public const int NorthEast = 3;
+        public const int East = 4;
+        public const int West = 5;
+        public const int South = 6;
+        public const int North = 7;
+
         public override int GridsNumber => 2;
 
         public AlternativeUpsilonMaze(int baseWidth, int baseHeight) : this(baseWidth, baseHeight, _ => true)
@@ -55,22 +64,22 @@ namespace Labyrinthian
                 // Octagon neighbors
                 0 => new MazeCell[8]
                     {
-                    GetCell(1, row, column, cell, 1),
-                    GetCell(1, row - 1, column - 1, cell, 0),
-                    GetCell(1, row, column - 1, cell, 3),
-                    GetCell(1, row - 1, column, cell, 2),
-                    GetCell(0, row, column + 1, cell, 5),
-                    GetCell(0, row, column - 1, cell, 4),
-                    GetCell(0, row + 1, column, cell, 7),
-                    GetCell(0, row - 1, column, cell, 6),
+                    GetCell(1, row, column, cell, NorthWest),
+                    GetCell(1, row - 1, column - 1, cell, SouthEast),
+                    GetCell(1, row, column - 1, cell, NorthEast),
+                    GetCell(1, row - 1, column, cell, SouthWest),
+                    GetCell(0, row, column + 1, cell, West),
+                    GetCell(0, row, column - 1, cell, East),
+                    GetCell(0, row + 1, column, cell, North),
+                    GetCell(0, row - 1, column, cell, South),
                     },
                 // Square neighbors
                 1 => new MazeCell[4]
                 {
-                    GetCell(0, row + 1, column + 1, cell, 1),
-                    GetCell(0, row, column, cell, 0),
-                    GetCell(0, row + 1, column, cell, 3),
-                    GetCell(0, row , column + 1, cell, 2)
+                    GetCell(0, row + 1, column + 1, cell, NorthWest),
+                    GetCell(0, row, column, cell, SouthEast),
+                    GetCell(0, row + 1, column, cell, NorthEast),
+                    GetCell(0, row , column + 1, cell, SouthWest)
                 },
                 _ => throw new InvalidGridIndexException()
             };

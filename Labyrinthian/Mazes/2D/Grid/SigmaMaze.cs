@@ -7,6 +7,13 @@ namespace Labyrinthian
     /// </summary>
     public sealed class SigmaMaze : GridMaze2D
     {
+        public const int South = 0;
+        public const int North = 1;
+        public const int SouthWest = 2;
+        public const int NorthEast = 3;
+        public const int SouthEast = 4;
+        public const int NorthWest = 5;
+
         private const float WidthToHeight = 0.86602540378443864676372317075294f;
 
         private readonly int _reminder = 0;
@@ -149,17 +156,17 @@ namespace Labyrinthian
             return new MazeCell[6]
             {
                 // Bottom neighbor
-                GetCell(row + 1, col, cell, 1),
+                GetCell(row + 1, col, cell, North),
                 // Top neighbor
-                GetCell(row - 1, col, cell, 0),
+                GetCell(row - 1, col, cell, South),
                 // Bottom-left neighbor
-                GetCell(row - d + 1, col - 1, cell, 3),
+                GetCell(row - d + 1, col - 1, cell, NorthEast),
                 // Top-right neighbor
-                GetCell(row - d, col + 1, cell, 2),
+                GetCell(row - d, col + 1, cell, SouthWest),
                 // Bottom-right neighbor
-                GetCell(row - d + 1, col + 1, cell, 5),
+                GetCell(row - d + 1, col + 1, cell, NorthWest),
                 // Top-left neighbor
-                GetCell(row - d, col - 1, cell, 4)
+                GetCell(row - d, col - 1, cell, SouthEast)
             };
         }
     }

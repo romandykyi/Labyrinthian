@@ -7,6 +7,15 @@ namespace Labyrinthian
     /// </summary>
     public sealed class UpsilonMaze : GridMaze2D
     {
+        public const int East = 0;
+        public const int West = 1;
+        public const int South = 2;
+        public const int North = 3;
+        public const int SouthEast = 4;
+        public const int NorthWest = 5;
+        public const int SouthWest = 6;
+        public const int NorthEast = 7;
+
         public const float SquareSize = 0.75f;
         public const float OctagonWidth = SquareSize * 3f;
 
@@ -75,7 +84,7 @@ namespace Labyrinthian
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException" />
         public UpsilonMaze(int width, int height, int inWidth = 0, int inHeight = 0, int reminder = 0) :
-            this(width, height, 
+            this(width, height,
                 Grid2DPatterns.RectangularPattern(width, height, inWidth, inHeight), reminder)
         {
             if (reminder != 0 && reminder != 1)
@@ -199,34 +208,34 @@ namespace Labyrinthian
                 return new MazeCell[8]
                     {
                     // Right neighbor
-                    GetCell(row, col + 1, cell, 1),
+                    GetCell(row, col + 1, cell, West),
                     // Left neighbor
-                    GetCell(row, col - 1, cell, 0),
+                    GetCell(row, col - 1, cell, East),
                     // Bottom neighbor
-                    GetCell(row + 1, col, cell, 3),
+                    GetCell(row + 1, col, cell, North),
                     // Top neighbor
-                    GetCell(row - 1, col, cell, 2),
+                    GetCell(row - 1, col, cell, South),
                     // Bottom-right neighbor
-                    GetCell(row + 1, col + 1, cell, 5),
+                    GetCell(row + 1, col + 1, cell, NorthWest),
                     // Top-left neighbor
-                    GetCell(row - 1, col - 1, cell, 4),
+                    GetCell(row - 1, col - 1, cell, SouthEast),
                     // Botom-left neighbor
-                    GetCell(row + 1, col - 1, cell, 7),
+                    GetCell(row + 1, col - 1, cell, NorthEast),
                     // Top-right neighbor
-                    GetCell(row - 1, col + 1, cell, 6)
+                    GetCell(row - 1, col + 1, cell, SouthWest)
                     };
             }
             // Square
             return new MazeCell[4]
                     {
                     // Left neighbor
-                    GetCell(row, col + 1, cell, 1),
+                    GetCell(row, col + 1, cell, West),
                     // Right neighbor
-                    GetCell(row, col - 1, cell, 0),
+                    GetCell(row, col - 1, cell, East),
                     // Bottom neighbor
-                    GetCell(row + 1, col, cell, 3),
+                    GetCell(row + 1, col, cell, North),
                     // Top neighbor
-                    GetCell(row - 1, col, cell, 2)
+                    GetCell(row - 1, col, cell, South)
                     };
         }
     }
