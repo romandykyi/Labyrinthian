@@ -13,8 +13,9 @@ This library is lightweight and comes with no external dependencies.
 
 ## Mazes, that was generated using Labyrinthian.Svg
 
-![lines-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/4b641816-3976-4eee-8edb-8a3acec09a19)
 ![gradient-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/de1fc580-e72a-45dc-ab15-a376addebad9)
+![theta-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/b792fc9c-e3dd-4122-b2ae-3cb3b26f2bf6)
+![lines-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/4b641816-3976-4eee-8edb-8a3acec09a19)
 
 ## Supported Maze Generation Algorithms
 * Aldous Broder
@@ -34,6 +35,7 @@ This library is lightweight and comes with no external dependencies.
 * Delta
 * Sigma
 * Orthogonal
+* Theta
 * Upsilon
 
 ## Example
