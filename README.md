@@ -7,10 +7,6 @@ This library is lightweight and comes with no external dependencies.
 
 **Note: This project is currently in active development.**
 
-## NuGet Packages
-* [Labyrinthian](https://www.nuget.org/packages/Labyrinthian/)
-* [Labyrinthian.Svg](https://www.nuget.org/packages/Labyrinthian.Svg/)
-
 ## Mazes, that was generated using Labyrinthian.Svg
 
 ![gradient-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/de1fc580-e72a-45dc-ab15-a376addebad9)
@@ -37,6 +33,35 @@ This library is lightweight and comes with no external dependencies.
 * Orthogonal
 * Theta
 * Upsilon
+
+## Installation
+### Unity
+1. [Download the Unity package here](https://github.com/romandykyi/Labyrinthian/releases/tag/Labyrinthian_v1.1.1)
+2. In Unity, go to 'Assets > Import package > Custom package'
+3. Select the downloaded package
+4. Click 'Import'
+
+### Visual Studio
+1. Open Package Manager Console window: 'View > Other Windows > Package Manager Console'
+2. Navigate to the directory in which the .csproj file exists
+3.  Run this command to install the main package:
+```
+NuGet\Install-Package Labyrinthian -Version 1.1.1
+```
+4. If you need SVG-export features, also run this command:
+```
+NuGet\Install-Package Labyrinthian.Svg -Version 1.1.1
+```
+
+### .NET CLI
+Run this command to install the main package:
+```
+dotnet add package Labyrinthian --version 1.1.1
+```
+If you need SVG-export features, also run this command:
+```
+dotnet add package Labyrinthian.Svg --version 1.1.1
+```
 
 ## Example
 This code snippet demonstrates the creation, generation, and export of an orthogonal maze as an SVG file:
