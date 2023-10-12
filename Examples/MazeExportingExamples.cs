@@ -186,7 +186,7 @@ namespace LabyrinthianExamples
             MazeGenerator generator = new GrowingTreeGeneration(maze, newestOrRandom);
             generator.Generate();
 
-            // Specify radient stops
+            // Specify gradient stops
             var stops = new SvgStop[2]
             {
                 new(0f, SvgColor.FromHexCode("#ff0000")),
