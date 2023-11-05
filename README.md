@@ -5,7 +5,7 @@ Labyrinthian is a .NET Standard 2.1 C# library for generating mazes step-by-step
 
 This library is lightweight and comes with no external dependencies.
 
-## Mazes, that was generated using Labyrinthian.Svg
+## Mazes, that were generated using Labyrinthian.Svg
 
 ![gradient-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/de1fc580-e72a-45dc-ab15-a376addebad9)
 ![theta-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/b792fc9c-e3dd-4122-b2ae-3cb3b26f2bf6)
