@@ -12,7 +12,7 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<Version>1.1.1.0</Version>
+		<Version>1.1.2.0</Version>
 		<Authors>Roman Dykyi</Authors>
 		<AssemblyVersion></AssemblyVersion>
 	</PropertyGroup>
@@ -42,7 +42,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Labyrinthian\Labyrinthian.csproj" />
-		<PackageReference Include="Labyrinthian" Version="1.0.0.1" />
+		<PackageReference Include="Labyrinthian" Version="1.1.2.0" />
 	</ItemGroup>
 
 </Project>
