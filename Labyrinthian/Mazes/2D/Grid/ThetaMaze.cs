@@ -66,7 +66,7 @@ namespace Labyrinthian
             InRadius = inRadius;
             Description = "Theta(circular) maze with ";
             Description += inRadius == 0 ?
-                $"radius {inRadius}" :
+                $"radius {radius}" :
                 $"base radius {inRadius} and inner radius {inRadius}";
         }
 
