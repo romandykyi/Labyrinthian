@@ -54,11 +54,11 @@ NuGet\Install-Package Labyrinthian.Svg -Version 1.1.1
 ### .NET CLI
 Run this command to install the main package:
 ```
-dotnet add package Labyrinthian --version 1.1.1
+dotnet add package Labyrinthian
 ```
 If you need SVG-export features, also run this command:
 ```
-dotnet add package Labyrinthian.Svg --version 1.1.1
+dotnet add package Labyrinthian.Svg
 ```
 
 ## Example
