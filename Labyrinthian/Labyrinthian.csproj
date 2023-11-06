@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/romandykyi/Labyrinthian</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyVersion></AssemblyVersion>
-    <Version>1.1.2.0</Version>
+    <Version>1.1.3.0</Version>
     <Authors>Roman Dykyi</Authors>
   </PropertyGroup>
 

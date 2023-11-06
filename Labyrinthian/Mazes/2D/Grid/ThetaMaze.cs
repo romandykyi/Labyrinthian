@@ -67,7 +67,7 @@ namespace Labyrinthian
             Description = "Theta(circular) maze with ";
             Description += inRadius == 0 ?
                 $"radius {radius}" :
-                $"base radius {inRadius} and inner radius {inRadius}";
+                $"base radius {radius} and inner radius {inRadius}";
         }
 
         public override int GetCellPointsNumber(MazeCell cell) => 4;
