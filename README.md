@@ -44,11 +44,11 @@ This library is lightweight and comes with no external dependencies.
 2. Navigate to the directory in which the .csproj file exists
 3.  Run this command to install the main package:
 ```
-NuGet\Install-Package Labyrinthian -Version 1.1.1
+NuGet\Install-Package Labyrinthian
 ```
 4. If you need SVG-export features, also run this command:
 ```
-NuGet\Install-Package Labyrinthian.Svg -Version 1.1.1
+NuGet\Install-Package Labyrinthian.Svg
 ```
 
 ### .NET CLI
