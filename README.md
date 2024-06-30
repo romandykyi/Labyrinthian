@@ -5,6 +5,8 @@ Labyrinthian is a .NET Standard 2.1 C# library for generating mazes step-by-step
 
 This library is lightweight and comes with no external dependencies.
 
+You can play around with a Blazor demo [here](https://romandykyi.github.io/LabyrinthianDemo/).
+
 ## Mazes, that were generated using Labyrinthian.Svg
 
 ![gradient-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/de1fc580-e72a-45dc-ab15-a376addebad9)
@@ -44,11 +46,11 @@ This library is lightweight and comes with no external dependencies.
 2. Navigate to the directory in which the .csproj file exists
 3.  Run this command to install the main package:
 ```
-NuGet\Install-Package Labyrinthian -Version 1.1.1
+NuGet\Install-Package Labyrinthian
 ```
 4. If you need SVG-export features, also run this command:
 ```
-NuGet\Install-Package Labyrinthian.Svg -Version 1.1.1
+NuGet\Install-Package Labyrinthian.Svg
 ```
 
 ### .NET CLI
