@@ -5,7 +5,7 @@ namespace Labyrinthian
 {
     /// <summary>
     /// Maze generator that uses Sidewinder algorithm.
-    /// Can be used only for <see cref="OrthogonalMaze"/> or <see cref="ThetaMaze"/>.
+    /// Can be used only for <see cref="OrthogonalMaze"/>.
     /// </summary>
     public sealed class SidewinderGeneration : MazeGenerator
     {

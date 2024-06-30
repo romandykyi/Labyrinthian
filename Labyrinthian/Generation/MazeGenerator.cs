@@ -204,7 +204,7 @@ namespace Labyrinthian
         /// {
         ///     // [Maze generation process here]
         ///     
-        ///     return ApplyPostProcessorsStepByStep().Last();\
+        ///     return ApplyPostProcessorsStepByStep().Last();
         /// }
         /// </code>
         /// </example>
@@ -224,10 +224,6 @@ namespace Labyrinthian
             if (maze is OrthogonalMaze orthogonalMaze)
             {
                 return orthogonalMaze.Cells.Length == orthogonalMaze.Columns * orthogonalMaze.Rows;
-            }
-            else if (maze is ThetaMaze thetaMaze)
-            {
-                return thetaMaze.InRadius != -1;
             }
             return false;
         }
