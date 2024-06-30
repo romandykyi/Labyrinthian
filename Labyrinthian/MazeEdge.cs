@@ -28,18 +28,15 @@ namespace Labyrinthian
         }
 
         /// <summary>
-        /// Create an edge where Cell0.index &lt; Cell1.index
+        /// Create an edge where cell1.index &lt; cell2.index
         /// </summary>
-        public static MazeEdge GetMinMax(MazeCell cell0, MazeCell cell1)
+        public static MazeEdge GetMinMax(MazeCell cell1, MazeCell cell2)
         {
-            if (cell0.Index < cell1.Index)
+            if (cell1.Index < cell2.Index)
             {
-                return new MazeEdge(cell0, cell1);
+                return new MazeEdge(cell1, cell2);
             }
-            else
-            {
-                return new MazeEdge(cell1, cell0);
-            }
+            return new MazeEdge(cell2, cell1);
         }
 
         public override bool Equals(object obj)
