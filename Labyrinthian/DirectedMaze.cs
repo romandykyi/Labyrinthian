@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Labyrinthian
 {
@@ -25,6 +26,13 @@ namespace Labyrinthian
 		/// otherwise it's Cell2 -> Cell1.
 		/// </remarks>
 		public IReadOnlyDictionary<MazeEdge, bool> EdgesDirections => _edgesDirections;
+
+		/// <summary>
+		/// Get an enumerable of directed edges.
+		/// </summary>
+		public IEnumerable<MazeEdge> DirectedEdges => EdgesDirections
+			.Select(x => x.Value ? new MazeEdge(x.Key.Cell2, x.Key.Cell1) : x.Key
+			);
 
 		/// <summary>
 		/// Construct a directed maze based on a maze. 
