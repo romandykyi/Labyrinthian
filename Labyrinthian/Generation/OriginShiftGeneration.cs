@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Labyrinthian.Generation
+namespace Labyrinthian
 {
 	/// <summary>
 	/// Maze generator that uses Origin Shift algorithm.
@@ -72,7 +72,7 @@ namespace Labyrinthian.Generation
 
 		protected override IEnumerable<Maze> Generation()
 		{
-			// https://github.com/CaptainLuma/New-Maze-Generating-Algorithm
+			// Based on https://github.com/CaptainLuma/New-Maze-Generating-Algorithm
 
 			// Choose the initial cell and mark it as origin
 			SelectedCell ??= GetRandomCell();

@@ -1,4 +1,4 @@
-﻿namespace Labyrinthian.Generation
+﻿namespace Labyrinthian
 {
 	/// <summary>
 	/// An interface for generators which use directed graphs.
