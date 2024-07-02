@@ -14,6 +14,7 @@ You can play around with a Blazor demo [here](https://romandykyi.github.io/Labyr
 ![lines-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/4b641816-3976-4eee-8edb-8a3acec09a19)
 
 ## Supported Maze Generation Algorithms
+
 * Aldous Broder
 * Binary tree
 * Depth-first search
@@ -21,8 +22,9 @@ You can play around with a Blazor demo [here](https://romandykyi.github.io/Labyr
 * Growing tree
 * Hunt and Kill
 * Kruskal's algorithm
+* Origin Shift (invented by [CaptainLuma](https://github.com/captainluma))
 * Prim's algorithm
-* Recursive backtracker(with customizable cell selection method)
+* Recursive backtracker (with customizable cell selection method)
 * Recursive division
 * Sidewinder
 * Wilson's algorithm

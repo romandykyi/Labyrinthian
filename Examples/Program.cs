@@ -16,6 +16,7 @@ namespace LabyrinthianExamples
             //ExportLinesMaze();
             //ExportRainbowTriangularMaze();
             //await ExportGenerationVisualizationAsync();
+            await ExportOriginShiftVisualizationAsync();
         }
     }
 }
