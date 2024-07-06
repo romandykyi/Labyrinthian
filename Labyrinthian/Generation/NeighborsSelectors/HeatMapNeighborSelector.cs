@@ -72,7 +72,7 @@ namespace Labyrinthian
 				);
 
 			double[] neighborsHeatmap = new double[cell.Neighbors.Length];
-			double heatmapSum = 0f;
+			double heatmapSum = 0.0;
 			for (int i = 0; i < neighborsHeatmap.Length; i++)
 			{
 				double heatValue = _heatmap[cell.Neighbors[i].Index].Temperature;
@@ -83,7 +83,7 @@ namespace Labyrinthian
 			double rndNumber = (double)(1.0 - _rnd.NextDouble()); // From 0 (exclusive) to 1 (inclusive)
 
 			// Cumulative Distribution Function
-			double cdf = 0f;
+			double cdf = 0.0;
 			for (int i = 0; i < neighborsHeatmap.Length; i++)
 			{
 				cdf += neighborsHeatmap[i] / heatmapSum;
