@@ -11,7 +11,7 @@ public class OriginShiftBenchmarks
 
 	private Maze _maze = null!;
 
-	[Params(20)]
+	[Params(10, 20, 30, 50, 100)]
 	public int MazeSize { get; set; }
 
 	[GlobalSetup]
@@ -23,11 +23,40 @@ public class OriginShiftBenchmarks
 	[Benchmark]
 	public Maze AldousBroder() => new AldousBroderGeneration(_maze, seed: Seed).Generate();
 	[Benchmark]
+	public Maze HeatMapAldousBroder()
+	{
+		HeatMapNeighborSelector selector = new();
+		AldousBroderGeneration generator = new(_maze, seed: Seed, neighborSelector: selector);
+		return generator.Generate();
+	}
+	[Benchmark]
 	public Maze DFSGeneration() => new DFSGeneration(_maze, seed: Seed).Generate();
 	[Benchmark]
 	public Maze Kruskal() => new KruskalGeneration(_maze, seed: Seed).Generate();
 	[Benchmark]
-	public Maze OriginShift() => new OriginShiftGeneration(_maze, seed: Seed).Generate();
+	public Maze OriginShift()
+	{
+		OriginShiftParams @params = new()
+		{
+			MaxIterations = MazeSize * MazeSize * 10,
+			GenerateUntilAllCellsAreVisited = false,
+			NeighborSelector = new UnweightedNeighborSelector()
+		};
+		OriginShiftGeneration generator = new(_maze, seed: Seed, @params);
+		return generator.Generate();
+	}
+	[Benchmark]
+	public Maze HeatMapOriginShift()
+	{
+		OriginShiftParams @params = new()
+		{
+			MaxIterations = -1,
+			GenerateUntilAllCellsAreVisited = true,
+			NeighborSelector = new HeatMapNeighborSelector()
+		};
+		OriginShiftGeneration generator = new(_maze, seed: Seed, @params);
+		return generator.Generate();
+	}
 	[Benchmark]
 	public Maze Prim() => new PrimGeneration(_maze, seed: Seed).Generate();
 	[Benchmark]

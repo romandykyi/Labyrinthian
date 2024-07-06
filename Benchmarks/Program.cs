@@ -1,6 +1,9 @@
-﻿using Labyrinthian;
+﻿using BenchmarkDotNet.Running;
+using Benchmarks;
+using Labyrinthian;
 
-//BenchmarkRunner.Run(typeof(OriginShiftBenchmarks));
+BenchmarkRunner.Run(typeof(OriginShiftBenchmarks));
+return;
 
 const int seed = 3403;
 const int tests = 500;
