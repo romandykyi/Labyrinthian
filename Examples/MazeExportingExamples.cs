@@ -528,8 +528,15 @@ namespace LabyrinthianExamples
 		{
 			// Create an orthogonal maze 5x5
 			Maze maze = new OrthogonalMaze(5, 5);
+			// Parameters that simulate author's original approach
+			OriginShiftParams @params = new()
+			{
+				GenerateUntilAllCellsAreVisited = false,
+				MaxIterations = 250,
+				NeighborSelector = new UnweightedNeighborSelector()
+			};
 			// Create a generator
-			OriginShiftGeneration originShiftGenerator = new(maze, maxIterations: 250);
+			OriginShiftGeneration originShiftGenerator = new(maze, @params);
 
 			// IEnumerable for selected cell of generator
 			IEnumerable<MazeCell> SelectedCellEnumerable()

@@ -7,19 +7,40 @@ namespace Labyrinthian
     /// </summary>
     public sealed class AldousBroderGeneration : MazeGenerator
     {
-        /// <inheritdoc cref="MazeGenerator(Maze, MazeCell?, bool)" />
-        public AldousBroderGeneration(Maze maze, MazeCell? initialCell = null) :
+        private INeighborSelector _neighborSelector;
+
+		/// <summary>
+		/// Construct a generator with a default seed.
+		/// </summary>
+		/// <param name="maze">Maze used for generation.</param>
+		/// <param name="initialCell">Cell that will be current at the start of generation(optional).</param>
+		/// <param name="neighborSelector">An optional neighbor selector.</param>
+		/// <exception cref="MazeTypeIsNotSupportedException"></exception>
+		public AldousBroderGeneration(Maze maze, MazeCell? initialCell = null, INeighborSelector? neighborSelector = null) :
             base(maze, initialCell)
-        { }
-        /// <inheritdoc cref="MazeGenerator(Maze, int, MazeCell?, bool)" />
-        public AldousBroderGeneration(Maze maze, int seed, MazeCell? initialCell = null) :
+        {
+            _neighborSelector = neighborSelector ?? new UnweightedNeighborSelector();
+        }
+
+		/// <summary>
+		/// Construct a generator with specified seed.
+		/// </summary>
+		/// <param name="maze">Maze used for generation.</param>
+		/// <param name="seed">Seed for random numbers generator.</param>
+		/// <param name="initialCell">Cell that will be current at the start of generation(optional).</param>
+		/// <param name="neighborSelector">An optional neighbor selector.</param>
+		public AldousBroderGeneration(Maze maze, int seed, MazeCell? initialCell = null, INeighborSelector? neighborSelector = null) :
             base(maze, seed, initialCell)
-        { }
+		{
+			_neighborSelector = neighborSelector ?? new UnweightedNeighborSelector();
+		}
 
         protected override IEnumerable<Maze> Generation()
-        {
-            // Pick a random cell as the current cell and mark it as visited
-            SelectedCell ??= GetRandomCell();
+		{
+			_neighborSelector.Init(Maze, Rnd);
+
+			// Pick a random cell as the current cell and mark it as visited
+			SelectedCell ??= GetRandomCell();
             VisitedCells[SelectedCell] = true;
 
             yield return Maze;
@@ -29,11 +50,10 @@ namespace Labyrinthian
             while (visitedCells < Maze.Cells.Length)
             {
                 // Pick a random neighbour
-                int rndIndex = Rnd.Next(0, SelectedCell.Neighbors.Length);
-                MazeCell neighbor = SelectedCell.Neighbors[rndIndex];
+                MazeCell neighbor = _neighborSelector.Select(SelectedCell);
 
-                // If the chosen neighbour has not been visited
-                if (!VisitedCells[neighbor])
+				// If the chosen neighbour has not been visited
+				if (!VisitedCells[neighbor])
                 {
                     // Remove the wall between the current cell and the chosen neighbour
                     Maze.ConnectCells(SelectedCell, neighbor);

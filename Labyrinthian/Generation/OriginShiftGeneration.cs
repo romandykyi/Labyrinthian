@@ -3,17 +3,33 @@ using System.Collections.Generic;
 
 namespace Labyrinthian
 {
+	public class OriginShiftParams
+	{
+		/// <summary>
+		/// Get/set the max algorithm's iterations number.
+		/// If the value is negative, there is no iterations limit.
+		/// </summary>
+		public int MaxIterations { get; set; } = -1;
+
+		/// <summary>
+		/// Get/set a flag which determines whether a generation should be stopped when
+		/// all cells were visited.
+		/// </summary>
+		public bool GenerateUntilAllCellsAreVisited { get; set; } = true;
+
+		/// <summary>
+		/// Get/set a neighbor selector.
+		/// </summary>
+		public INeighborSelector NeighborSelector { get; set; } = new HeatMapNeighborSelector();
+	}
+
 	/// <summary>
 	/// Maze generator that uses Origin Shift algorithm.
 	/// Algorithm's author: https://github.com/CaptainLuma.
 	/// </summary>
 	public class OriginShiftGeneration : MazeGenerator, IDirectedGraphGenerator
 	{
-		/// <summary>
-		/// Gets the max algorithm's iterations number.
-		/// If the value is negative, generator generates a maze forever.
-		/// </summary>
-		public int MaxIterations { get; private set; }
+		private readonly OriginShiftParams _params;
 
 		public DirectedMaze DirectedMaze { get; private set; }
 
@@ -22,12 +38,9 @@ namespace Labyrinthian
 		/// </summary>
 		/// <param name="maze">Maze used for generation.</param>
 		/// <param name="initialCell">Cell that will be current at the start of generation(optional).</param>
-		/// <param name="maxIterations">
-		/// Max algorithm's iterations number. If negative, maze doesn't stop generating,
-		/// if <see langword="null"/> then a default number of iterations is used based on the number of maze cells.
-		/// </param>
-		public OriginShiftGeneration(Maze maze, int? maxIterations = null, MazeCell? initialCell = null) :
-			this(maze, Environment.TickCount, maxIterations, initialCell)
+		/// <param name="params">Optional origin shift parameters to use.</param>
+		public OriginShiftGeneration(Maze maze, OriginShiftParams? @params = null, MazeCell? initialCell = null) :
+			this(maze, Environment.TickCount, @params, initialCell)
 		{ }
 
 		/// <summary>
@@ -36,15 +49,12 @@ namespace Labyrinthian
 		/// <param name="maze">Maze used for generation.</param>
 		/// <param name="seed">Seed for random numbers generator.</param>
 		/// <param name="initialCell">Cell that will be current at the start of generation(optional).</param>
-		/// <param name="maxIterations">
-		/// Max algorithm's iterations number. If negative, maze doesn't stop generating,
-		/// if <see langword="null"/> then a default number of iterations is used based on the number of maze cells.
-		/// </param>
-		public OriginShiftGeneration(Maze maze, int seed, int? maxIterations = null, MazeCell? initialCell = null) :
+		/// <param name="params">Optional origin shift parameters to use.</param>
+		public OriginShiftGeneration(Maze maze, int seed, OriginShiftParams? @params = null, MazeCell? initialCell = null) :
 			base(maze, seed, initialCell, false)
 		{
 			DirectedMaze = new DirectedMaze(Maze);
-			MaxIterations = maxIterations ?? Maze.Cells.Length * 10;
+			_params = @params ?? new OriginShiftParams();
 		}
 
 		private void ConnectToOrigin(MazeCell origin)
@@ -74,6 +84,9 @@ namespace Labyrinthian
 		{
 			// Based on https://github.com/CaptainLuma/New-Maze-Generating-Algorithm
 
+			int visitedCount = 1;
+			_params.NeighborSelector.Init(Maze, Rnd);
+
 			// Choose the initial cell and mark it as origin
 			SelectedCell ??= GetRandomCell();
 			VisitedCells[SelectedCell] = true;
@@ -82,15 +95,23 @@ namespace Labyrinthian
 
 			yield return Maze;
 
-			for (int i = 0; i < MaxIterations || MaxIterations < 0; i++)
+			for (int i = 0; 
+				(_params.MaxIterations < 0 || i < _params.MaxIterations) &&
+				(!_params.GenerateUntilAllCellsAreVisited || visitedCount < Maze.Cells.Length);
+				i++)
 			{
 				// Have the origin node, point to a random neighboring node
-				var selectedNeighbor = SelectNeighbor(SelectedCell);
+				var selectedNeighbor = _params.NeighborSelector.Select(SelectedCell);
 				DirectedMaze.ConnectCells(SelectedCell, selectedNeighbor);
 
 				// That neigboring node becomes the new origin node
 				SelectedCell = selectedNeighbor;
-				VisitedCells[SelectedCell] = true;
+
+				if (!VisitedCells[SelectedCell])
+				{
+					visitedCount++;
+					VisitedCells[SelectedCell] = true;
+				}
 
 				// Have the new origin node point nowhere
 				foreach (var neighbor in SelectedCell.Neighbors)
@@ -108,22 +129,11 @@ namespace Labyrinthian
 			yield return Maze;
 		}
 
-		/// <summary>
-		/// Randomly select a neighbor of a cell. Can be overriden.
-		/// </summary>
-		/// <param name="cell">Cell which neighbor will be selected.</param>
-		/// <returns>A random neighbor of a cell.</returns>
-		protected virtual MazeCell SelectNeighbor(MazeCell cell)
-		{
-			int neighborIndex = Rnd.Next(0, cell.Neighbors.Length);
-			return cell.Neighbors[neighborIndex];
-		}
-
 		public override Maze Generate()
 		{
-			if (MaxIterations < 0)
+			if (_params.MaxIterations < 0 && !_params.GenerateUntilAllCellsAreVisited)
 			{
-				throw new InvalidOperationException("To prevent an infinite loop, Generate cannot be called when MaxIterations is set to a negative number.");
+				throw new InvalidOperationException("Infinite loop detected. Please specify MaxIterations or set GenerateUntilAllCelslAreVisited to true.");
 			}
 
 			return base.Generate();
@@ -131,7 +141,7 @@ namespace Labyrinthian
 
 		public override string ToString()
 		{
-			return MaxIterations >= 0 ? $"Origin Shift ({MaxIterations} iterations)" : "Origin Shift";
+			return "Origin Shift";
 		}
 	}
 }
