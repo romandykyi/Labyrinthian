@@ -21,13 +21,13 @@ namespace Labyrinthian
 		/// <summary>
 		/// Create an exponential decay function for the heat map values.
 		/// </summary>
-		/// <param name="alpha">Decay constant for exponential decay (must be positive).</param>
+		/// <param name="alpha">Decay constant for exponential decay (must be positive or 0).</param>
 		/// <returns>A function that performs exponential decay on a <see cref="HeatMapValue"/>.</returns>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="alpha"/> is not positive.</exception>
 		public static Func<HeatMapValue, double> Exponential(double alpha)
 		{
-			if (alpha >= 0.0)
-				throw new ArgumentOutOfRangeException(nameof(alpha), alpha, "alpha must be positive.");
+			if (alpha < 0.0)
+				throw new ArgumentOutOfRangeException(nameof(alpha), alpha, "alpha must be positive or 0.");
 
 			return x => x.Temperature * Exp(-alpha);
 		}
