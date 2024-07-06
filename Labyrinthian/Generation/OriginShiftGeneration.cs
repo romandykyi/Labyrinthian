@@ -41,7 +41,7 @@ namespace Labyrinthian
 		/// if <see langword="null"/> then a default number of iterations is used based on the number of maze cells.
 		/// </param>
 		public OriginShiftGeneration(Maze maze, int seed, int? maxIterations = null, MazeCell? initialCell = null) :
-			base(maze, seed, initialCell, true)
+			base(maze, seed, initialCell, false)
 		{
 			DirectedMaze = new DirectedMaze(Maze);
 			MaxIterations = maxIterations ?? Maze.Cells.Length * 10;
@@ -76,6 +76,7 @@ namespace Labyrinthian
 
 			// Choose the initial cell and mark it as origin
 			SelectedCell ??= GetRandomCell();
+			VisitedCells[SelectedCell] = true;
 			// Make a starting perfect maze
 			ConnectToOrigin(SelectedCell);
 
@@ -84,12 +85,12 @@ namespace Labyrinthian
 			for (int i = 0; i < MaxIterations || MaxIterations < 0; i++)
 			{
 				// Have the origin node, point to a random neighboring node
-				int neighborIndex = Rnd.Next(0, SelectedCell.Neighbors.Length);
-				var selectedNeighbor = SelectedCell.Neighbors[neighborIndex];
+				var selectedNeighbor = SelectNeighbor(SelectedCell);
 				DirectedMaze.ConnectCells(SelectedCell, selectedNeighbor);
 
 				// That neigboring node becomes the new origin node
 				SelectedCell = selectedNeighbor;
+				VisitedCells[SelectedCell] = true;
 
 				// Have the new origin node point nowhere
 				foreach (var neighbor in SelectedCell.Neighbors)
@@ -100,8 +101,22 @@ namespace Labyrinthian
 				yield return Maze;
 			}
 
+			// Reset state
 			SelectedCell = null;
+			VisitedCells.SetAll(true);
+
 			yield return Maze;
+		}
+
+		/// <summary>
+		/// Randomly select a neighbor of a cell. Can be overriden.
+		/// </summary>
+		/// <param name="cell">Cell which neighbor will be selected.</param>
+		/// <returns>A random neighbor of a cell.</returns>
+		protected virtual MazeCell SelectNeighbor(MazeCell cell)
+		{
+			int neighborIndex = Rnd.Next(0, cell.Neighbors.Length);
+			return cell.Neighbors[neighborIndex];
 		}
 
 		public override Maze Generate()
@@ -116,7 +131,7 @@ namespace Labyrinthian
 
 		public override string ToString()
 		{
-			return "Origin Shift";
+			return MaxIterations >= 0 ? $"Origin Shift ({MaxIterations} iterations)" : "Origin Shift";
 		}
 	}
 }
