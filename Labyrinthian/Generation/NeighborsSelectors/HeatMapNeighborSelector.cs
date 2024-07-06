@@ -31,7 +31,6 @@ namespace Labyrinthian
 		private bool _initialized = false;
 
 		private Random _rnd = null!;
-		private Maze _maze = null!; 
 		/// <summary>
 		/// A heatmap for each maze cell, negative numbers may cause undefined behaviour.
 		/// </summary>
@@ -62,6 +61,9 @@ namespace Labyrinthian
 
 		public MazeCell Select(MazeCell cell)
 		{
+			if (!_initialized)
+				throw new InvalidOperationException("Neighbor selector was not initialized.");
+
 			// Apply a decay function
 			var previousValue = _heatmap[cell.Index];
 			_heatmap[cell.Index] = new HeatMapValue(
