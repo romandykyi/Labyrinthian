@@ -24,30 +24,6 @@ float[] deltaFactors = Enumerable.Range(0, deltaFactorsNumber)
 	.Select(n => (float)n / (deltaFactorsNumber - 1))
 	.ToArray();
 
-int TestGenerator(OriginShiftGeneration generator)
-{
-	int visitedCells = 0;
-
-	void OnMarkChanged(CellMark mark)
-	{
-		if (mark.Value) visitedCells++;
-	}
-
-	generator.VisitedCells.MarkChanged += OnMarkChanged;
-
-	int iterations = 0;
-	var enumerator = generator.GenerateStepByStep().GetEnumerator();
-	while (visitedCells < generator.Maze.Cells.Length)
-	{
-		enumerator.MoveNext();
-		iterations++;
-	}
-
-	generator.VisitedCells.MarkChanged -= OnMarkChanged;
-
-	return iterations;
-}
-
 foreach (var mazeFunc in mazeTypes)
 {
 	var testMaze = mazeFunc();
@@ -75,11 +51,12 @@ foreach (var mazeFunc in mazeTypes)
 			OriginShiftParams @params = new()
 			{
 				MaxIterations = -1,
+				GenerateUntilAllCellsAreVisited = true,
 				NeighborSelector = new HeatMapNeighborSelector(function)
 			};
 			OriginShiftGeneration generator = new(maze, localSeed, @params);
 
-			int iterations = TestGenerator(generator);
+			int iterations = generator.GenerateStepByStep().Count();
 			float deadEndsRatio = (float)maze.FindDeadEnds().Count() / maze.Cells.Length;
 			float pathLengthToCells = (float)path.GetSegments(false).Count() / maze.Cells.Length;
 			results[i, j] = $"{deltaFactors[j]}; {iterations}; {deadEndsRatio}; {pathLengthToCells}";
