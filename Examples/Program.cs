@@ -1,21 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using static LabyrinthianExamples.FluentExportingExamples;
 
-namespace LabyrinthianExamples
-{
-    internal partial class Program
-    {
-        private static async Task Main()
-        {
-            //ExportOrthogonalMaze();
-            ExportOrthogonalMazeWithSolution();
-            //ExportOrthogonalMazeWithMultipleSolutions();
-            //ExportCircularMaze();
-            //ExportMazeAsGraph();
-            //ExportMazeAsBinaryTree();
-            //ExportLinesMaze();
-            //ExportRainbowTriangularMaze();
-            //await ExportGenerationVisualizationAsync();
-            await ExportOriginShiftVisualizationAsync();
-        }
-    }
-}
+ExportOrthogonalMaze();
+ExportOrthogonalMazeWithSolution();
+ExportOrthogonalMazeWithMultipleSolutions();
+ExportCircularMaze();
+ExportMazeAsGraph();
+ExportMazeAsBinaryTree();
+ExportLinesMaze();
+ExportRainbowTriangularMaze();
+await ExportGenerationVisualizationAsync();
+await ExportOriginShiftVisualizationAsync();
