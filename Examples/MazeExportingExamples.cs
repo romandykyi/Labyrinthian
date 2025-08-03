@@ -136,13 +136,13 @@ namespace LabyrinthianExamples
             };
 
             // Different colors for solutions
-            SvgFill[] solutionsFills = new SvgFill[4]
-            {
+            SvgFill[] solutionsFills =
+            [
                 SvgColor.Orange,
                 SvgColor.Magenta,
                 SvgColor.Green,
                 SvgColor.Blue
-            };
+            ];
 
             // Create a maze exporter(it doesn't need to be closed or disposed)
             MazeSvgExporter exporter = new(maze, padding: 5f)
@@ -181,9 +181,9 @@ namespace LabyrinthianExamples
 
             // Selection method for a cell.
             // It's a newest cell with 50% probability, or a random cell
-            MazeCellSelection newestOrRandom = (rnd, n) => rnd.Next(2) == 0 ? n - 1 : rnd.Next(n);
+            static int NewestOrRandom(System.Random rnd, int n) => rnd.Next(2) == 0 ? n - 1 : rnd.Next(n);
             // Generate it using Growing tree algorithm
-            MazeGenerator generator = new GrowingTreeGeneration(maze, newestOrRandom);
+            MazeGenerator generator = new GrowingTreeGeneration(maze, NewestOrRandom);
             generator.Generate();
 
             // Specify gradient stops
@@ -338,13 +338,13 @@ namespace LabyrinthianExamples
             SvgPolygon entryTriangle = new()
             {
                 Id = "entry",
-                Points = new SvgPoint[3] { new(0f, -7.5f), new(7.5f, 7.5f), new(-7.5f, 7.5f) },
+                Points = [new(0f, -7.5f), new(7.5f, 7.5f), new(-7.5f, 7.5f)],
                 Fill = SvgColor.Green
             };
             SvgPolygon exitTriangle = new()
             {
                 Id = "exit",
-                Points = new SvgPoint[3] { new(0f, 7.5f), new(7.5f, -7.5f), new(-7.5f, -7.5f) },
+                Points = [new(0f, 7.5f), new(7.5f, -7.5f), new(-7.5f, -7.5f)],
                 Fill = SvgColor.Red
             };
             SvgCircle deadEndCircle = new()
@@ -369,7 +369,7 @@ namespace LabyrinthianExamples
                 Fill = SvgFill.None,
                 Stroke = SvgColor.Orange,
                 StrokeWidth = edgesPath.StrokeWidth,
-                StrokeDasharray = new SvgLength[1] { 10f }
+                StrokeDasharray = [10f]
             };
 
             // Custom style

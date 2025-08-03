@@ -7,8 +7,8 @@ namespace Labyrinthian.Tests.DataStructures
         [Test]
         public void Add()
         {
-            int[] arr = { 0, 1, 2, 3 };
-            DisjointSet<int> set = new();
+            int[] arr = [0, 1, 2, 3];
+            DisjointSet<int> set = [];
             foreach (int i in arr)
             {
                 Assert.That(set.Add(i), Is.True);
@@ -21,8 +21,8 @@ namespace Labyrinthian.Tests.DataStructures
         [Test]
         public void IEnumerableConstructor()
         {
-            int[] arr = { 0, 1, 2, 3 };
-            DisjointSet<int> set = new(arr);
+            int[] arr = [0, 1, 2, 3];
+            DisjointSet<int> set = [];
 
             CollectionAssert.AreEquivalent(arr, set);
         }
@@ -30,7 +30,7 @@ namespace Labyrinthian.Tests.DataStructures
         [Test]
         public void Contains()
         {
-            DisjointSet<char> set = new() { 'a', 'b', 'c', 'd' };
+            DisjointSet<char> set = [];
 
             Assert.Multiple(() =>
             {
@@ -45,7 +45,7 @@ namespace Labyrinthian.Tests.DataStructures
         [Test]
         public void Union()
         {
-            DisjointSet<int> set = new() { 1, 2, 3, 4, 5 };
+            DisjointSet<int> set = [];
 
             Assert.Multiple(() =>
             {
@@ -60,7 +60,7 @@ namespace Labyrinthian.Tests.DataStructures
         [Test]
         public void Find()
         {
-            DisjointSet<int> set = new() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            DisjointSet<int> set = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
             // 1-2-3
             set.Union(1, 2);

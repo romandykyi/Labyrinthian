@@ -21,7 +21,7 @@ namespace Labyrinthian.Tests.Svg
             return new SvgPath()
             {
                 Stroke = SvgColor.Red,
-                StrokeDasharray = new SvgLength[1] { 5f }
+                StrokeDasharray = [5f]
             };
         }
 

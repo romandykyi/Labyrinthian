@@ -23,7 +23,7 @@ namespace Labyrinthian.Tests.DataStructures
         [Test]
         public void CreateFromEnumerable()
         {
-            List<int> list = new(6) { 0, 1, 2, 3, 4, 5 };
+            List<int> list = [0, 1, 2, 3, 4, 5];
 #pragma warning disable IDE0028 // Simplify collection initialization
             StaticUnorderedList<int> dCList = new(list, 7);
             dCList.Add(6);
@@ -176,13 +176,14 @@ namespace Labyrinthian.Tests.DataStructures
         [Test]
         public void CopyTo_CopiesListItemsToArray()
         {
-            var list = new StaticUnorderedList<int>(10) { 1, 2, 3 };
+            int[] expected = [1, 2, 3];
 
+            var list = new StaticUnorderedList<int>(10) { 1, 2, 3 };
             var array = new int[3];
 
             list.CopyTo(array, 0);
 
-            CollectionAssert.AreEqual(new int[] { 1, 2, 3 }, array);
+            CollectionAssert.AreEqual(expected, array);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Labyrinthian
     /// </summary>
     public sealed class AldousBroderGeneration : MazeGenerator
     {
-        private INeighborSelector _neighborSelector;
+        private readonly INeighborSelector _neighborSelector;
 
         /// <summary>
         /// Construct a generator with a default seed.

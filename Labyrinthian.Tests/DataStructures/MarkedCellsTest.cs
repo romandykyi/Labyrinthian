@@ -48,8 +48,11 @@ namespace Labyrinthian.Tests.DataStructures
             MazeCell trueCell = maze.Cells[3];
             markedCells[trueCell] = true;
 
-            Assert.That(changedMark.Cell, Is.EqualTo(trueCell));
-            Assert.That(changedMark.Value, Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(changedMark.Cell, Is.EqualTo(trueCell));
+                Assert.That(changedMark.Value, Is.True);
+            });
         }
     }
 }

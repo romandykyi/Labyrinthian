@@ -70,8 +70,8 @@ namespace Labyrinthian.Tests.Mazes
             MazeCell neighbor1 = new(1), neighbor2 = new(2);
             MazeCell outerNeighbor = MazeCell.CreateOuterCell(cell, 1);
 
-            MazeCell[] neighbors = { neighbor1, neighbor2 };
-            MazeCell?[] directedNeighbors = { outerNeighbor, neighbor1, null, neighbor2, null };
+            MazeCell[] neighbors = [neighbor1, neighbor2];
+            MazeCell?[] directedNeighbors = [outerNeighbor, neighbor1, null, neighbor2, null];
 
             cell.SetNeighbors(directedNeighbors);
 

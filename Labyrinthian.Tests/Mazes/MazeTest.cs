@@ -16,7 +16,7 @@ namespace Labyrinthian.Tests.Mazes
         private sealed class TestMaze : Maze
         {
             public override int Dimensions => 2;
-            public override float[] Sizes => new float[2] { Cells.Length, -Cells.Length };
+            public override float[] Sizes => [Cells.Length, -Cells.Length];
 
             public override float Width2D => throw new NotImplementedException();
 
@@ -24,7 +24,7 @@ namespace Labyrinthian.Tests.Mazes
 
             public TestMaze(int size) : base(size)
             {
-                if (size < 2) throw new ArgumentOutOfRangeException(nameof(size));
+                ArgumentOutOfRangeException.ThrowIfLessThan(size, 2);
 
                 InitGraph();
             }
@@ -32,16 +32,16 @@ namespace Labyrinthian.Tests.Mazes
             protected override MazeCell[] GetDirectedNeighbors(MazeCell cell)
             {
                 if (cell.Index == 0)
-                    return new MazeCell[] { Cells[1], MazeCell.CreateOuterCell(Cells[0], 0) };
+                    return [Cells[1], MazeCell.CreateOuterCell(Cells[0], 0)];
                 else if (cell.Index == Cells.Length - 1)
-                    return new MazeCell[] { MazeCell.CreateOuterCell(Cells[^1], 1), Cells[^2] };
+                    return [MazeCell.CreateOuterCell(Cells[^1], 1), Cells[^2]];
                 else
-                    return new MazeCell[] { Cells[cell.Index + 1], Cells[cell.Index - 1] };
+                    return [Cells[cell.Index + 1], Cells[cell.Index - 1]];
             }
 
             public override float[] GetCellPoint(MazeCell cell, int pointIndex)
             {
-                return new float[2] { pointIndex, -pointIndex };
+                return [pointIndex, -pointIndex];
             }
 
             public override int GetCellPointsNumber(MazeCell cell) => 2;
