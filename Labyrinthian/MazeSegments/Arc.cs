@@ -24,7 +24,7 @@ namespace Labyrinthian
             _clockwise = clockwise;
         }
 
-        public Arc(Vector2 start, Vector2 end, float r, bool clockwise = true) : 
+        public Arc(Vector2 start, Vector2 end, float r, bool clockwise = true) :
             this(start, end, r, r, clockwise)
         { }
 

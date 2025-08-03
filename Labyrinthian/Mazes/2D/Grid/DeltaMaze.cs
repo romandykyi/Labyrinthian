@@ -81,7 +81,7 @@ namespace Labyrinthian
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException" />
         public DeltaMaze(int sideLength, int inSideLength = 0) :
-            this(2 * sideLength - 1, sideLength, 
+            this(2 * sideLength - 1, sideLength,
                 Grid2DPatterns.TriangularPattern(sideLength, inSideLength), (sideLength + 1) % 2)
         {
             Description = $"Triangular maze(size {sideLength})";

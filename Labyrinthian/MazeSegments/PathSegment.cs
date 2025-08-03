@@ -22,7 +22,7 @@ namespace Labyrinthian
         {
             Vector2 point = TransformPoint(StartPoint, cellSize, offset);
             return $"M{point.X.ToInvariantString()},{point.Y.ToInvariantString()} ";
-        }   
+        }
 
         public abstract string MoveToEndSvg(float cellSize, float offset);
 

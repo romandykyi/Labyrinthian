@@ -60,7 +60,7 @@ namespace Labyrinthian
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException" />
         public SigmaMaze(int width, int height, int inWidth, int inHeight, int reminder = 0) :
-            this(width, height, 
+            this(width, height,
                 Grid2DPatterns.RectangularPattern(width, height, inWidth, inHeight), reminder)
         {
             Description = $"Rectangular Sigma maze {Columns}x{Rows}";
