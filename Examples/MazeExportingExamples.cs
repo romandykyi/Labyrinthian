@@ -34,7 +34,7 @@ namespace LabyrinthianExamples
                     * MazeDescription
                     * Nodes
                     * Solutions
-                    */
+                */
             };
 
             // Use a FileStream for exporting.
