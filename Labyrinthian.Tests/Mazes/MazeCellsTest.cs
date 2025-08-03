@@ -77,8 +77,8 @@ namespace Labyrinthian.Tests.Mazes
 
             Assert.Multiple(() =>
             {
-                CollectionAssert.AreEqual(neighbors, cell.Neighbors);
-                CollectionAssert.AreEqual(directedNeighbors, cell.DirectedNeighbors);
+                Assert.That(cell.Neighbors, Is.EquivalentTo(neighbors));
+                Assert.That(cell.DirectedNeighbors, Is.EquivalentTo(directedNeighbors));
             });
         }
 

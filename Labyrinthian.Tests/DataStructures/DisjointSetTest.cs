@@ -13,48 +13,51 @@ namespace Labyrinthian.Tests.DataStructures
             {
                 Assert.That(set.Add(i), Is.True);
             }
-            Assert.That(set.Add(arr[0]), Is.False);
 
-            CollectionAssert.AreEquivalent(arr, set);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(set.Add(arr[0]), Is.False);
+                Assert.That(set, Is.EquivalentTo(arr));
+            }
         }
 
         [Test]
         public void IEnumerableConstructor()
         {
             int[] arr = [0, 1, 2, 3];
-            DisjointSet<int> set = [];
+            DisjointSet<int> set = [0, 1, 2, 3];
 
-            CollectionAssert.AreEquivalent(arr, set);
+            Assert.That(set, Is.EquivalentTo(arr));
         }
 
         [Test]
         public void Contains()
         {
-            DisjointSet<char> set = [];
+            DisjointSet<char> set = ['a', 'b', 'c', 'd'];
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(set.Contains('a'), Is.True);
                 Assert.That(set.Contains('c'), Is.True);
                 Assert.That(set.Contains('d'), Is.True);
                 Assert.That(set.Contains('e'), Is.False);
                 Assert.That(set.Contains('0'), Is.False);
-            });
+            }
         }
 
         [Test]
         public void Union()
         {
-            DisjointSet<int> set = [];
+            DisjointSet<int> set = [1, 2, 3];
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(set.Union(1, 2), Is.True);
                 Assert.That(set.Union(2, 1), Is.False);
                 Assert.That(set.Union(1, 3), Is.True);
                 Assert.That(set.Union(2, 3), Is.False);
                 Assert.That(set.Union(1, 1), Is.False);
-            });
+            }
         }
 
         [Test]
@@ -71,7 +74,7 @@ namespace Labyrinthian.Tests.DataStructures
             // 7-8
             set.Union(7, 8);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // 1-2-3
                 Assert.That(set.Find(1), Is.EqualTo(set.Find(2)));
@@ -90,7 +93,7 @@ namespace Labyrinthian.Tests.DataStructures
                 Assert.That(set.Find(2), Is.Not.EqualTo(set.Find(6)));
                 // 4-5-6 != 9
                 Assert.That(set.Find(6), Is.Not.EqualTo(set.Find(9)));
-            });
+            }
         }
     }
 }

@@ -183,7 +183,7 @@ namespace Labyrinthian.Tests.DataStructures
 
             list.CopyTo(array, 0);
 
-            CollectionAssert.AreEqual(expected, array);
+            Assert.That(array, Is.EqualTo(expected));
         }
     }
 }
