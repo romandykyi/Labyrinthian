@@ -78,7 +78,7 @@ namespace Labyrinthian.Svg
             await svgWriter.EndElementAsync();
         }
 
-        public async Task ExportUndirectedEdgesAsync(MazeSvgExporter exporter, SvgWriter svgWriter)
+        private async Task ExportUndirectedEdgesAsync(MazeSvgExporter exporter, SvgWriter svgWriter)
         {
             _edges ??= _baseGraphEdges ?
                 BaseGraphEdges(exporter.Maze) :
