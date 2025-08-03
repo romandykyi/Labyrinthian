@@ -122,6 +122,16 @@ namespace Labyrinthian.Svg
             RecalculateSizes();
         }
 
+        internal MazeSvgExporter(
+            Maze maze,
+            List<IExportModule> exportModules,
+            float cellSize,
+            float padding = 0f
+            ) : this(maze, cellSize, padding)
+        {
+            _exportModules = exportModules;
+        }
+
         /// <summary>
         /// Add a module for future exporting.
         /// </summary>
