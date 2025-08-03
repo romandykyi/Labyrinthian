@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LabyrinthianExamples
 {
-    internal partial class Program
+    public static class DirectSyntaxExamples
     {
         // Export default orthogonal maze
         public static void ExportOrthogonalMaze()
