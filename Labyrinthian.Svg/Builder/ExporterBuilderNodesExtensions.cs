@@ -6,7 +6,7 @@ namespace Labyrinthian.Svg
     public static class ExporterBuilderNodesExtensions
     {
         /// <summary>
-        /// Adds selected the maze cell as a nodes.
+        /// Adds the maze cells as nodes.
         /// </summary>
         /// <param name="builder">Builder to use.</param>
         /// <param name="cells">
@@ -28,7 +28,7 @@ namespace Labyrinthian.Svg
         }
 
         /// <summary>
-        /// Adds a selected node.
+        /// Adds the maze cell as a node.
         /// </summary>
         /// <param name="builder">Builder to use.</param>
         /// <param name="cell">
@@ -47,7 +47,7 @@ namespace Labyrinthian.Svg
         }
 
         /// <summary>
-        /// Adds all nodes.
+        /// Adds all maze cell as nodes.
         /// </summary>
         /// <param name="builder">Builder to use.</param>
         /// <param name="nodeShape">
