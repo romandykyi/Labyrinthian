@@ -48,7 +48,7 @@ public static class FluentSyntaxExamples
         MazeGenerator generator = new HuntAndKillGeneration(maze);
         generator.Generate();
 
-        // Create a maze exporter(it doesn't need to be closed or disposed)
+        // Export the maze
         MazeSvgExporterBuilder.For(maze)
             .WithPadding(5f)
             .IncludeMetadata() // This will write a description about the maze in SVG-file.
