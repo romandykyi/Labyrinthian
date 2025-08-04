@@ -1,4 +1,4 @@
-﻿namespace Labyrinthian.Svg.Builder
+﻿namespace Labyrinthian.Svg
 {
     public static class ExporterBuilderWallsExtension
     {

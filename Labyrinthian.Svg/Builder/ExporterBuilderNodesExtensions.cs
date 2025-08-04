@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Labyrinthian.Svg.Builder
+namespace Labyrinthian.Svg
 {
     public static class ExporterBuilderNodesExtensions
     {
