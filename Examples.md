@@ -1,5 +1,23 @@
 # SVG Export Examples
 
+## Table of Contents
+
+### Mazes
+- [Orthogonal maze](#orthogonal-maze)
+- [Maze with a solution](#maze-with-a-solution)
+- [Maze with multiple solutions](#maze-with-multiple-solutions)
+- [Circular (theta) maze](#circular-theta-maze)
+- [Graph representation](#graph-representation)
+- [Binary tree representation](#binary-tree-representation)
+- [Stylized graph maze](#stylized-graph-maze)
+- [Rainbow triangular maze](#rainbow-triangular-maze)
+
+### Animations
+- [Generation animation](#generation-animation)
+- [Generation animation (Origin Shift)](#generation-animation-origin-shift)
+
+---
+
 ### Orthogonal maze
 
 ![orthogonal-maze](https://github.com/user-attachments/assets/28309445-8598-4794-b4bc-c04d6c237a24)
@@ -363,6 +381,8 @@ MazeSvgExporterBuilder.For(maze)
 
 ### Generation animation
 
+![animated](https://github.com/user-attachments/assets/c762cbba-1f10-488d-a529-0b5f9c4f3615)
+
 ```csharp
 // Create an orthogonal maze 10x10
 Maze maze = new OrthogonalMaze(10, 10);
@@ -400,6 +420,8 @@ foreach (Maze frame in generator.GenerateStepByStep())
 ```
 
 ### Generation animation (Origin Shift)
+
+![animated](https://github.com/user-attachments/assets/4cb316df-7f37-4396-b19d-546e0af39c27)
 
 ```csharp
 // Create an orthogonal maze 5x5
