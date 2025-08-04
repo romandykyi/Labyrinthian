@@ -49,7 +49,7 @@ namespace Labyrinthian.Svg
         /// <param name="builder">The builder to use.</param>
         /// <param name="generator">The maze generator which provides the cells' state.</param>
         /// <param name="group">Group, that will contain the selected cell.</param>
-        public static MazeSvgExporterBuilder AddSelectedCells(this MazeSvgExporterBuilder builder, MazeGenerator generator, SvgGroup group)
+        public static MazeSvgExporterBuilder AddSelectedCell(this MazeSvgExporterBuilder builder, MazeGenerator generator, SvgGroup group)
         {
             return builder.AddCells(SelectedCell(generator), group);
         }

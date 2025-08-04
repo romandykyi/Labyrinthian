@@ -1,6 +1,5 @@
 ﻿using Labyrinthian;
 using Labyrinthian.Svg;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,36 +20,11 @@ public static class FluentSyntaxExamples
         MazeGenerator generator = new PrimGeneration(maze);
         generator.Generate();
 
-        // Create a maze exporter(it doesn't need to be closed or disposed)
-        MazeSvgExporter exporter = new(maze)
-        {
-            // Here we're adding export modules.
-            // You can also use MazeSvgExporter.Add(IExportModule) method for this
-            Walls.AsOnePath()
-
-            /*
-                Besides Walls there are others modules, including:
-
-                * Background
-                * Cells
-                * Edges
-                * MazeDescription
-                * Nodes
-                * Solutions
-            */
-        };
-
-        string filename = Path.Combine(directory, "orthogonal-maze.svg");
-
-        // Use a FileStream for exporting.
-        // You can also use any Stream or TextWriter(e.g. StreamWriter) or XmlWriter
-        using var fs = File.Create(filename);
-        using var svgWriter = new SvgWriter(fs);
-        // Export the maze
-        exporter.Export(svgWriter);
-
-        // Shorter version of the code above:
-        //exporter.ExportToFile(filename);
+        // Export the maze to SVG file
+        MazeSvgExporterBuilder.For(maze)
+            .AddWallsAsSinglePath()
+            .Build()
+            .ExportToFile(Path.Combine(directory, "orthogonal-maze.svg"));
     }
 
     // Export orthogonal maze with a solution
@@ -75,19 +49,13 @@ public static class FluentSyntaxExamples
         generator.Generate();
 
         // Create a maze exporter(it doesn't need to be closed or disposed)
-        MazeSvgExporter exporter = new(maze, padding: 5f)
-        {
-            // This module will write a description about the maze in SVG-file.
-            // It doesn't affect maze appearance
-            MazeDescription.Default,
-            // Export walls
-            Walls.AsOnePath(),
-            // And solution
-            Solutions.All()
-        };
-
-        // Export the maze
-        exporter.ExportToFile(Path.Combine(directory, "orthogonal-maze-with-solution.svg"));
+        MazeSvgExporterBuilder.For(maze)
+            .WithPadding(5f)
+            .IncludeMetadata() // This will write a description about the maze in SVG-file.
+            .AddWallsAsSinglePath()
+            .AddSolutions()
+            .Build()
+            .ExportToFile(Path.Combine(directory, "orthogonal-maze-with-solution.svg"));
     }
 
     // Export orthogonal maze with multiple solutions
@@ -137,25 +105,19 @@ public static class FluentSyntaxExamples
         SvgFill[] solutionsFills =
         [
             SvgColor.Orange,
-                SvgColor.Magenta,
-                SvgColor.Green,
-                SvgColor.Blue
+            SvgColor.Magenta,
+            SvgColor.Green,
+            SvgColor.Blue
         ];
 
         // Create a maze exporter(it doesn't need to be closed or disposed)
-        MazeSvgExporter exporter = new(maze, padding: 5f)
-        {
-            // This module will write a description about the maze in SVG-file.
-            // It doesn't affect maze appearance
-            MazeDescription.Default,
-            // Export walls
-            Walls.AsOnePath(),
-            // And solutions with different stroke colors
-            Solutions.All(pathsGroup, i => new SvgPath() {Stroke = solutionsFills[i]})
-        };
-
-        // Export the maze
-        exporter.ExportToFile(Path.Combine(directory, "orthogonal-maze-with-solutions.svg"));
+        MazeSvgExporterBuilder.For(maze)
+            .WithPadding(5f)
+            .IncludeMetadata()
+            .AddWallsAsSinglePath()
+            .AddSolutions(pathsGroup, i => new SvgPath() { Stroke = solutionsFills[i] })
+            .Build()
+            .ExportToFile(Path.Combine(directory, "orthogonal-maze-with-multiple-solutions.svg"));
     }
 
     // Export Theta(circular) maze
@@ -193,28 +155,19 @@ public static class FluentSyntaxExamples
             Cy = new SvgLength(50f, SvgLengthUnit.Percentage),
             R = new SvgLength(50f, SvgLengthUnit.Percentage),
         };
-        // Custom path for walls.
-        SvgPath wallsPath = new()
-        {
-            Stroke = radialGradient,
-            StrokeWidth = 5f,
-            Fill = SvgFill.None,
-            StrokeLinecap = SvgLinecap.Round,
-            StrokeLinejoin = SvgLinejoin.Round
-        };
 
-        // Create a maze exporter(it doesn't need to be closed or disposed)
-        MazeSvgExporter exporter = new(maze, padding: 2.5f)
-        {
-            // This module will write a description about the maze in SVG-file.
-            // It doesn't affect maze appearance
-            MazeDescription.Default,
-            // Export walls
-            Walls.AsOnePath(wallsPath),
-        };
-
-        // Export the maze
-        exporter.ExportToFile(Path.Combine(directory, "theta-maze.svg"));
+        MazeSvgExporterBuilder.For(maze)
+            .WithPadding(2.5f)
+            .AddWallsAsSinglePath(new SvgPath()
+            {
+                Stroke = radialGradient,
+                StrokeWidth = 5f,
+                Fill = SvgFill.None,
+                StrokeLinecap = SvgLinecap.Round,
+                StrokeLinejoin = SvgLinejoin.Round
+            })
+            .Build()
+            .ExportToFile(Path.Combine(directory, "theta-maze.svg"));
     }
 
     // Export graph representation of a maze
@@ -226,18 +179,12 @@ public static class FluentSyntaxExamples
         MazeGenerator generator = new AldousBroderGeneration(maze);
         generator.Generate();
 
-        // Create a maze exporter(it doesn't need to be closed or disposed)
-        MazeSvgExporter exporter = new(maze)
-        {
-            Edges.OfPassagesGraph(),
-            Nodes.All()
-                
-            // Remember, that order here matters and nodes should be added
-            // after edges to be displayed correctly.
-        };
-
-        // Export the maze
-        exporter.ExportToFile(Path.Combine(directory, "sigma-maze-as-graph.svg"));
+        // Order matters here, so we should add edges before nodes
+        MazeSvgExporterBuilder.For(maze)
+            .AddPassagesGraphEdges()
+            .AddAllNodes()
+            .Build()
+            .ExportToFile(Path.Combine(directory, "sigma-maze-as-graph.svg"));
     }
 
     // Export binary tree representation of an orthogonal maze
@@ -251,15 +198,11 @@ public static class FluentSyntaxExamples
         MazeGenerator generator = new BinaryTreeGeneration(maze);
         generator.Generate();
 
-        // Create a maze exporter(it doesn't need to be closed or disposed)
-        MazeSvgExporter exporter = new(maze)
-        {
-            Edges.OfPassagesGraph(),
-            Nodes.All()
-                
-            // Remember, that order here matters and nodes should be added
-            // after edges to be displayed correctly.
-        };
+        // Create a maze exporter
+        MazeSvgExporter exporter = MazeSvgExporterBuilder.For(maze)
+            .AddPassagesGraphEdges()
+            .AddAllNodes()
+            .Build();
 
         float cX = exporter.Width / 2f, cY = exporter.Height / 2f;
         // Define custom SvgRoot
@@ -348,22 +291,15 @@ public static class FluentSyntaxExamples
             Style = "stroke: black; stroke-width: 2.5"
         };
 
-        MazeSvgExporter exporter = new(maze)
-        {
-            MazeDescription.Default,
-
-            Edges.OfPassagesGraph(edgesPath, false),
-            Solutions.All(solutionsGroup, intersectOuterCells: false),
-
-            Nodes.Selected(entry, entryTriangle),
-            Nodes.Selected(exit, exitTriangle),
-            Nodes.Selected(deadEnds, deadEndCircle),
-                
-            // Remember, that order here matters and nodes should be added
-            // after edges to be displayed correctly.
-        };
-
-        exporter.ExportToFile(Path.Combine(directory, "lines-maze.svg"), root);
+        MazeSvgExporterBuilder.For(maze)
+            .IncludeMetadata()
+            .AddPassagesGraphEdges(edgesPath, false)
+            .AddSolutions(solutionsGroup, intersectOuterCells: false)
+            .AddNode(entry, entryTriangle)
+            .AddNode(exit, exitTriangle)
+            .AddNodes(deadEnds, deadEndCircle)
+            .Build()
+            .ExportToFile(Path.Combine(directory, "lines-maze.svg"), root);
     }
 
     // Triangular maze with rainbow walls
@@ -403,22 +339,17 @@ public static class FluentSyntaxExamples
             X2 = new SvgLength(100f, SvgLengthUnit.Percentage),
             Y2 = new SvgLength(0f, SvgLengthUnit.Percentage)
         };
-        // Custom path for walls
-        SvgPath wallsPath = new()
-        {
-            Fill = SvgFill.None,
-            Stroke = rainbowGradient,
-        };
-        var exporter = new MazeSvgExporter(maze, padding: 5f)
-        {
-            Background.Create(SvgColor.Black),
-            Walls.AsOnePath(wallsPath, 2f)
 
-            // Remember, that order here matters and walls should be added
-            // after background to be displayed correctly.
-        };
-
-        exporter.ExportToFile(Path.Combine(directory, "triangular-rainbow-maze.svg"));
+        MazeSvgExporterBuilder.For(maze)
+            .WithPadding(5f)
+            .AddBackground(SvgColor.Black)
+            .AddWallsAsSinglePath(new()
+            {
+                Fill = SvgFill.None,
+                Stroke = rainbowGradient,
+            }, wallsWidth: 2f)
+            .Build()
+            .ExportToFile(Path.Combine(directory, "triangular-rainbow-maze.svg"));
     }
 
     // Export visualization of generation process as multiple SVG-files asynchronously
@@ -429,51 +360,25 @@ public static class FluentSyntaxExamples
         // Create a generator
         MazeGenerator generator = new DFSGeneration(maze);
 
-        // IEnumerable for selected cell of generator
-        IEnumerable<MazeCell> SelectedCellEnumerable()
-        {
-            if (generator.SelectedCell != null)
-                yield return generator.SelectedCell;
-        }
-
-        // Group for unvisited cells
-        SvgGroup unvisitedCellsGroup = new()
-        {
-            Fill = SvgColor.Black,
-            Stroke = SvgColor.Black
-        };
-        // Group for highlighted cells
-        SvgGroup highilightedCellsGroup = new()
-        {
-            Fill = SvgColor.Gray,
-            Stroke = SvgColor.Gray
-        };
-        // Group for selected cell
-        SvgGroup selectedCellGroup = new()
-        {
-            Fill = SvgColor.Red,
-            Stroke = SvgColor.Red
-        };
-
         // Create a maze exporter
-        MazeSvgExporter exporter = new(maze)
-        {
-            // Unvisited cells that also are not highlighted
-            Cells.Selected(
-                maze.Cells.Where(c => !generator.VisitedCells[c] && !generator.HighlightedCells[c]),
-                unvisitedCellsGroup),
-            // Highlighted cells
-            Cells.Selected(
-                maze.Cells.Where(c => generator.HighlightedCells[c]),
-                highilightedCellsGroup),
-            // Selected cell
-            Cells.Selected(SelectedCellEnumerable(), selectedCellGroup),
-            // Walls
-            Walls.AsOnePath()
-                
-            // Remember, that order here matters and walls should be added
-            // after cells to be displayed correctly.
-        };
+        var exporter = MazeSvgExporterBuilder.For(maze)
+            .AddUnvisitedCells(generator, new SvgGroup()
+            {
+                Fill = SvgColor.Black,
+                Stroke = SvgColor.Black
+            })
+            .AddHighlightedCells(generator, new SvgGroup()
+            {
+                Fill = SvgColor.Gray,
+                Stroke = SvgColor.Gray
+            })
+            .AddSelectedCell(generator, new SvgGroup()
+            {
+                Fill = SvgColor.Red,
+                Stroke = SvgColor.Red
+            })
+            .AddWallsAsSinglePath()
+            .Build();
 
         string animationDirectory = Path.Combine(directory, "maze-frames");
         // Create a directory for SVG frames
@@ -502,13 +407,6 @@ public static class FluentSyntaxExamples
         };
         // Create a generator
         OriginShiftGeneration originShiftGenerator = new(maze, @params);
-
-        // IEnumerable for selected cell of generator
-        IEnumerable<MazeCell> SelectedCellEnumerable()
-        {
-            if (originShiftGenerator.SelectedCell != null)
-                yield return originShiftGenerator.SelectedCell;
-        }
 
         // Marker for directed edges arrow
         SvgMarker arrowMarker = new()
@@ -564,19 +462,11 @@ public static class FluentSyntaxExamples
             R = 5f
         };
 
-        // Create a maze exporter
-        MazeSvgExporter exporter = new(maze)
-        {
-            // Directed edges
-            Edges.Directed(originShiftGenerator.DirectedMaze.DirectedEdges, edgesGroup, edgePath),
-            // Nodes
-            Nodes.All(nodesGroup: nodesGroup, nodeShape: nodeCircle),
-            // "Origin"
-            Nodes.Selected(SelectedCellEnumerable(), nodeShape: originCircle),
-                
-            // Remember, that order here matters and nodes should be added
-            // after edges to be displayed correctly.
-        };
+        var exporter = MazeSvgExporterBuilder.For(maze)
+            .AddDirectedEdges(originShiftGenerator.DirectedMaze.DirectedEdges, edgesGroup, edgePath)
+            .AddAllNodes(nodeCircle, nodesGroup)
+            .AddSelectedNode(originShiftGenerator, originCircle)
+            .Build();
 
         string animationDirectory = Path.Combine(directory, "origin-shift-maze-frames");
         // Create a directory for SVG frames
