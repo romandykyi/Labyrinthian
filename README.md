@@ -94,7 +94,7 @@ Possible output:
 
 ![orthogonal-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/a6c20704-ab86-4247-8419-4e1b1fc84aa5)
 
-More examples [here](https://github.com/romandykyi/Labyrinthian/blob/master/Examples/MazeExportingExamples.cs).
+More examples [here](https://github.com/romandykyi/Labyrinthian/blob/master/Examples.md).
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/romandykyi/Labyrinthian/blob/master/LICENSE) file for details.
