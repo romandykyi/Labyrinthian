@@ -77,22 +77,16 @@ Maze maze = new OrthogonalMaze(30, 20);
 MazeGenerator generator = new PrimGeneration(maze);
 generator.Generate();
 
-// Create a maze exporter
-MazeSvgExporter exporter = new(maze)
-{
-    Walls.AsOnePath()
-};
-
-// Use a FileStream for exporting.
-// You can also use any Stream or TextWriter(e.g. StreamWriter) or XmlWriter
-using var fs = File.Create(@"d:\orthogonal-maze.svg");
-using var svgWriter = new SvgWriter(fs);
-// Export a maze
-exporter.Export(svgWriter);
+// Export the maze to SVG file
+MazeSvgExporterBuilder.For(maze)
+    .AddBackground(SvgColor.White)
+    .AddWallsAsSinglePath()
+    .Build()
+    .ExportToFile("orthogonal-maze.svg");
 ```
 Possible output:
 
-![orthogonal-maze](https://github.com/romandykyi/Labyrinthian/assets/94003504/a6c20704-ab86-4247-8419-4e1b1fc84aa5)
+![orthogonal-maze](https://github.com/user-attachments/assets/547a1661-734b-4ef8-b42d-4875b5e740ec)
 
 More examples [here](https://github.com/romandykyi/Labyrinthian/blob/master/Examples.md).
 
