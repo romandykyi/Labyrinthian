@@ -109,8 +109,8 @@ namespace Labyrinthian
         /// Check whether cell is a dead end or not.
         /// </summary>
         /// <returns>
-        /// &lt;true&gt; if cell is a dead end;
-        /// &lt;false&gt; otherwise.
+        /// <see langword="true"/> if cell is a dead end;
+        /// <see langword="false"/> otherwise.
         /// </returns>
         public static bool IsDeadEnd(this Maze maze, MazeCell cell)
         {
