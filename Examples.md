@@ -2,6 +2,8 @@
 
 ### Orthogonal maze
 
+![orthogonal-maze](https://github.com/user-attachments/assets/28309445-8598-4794-b4bc-c04d6c237a24)
+
 ```csharp
 // Create an orthogonal maze 30x20
 Maze maze = new OrthogonalMaze(30, 20);
@@ -11,12 +13,15 @@ generator.Generate();
 
 // Export the maze to SVG file
 MazeSvgExporterBuilder.For(maze)
+    .AddBackground(SvgColor.White)
     .AddWallsAsSinglePath()
     .Build()
     .ExportToFile("orthogonal-maze.svg");
 ```
 
 ### Maze with a solution
+
+![orthogonal-maze-with-solution](https://github.com/user-attachments/assets/95bde1a6-55cb-4332-b3ef-1998a1876f35)
 
 ```csharp
 // Create an orthogonal maze 30x20
@@ -38,6 +43,7 @@ generator.Generate();
 MazeSvgExporterBuilder.For(maze)
     .WithPadding(5f)
     .IncludeMetadata() // This will write a description about the maze in SVG-file.
+    .AddBackground(SvgColor.White)
     .AddWallsAsSinglePath()
     .AddSolutions()
     .Build()
@@ -46,7 +52,10 @@ MazeSvgExporterBuilder.For(maze)
 
 ### Maze with multiple solutions
 
+![orthogonal-maze-with-multiple-solutions](https://github.com/user-attachments/assets/41f17510-da5a-4a24-8725-38ef10bbb69f)
+
 ```csharp
+
 // Create an orthogonal maze 25x25
 GridMaze2D maze = new OrthogonalMaze(25, 25);
 
@@ -100,6 +109,7 @@ SvgFill[] solutionsFills =
 MazeSvgExporterBuilder.For(maze)
     .WithPadding(5f)
     .IncludeMetadata()
+    .AddBackground(SvgColor.White)
     .AddWallsAsSinglePath()
     .AddSolutions(pathsGroup, i => new SvgPath() { Stroke = solutionsFills[i] })
     .Build()
@@ -108,6 +118,8 @@ MazeSvgExporterBuilder.For(maze)
 
 
 ### Circular (theta) maze
+
+![theta-maze](https://github.com/user-attachments/assets/5fe9b669-23dc-4014-88e3-3785fa222b65)
 
 ```csharp
 // Create a Theta maze with radius 18, inner radius 3 and 40 cells on each circle
@@ -159,6 +171,8 @@ MazeSvgExporterBuilder.For(maze)
 
 ### Graph representation
 
+![sigma-maze-as-graph](https://github.com/user-attachments/assets/8c68f042-f245-4ede-868f-4ae24bd88544)
+
 ```csharp
 // Create a Hexagonal Sigma Maze
 Maze maze = new SigmaMaze(15);
@@ -168,6 +182,7 @@ generator.Generate();
 
 // Order matters here, so we should add edges before nodes
 MazeSvgExporterBuilder.For(maze)
+    .AddBackground(SvgColor.White)
     .AddPassagesGraphEdges()
     .AddAllNodes()
     .Build()
@@ -175,6 +190,8 @@ MazeSvgExporterBuilder.For(maze)
 ```
 
 ### Binary tree representation
+
+<img width="904" height="861" alt="image" src="https://github.com/user-attachments/assets/1a9ce3c2-03d0-4ba2-8fa7-744f83cca213" />
 
 ```csharp
 // Create an Orthogonal Maze 10x10
@@ -186,6 +203,7 @@ generator.Generate();
 
 // Create a maze exporter
 MazeSvgExporter exporter = MazeSvgExporterBuilder.For(maze)
+    .AddBackground(SvgColor.White)
     .AddPassagesGraphEdges()
     .AddAllNodes()
     .Build();
@@ -205,6 +223,8 @@ exporter.ExportToFile("binary-tree-maze.svg", root);
 ```
 
 ### Stylized graph maze
+
+![lines-maze](https://github.com/user-attachments/assets/a3a07bfb-006b-4a83-b9fe-0fdf9234e6f2)
 
 ```csharp
 // You can use here any type of maze
@@ -279,6 +299,7 @@ SvgRoot root = new()
 
 MazeSvgExporterBuilder.For(maze)
     .IncludeMetadata()
+    .AddBackground(SvgColor.White)
     .AddPassagesGraphEdges(edgesPath, false)
     .AddSolutions(solutionsGroup, intersectOuterCells: false)
     .AddNode(entry, entryTriangle)
@@ -289,6 +310,8 @@ MazeSvgExporterBuilder.For(maze)
 ```
 
 ### Rainbow triangular maze
+
+![triangular-rainbow-maze](https://github.com/user-attachments/assets/cea38741-350b-4d48-a489-c97defd1e2e7)
 
 ```csharp
 // Triangular maze with inner triangular room
@@ -348,6 +371,7 @@ MazeGenerator generator = new DFSGeneration(maze);
 
 // Create a maze exporter
 var exporter = MazeSvgExporterBuilder.For(maze)
+    .AddBackground(SvgColor.White)
     .AddUnvisitedCells(generator, new SvgGroup()
     {
         Fill = SvgColor.Black,
@@ -445,6 +469,7 @@ SvgCircle originCircle = new()
 };
 
 var exporter = MazeSvgExporterBuilder.For(maze)
+    .AddBackground(SvgColor.White)
     .AddDirectedEdges(originShiftGenerator.DirectedMaze.DirectedEdges, edgesGroup, edgePath)
     .AddAllNodes(nodeCircle, nodesGroup)
     .AddSelectedNode(originShiftGenerator, originCircle)
