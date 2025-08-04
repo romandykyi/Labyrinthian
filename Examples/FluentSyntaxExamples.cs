@@ -22,6 +22,7 @@ public static class FluentSyntaxExamples
 
         // Export the maze to SVG file
         MazeSvgExporterBuilder.For(maze)
+            .AddBackground(SvgColor.White)
             .AddWallsAsSinglePath()
             .Build()
             .ExportToFile(Path.Combine(directory, "orthogonal-maze.svg"));
@@ -52,6 +53,7 @@ public static class FluentSyntaxExamples
         MazeSvgExporterBuilder.For(maze)
             .WithPadding(5f)
             .IncludeMetadata() // This will write a description about the maze in SVG-file.
+            .AddBackground(SvgColor.White)
             .AddWallsAsSinglePath()
             .AddSolutions()
             .Build()
@@ -112,6 +114,7 @@ public static class FluentSyntaxExamples
 
         // Create a maze exporter(it doesn't need to be closed or disposed)
         MazeSvgExporterBuilder.For(maze)
+            .AddBackground(SvgColor.White)
             .WithPadding(5f)
             .IncludeMetadata()
             .AddWallsAsSinglePath()
@@ -181,6 +184,7 @@ public static class FluentSyntaxExamples
 
         // Order matters here, so we should add edges before nodes
         MazeSvgExporterBuilder.For(maze)
+            .AddBackground(SvgColor.White)
             .AddPassagesGraphEdges()
             .AddAllNodes()
             .Build()
@@ -200,6 +204,7 @@ public static class FluentSyntaxExamples
 
         // Create a maze exporter
         MazeSvgExporter exporter = MazeSvgExporterBuilder.For(maze)
+            .AddBackground(SvgColor.White)
             .AddPassagesGraphEdges()
             .AddAllNodes()
             .Build();
@@ -293,6 +298,7 @@ public static class FluentSyntaxExamples
 
         MazeSvgExporterBuilder.For(maze)
             .IncludeMetadata()
+            .AddBackground(SvgColor.White)
             .AddPassagesGraphEdges(edgesPath, false)
             .AddSolutions(solutionsGroup, intersectOuterCells: false)
             .AddNode(entry, entryTriangle)
@@ -362,6 +368,7 @@ public static class FluentSyntaxExamples
 
         // Create a maze exporter
         var exporter = MazeSvgExporterBuilder.For(maze)
+            .AddBackground(SvgColor.White)
             .AddUnvisitedCells(generator, new SvgGroup()
             {
                 Fill = SvgColor.Black,
@@ -463,6 +470,7 @@ public static class FluentSyntaxExamples
         };
 
         var exporter = MazeSvgExporterBuilder.For(maze)
+            .AddBackground(SvgColor.White)
             .AddDirectedEdges(originShiftGenerator.DirectedMaze.DirectedEdges, edgesGroup, edgePath)
             .AddAllNodes(nodeCircle, nodesGroup)
             .AddSelectedNode(originShiftGenerator, originCircle)
