@@ -368,6 +368,7 @@ public static class FluentSyntaxExamples
 
         // Create a maze exporter
         var exporter = MazeSvgExporterBuilder.For(maze)
+            .WithCellSize(80f)
             .AddBackground(SvgColor.White)
             .AddUnvisitedCells(generator, new SvgGroup()
             {
@@ -437,7 +438,7 @@ public static class FluentSyntaxExamples
         {
             Fill = SvgFill.None,
             Stroke = SvgColor.Black,
-            StrokeWidth = 2f
+            StrokeWidth = 4f
         };
         // Path used for each edge
         SvgPath edgePath = new()
@@ -456,8 +457,8 @@ public static class FluentSyntaxExamples
             Id = "node",
             Fill = SvgColor.White,
             Stroke = SvgColor.Black,
-            StrokeWidth = 2f,
-            R = 5f
+            StrokeWidth = 4f,
+            R = 10f
         };
         // Circle for an "origin"
         SvgCircle originCircle = new()
@@ -465,11 +466,12 @@ public static class FluentSyntaxExamples
             Id = "origin",
             Fill = SvgColor.Red,
             Stroke = SvgColor.Black,
-            StrokeWidth = 2f,
-            R = 5f
+            StrokeWidth = 4f,
+            R = 10f
         };
 
         var exporter = MazeSvgExporterBuilder.For(maze)
+            .WithCellSize(160f)
             .AddBackground(SvgColor.White)
             .AddDirectedEdges(originShiftGenerator.DirectedMaze.DirectedEdges, edgesGroup, edgePath)
             .AddAllNodes(nodeCircle, nodesGroup)
