@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace LabyrinthianExamples;
 
-// Example class that demonstrates how to use the direct (old) syntax for exporting mazes.
-// The fluent syntax is more convenient and recommended for most cases.
-public static class DirectSyntaxExamples
+// Example class that demonstrates how to use the fluent syntax for exporting mazes.
+// This syntax is preferred over the direct syntax as it allows for a more readable
+// and shorter code structure.
+public static class FluentSyntaxExamples
 {
     // Export default orthogonal maze
     public static void ExportOrthogonalMaze(string directory)

@@ -1,12 +1,16 @@
-﻿using static LabyrinthianExamples.FluentExportingExamples;
+﻿using System.IO;
+using static LabyrinthianExamples.FluentSyntaxExamples;
 
-ExportOrthogonalMaze();
-ExportOrthogonalMazeWithSolution();
-ExportOrthogonalMazeWithMultipleSolutions();
-ExportCircularMaze();
-ExportMazeAsGraph();
-ExportMazeAsBinaryTree();
-ExportLinesMaze();
-ExportRainbowTriangularMaze();
-await ExportGenerationVisualizationAsync();
-await ExportOriginShiftVisualizationAsync();
+string exportFolder = "Mazes";
+Directory.CreateDirectory(exportFolder);
+
+ExportOrthogonalMaze(exportFolder);
+ExportOrthogonalMazeWithSolution(exportFolder);
+ExportOrthogonalMazeWithMultipleSolutions(exportFolder);
+ExportCircularMaze(exportFolder);
+ExportMazeAsGraph(exportFolder);
+ExportMazeAsBinaryTree(exportFolder);
+ExportLinesMaze(exportFolder);
+ExportRainbowTriangularMaze(exportFolder);
+await ExportGenerationVisualizationAsync(exportFolder);
+await ExportOriginShiftVisualizationAsync(exportFolder);
