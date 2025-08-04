@@ -40,15 +40,17 @@ public static class FluentSyntaxExamples
             */
         };
 
+        string filename = Path.Combine(directory, "orthogonal-maze.svg");
+
         // Use a FileStream for exporting.
         // You can also use any Stream or TextWriter(e.g. StreamWriter) or XmlWriter
-        using var fs = File.Create(Path.Combine(directory, "orthogonal-maze.svg"));
+        using var fs = File.Create(filename);
         using var svgWriter = new SvgWriter(fs);
-        // Export a maze
+        // Export the maze
         exporter.Export(svgWriter);
 
-        // Note: SvgWriter should be disposed after exporting.
-        // Here we do it with 'using'
+        // Shorter version of the code above:
+        //exporter.ExportToFile(filename);
     }
 
     // Export orthogonal maze with a solution
@@ -84,15 +86,8 @@ public static class FluentSyntaxExamples
             Solutions.All()
         };
 
-        // Use a FileStream for exporting.
-        // You can also use any Stream or TextWriter(e.g. StreamWriter) or XmlWriter
-        using var fs = File.Create(Path.Combine(directory, "orthogonal-maze-with-solution.svg"));
-        using var svgWriter = new SvgWriter(fs);
-        // Export a maze
-        exporter.Export(svgWriter);
-
-        // Note: SvgWriter should be disposed after exporting.
-        // Here we do it with 'using'
+        // Export the maze
+        exporter.ExportToFile(Path.Combine(directory, "orthogonal-maze-with-solution.svg"));
     }
 
     // Export orthogonal maze with multiple solutions
@@ -159,15 +154,8 @@ public static class FluentSyntaxExamples
             Solutions.All(pathsGroup, i => new SvgPath() {Stroke = solutionsFills[i]})
         };
 
-        // Use a FileStream for exporting.
-        // You can also use any Stream or TextWriter(e.g. StreamWriter) or XmlWriter
-        using var fs = File.Create(Path.Combine(directory, "orthogonal-maze-with-solutions.svg"));
-        using var svgWriter = new SvgWriter(fs);
-        // Export a maze
-        exporter.Export(svgWriter);
-
-        // Note: SvgWriter should be disposed after exporting.
-        // Here we do it with 'using'
+        // Export the maze
+        exporter.ExportToFile(Path.Combine(directory, "orthogonal-maze-with-solutions.svg"));
     }
 
     // Export Theta(circular) maze
@@ -225,15 +213,8 @@ public static class FluentSyntaxExamples
             Walls.AsOnePath(wallsPath),
         };
 
-        // Use a FileStream for exporting.
-        // You can also use any Stream or TextWriter(e.g. StreamWriter) or XmlWriter
-        using var fs = File.Create(Path.Combine(directory, "theta-maze.svg"));
-        using var svgWriter = new SvgWriter(fs);
-        // Export a maze
-        exporter.Export(svgWriter);
-
-        // Note: SvgWriter should be disposed after exporting.
-        // Here we do it with 'using'
+        // Export the maze
+        exporter.ExportToFile(Path.Combine(directory, "theta-maze.svg"));
     }
 
     // Export graph representation of a maze
@@ -255,15 +236,8 @@ public static class FluentSyntaxExamples
             // after edges to be displayed correctly.
         };
 
-        // Use a FileStream for exporting.
-        // You can also use any Stream or TextWriter(e.g. StreamWriter) or XmlWriter
-        using var fs = File.Create(Path.Combine(directory, "sigma-maze-as-graph.svg"));
-        using var svgWriter = new SvgWriter(fs);
-        // Export a maze
-        exporter.Export(svgWriter);
-
-        // Note: SvgWriter should be disposed after exporting.
-        // Here we do it with 'using'
+        // Export the maze
+        exporter.ExportToFile(Path.Combine(directory, "sigma-maze-as-graph.svg"));
     }
 
     // Export binary tree representation of an orthogonal maze
@@ -297,15 +271,8 @@ public static class FluentSyntaxExamples
             Transform = $"translate({cX.ToInvariantString()}, {cY.ToInvariantString()}) rotate(225)"
         };
 
-        // Use a FileStream for exporting.
-        // You can also use any Stream or TextWriter(e.g. StreamWriter) or XmlWriter
-        using var fs = File.Create(Path.Combine(directory, "binary-tree-maze.svg"));
-        using var svgWriter = new SvgWriter(fs);
-        // Export a maze
-        exporter.Export(svgWriter, root);
-
-        // Note: SvgWriter should be disposed after exporting.
-        // Here we do it with 'using'
+        // Export the maze
+        exporter.ExportToFile(Path.Combine(directory, "binary-tree-maze.svg"), root);
     }
 
     // Maze that consists only of lines
@@ -396,9 +363,7 @@ public static class FluentSyntaxExamples
             // after edges to be displayed correctly.
         };
 
-        using var fs = File.Create(Path.Combine(directory, "lines-maze.svg"));
-        using var svgWriter = new SvgWriter(fs);
-        exporter.Export(svgWriter, root);
+        exporter.ExportToFile(Path.Combine(directory, "lines-maze.svg"), root);
     }
 
     // Triangular maze with rainbow walls
@@ -453,9 +418,7 @@ public static class FluentSyntaxExamples
             // after background to be displayed correctly.
         };
 
-        using var fs = File.Create(Path.Combine(directory, "triangular-rainbow-maze.svg"));
-        using var svgWriter = new SvgWriter(fs);
-        exporter.Export(svgWriter);
+        exporter.ExportToFile(Path.Combine(directory, "triangular-rainbow-maze.svg"));
     }
 
     // Export visualization of generation process as multiple SVG-files asynchronously
@@ -519,10 +482,9 @@ public static class FluentSyntaxExamples
         int i = 0;
         foreach (Maze frame in generator.GenerateStepByStep())
         {
-            using var fs = File.Create(Path.Combine(animationDirectory, $"{i++:000}.svg"));
-            using var svgWriter = new SvgWriter(fs);
-            // Export a maze generation frame
-            await exporter.ExportAsync(svgWriter);
+            // Export the maze generation frame
+            string path = Path.Combine(animationDirectory, $"{i++:000}.svg");
+            await exporter.ExportToFileAsync(path);
         }
     }
 
@@ -623,10 +585,9 @@ public static class FluentSyntaxExamples
         int i = 0;
         foreach (Maze frame in originShiftGenerator.GenerateStepByStep())
         {
-            using var fs = File.Create(Path.Combine(animationDirectory, $"{i++:000}.svg"));
-            using var svgWriter = new SvgWriter(fs);
-            // Export a maze generation frame
-            await exporter.ExportAsync(svgWriter);
+            // Export the maze generation frame
+            string path = Path.Combine(animationDirectory, $"{i++:000}.svg");
+            await exporter.ExportToFileAsync(path);
         }
     }
 }
