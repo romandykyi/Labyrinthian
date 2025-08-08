@@ -38,7 +38,7 @@ You can play around with a Blazor demo [here](https://romandykyi.github.io/Labyr
 
 ## Installation
 ### Unity
-1. [Download the Unity package here](https://github.com/romandykyi/Labyrinthian/releases/tag/Labyrinthian_v1.1.1)
+1. [Download the Unity package here](https://github.com/romandykyi/Labyrinthian/releases/tag/v1.2.6_Svg.v1.3.0)
 2. In Unity, go to 'Assets > Import package > Custom package'
 3. Select the downloaded package
 4. Click 'Import'
