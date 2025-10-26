@@ -114,5 +114,12 @@ namespace Labyrinthian
         /// Access a cell from the grid.
         /// </summary>
         public MazeCell? this[int row, int column] => CellsGrid[row, column];
+
+        /// <summary>
+        /// Gets the cell's row and column.
+        /// </summary>
+        /// <param name="cell">The cell to obtain.</param>
+        /// <returns>The cell's row and column.</returns>
+        public GridPoint2D GetCellPosition(MazeCell cell) => CellsCoordinates[cell.Index];
     }
 }
